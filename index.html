@@ -199,32 +199,46 @@
       position: relative;
       height: 95vh;
       min-height: 600px;
-      background-image:
-        linear-gradient(to right,
-          rgba(0,0,0,0.95) 0%,
-          rgba(0,0,0,0.7) 30%,
-          rgba(0,0,0,0.2) 60%,
-          transparent 100%
-        ),
-        linear-gradient(to top,
-          var(--bg) 0%,
-          rgba(5,5,5,0.4) 40%,
-          rgba(0,0,0,0.8) 100%
-        ),
-        url("https://images.pexels.com/photos/4123893/pexels-photo-4123893.jpeg?auto=compress&cs=tinysrgb&w=1600");
-      background-size: cover;
-      background-position: center top;
-      color: #fff;
+      background-color: var(--bg);
       display: flex;
       align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-image-wrapper {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 50%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      z-index: 1;
+    }
+
+    .hero-image-wrapper img {
+      height: 100%;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: right center;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,1) 25%);
+      mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,1) 25%);
     }
 
     .hero-inner {
+      position: relative;
+      z-index: 2;
       max-width: 1200px;
       width: 100%;
       margin: 0 auto;
       padding: 80px 16px;
       margin-top: 80px; 
+    }
+
+    .hero-content {
+      max-width: 600px; /* Evita que o texto invada a imagem na direita */
     }
 
     .hero-type {
@@ -337,44 +351,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* ===== SOBRE O STUDIO - ISOLADO E PREMIUM ===== */
-    .premium-sobre {
-      max-width: 900px;
-      margin: 0 auto 60px;
-      padding: 60px 30px;
-      text-align: center;
-      background: rgba(15, 15, 15, 0.6);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.5);
-      position: relative;
-      z-index: 10;
-      transform: translateY(-40px);
-    }
-
-    .premium-sobre h2 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      font-family: "Times New Roman", serif;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    }
-    
-    .premium-sobre h2 span {
-      color: var(--accent);
-    }
-
-    .premium-sobre p {
-      font-size: 1.1rem;
-      color: #cccccc;
-      line-height: 1.7;
-      margin-bottom: 20px;
-      max-width: 750px;
-      margin-inline: auto;
-    }
-
     /* ===== ÁREA PRINCIPAL DAS LISTAS ===== */
     main {
       margin-top: 0;
@@ -382,11 +358,13 @@
 
     .rows {
       max-width: 1200px;
-      margin: 0 auto;
+      margin: -70px auto 0; /* Puxado para cima para sobrepor o Hero elegantemente */
       padding: 0 16px 60px;
       display: flex;
       flex-direction: column;
       gap: 50px;
+      position: relative;
+      z-index: 10;
     }
 
     .row {
@@ -546,7 +524,7 @@
       margin: 20px auto 80px;
       padding: 80px 20px;
       text-align: center;
-      background: url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg') center/cover no-repeat;
+      background: url('./img/Studio.jpg') center center / cover no-repeat;
       position: relative;
       border-radius: 16px;
       overflow: hidden;
@@ -737,6 +715,7 @@
       box-shadow: 0 10px 25px rgba(229, 9, 20, 0.5);
       z-index: 100;
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      color: #fff;
     }
     
     .wpp-fab:hover {
@@ -746,7 +725,6 @@
     .wpp-fab svg {
       width: 36px;
       height: 36px;
-      fill: #fff;
     }
 
     .wpp-chat-window {
@@ -994,7 +972,10 @@
       .nav-links { display: none; }
       .hero-inner { padding: 80px 16px 40px; margin-top: 40px; }
       .hero { height: 85vh; min-height: 550px; }
-      .premium-sobre { margin: -30px 16px 40px; padding: 40px 20px; }
+      .hero-image-wrapper { width: 100%; opacity: 0.3; justify-content: center; }
+      .hero-image-wrapper img { width: 100%; object-fit: cover; object-position: center 20%; -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,1) 40%); mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,1) 40%); }
+      .hero-content { max-width: 100%; }
+      .rows { margin: -50px auto 0; }
       .top10-card { flex: 0 0 240px; height: 180px; }
       .top10-number { font-size: 5rem; flex: 0 0 70px; -webkit-text-stroke-width: 2px; }
       .top10-card-inner { flex: 0 0 145px; height: 170px; }
@@ -1014,10 +995,8 @@
       .hero-buttons { flex-direction: column; width: 100%; gap: 12px; }
       .btn { width: 100%; justify-content: center; padding: 14px 20px; }
       
-      /* Seção Sobre o Studio */
-      .premium-sobre { padding: 30px 16px; margin: -20px 10px 40px; }
-      .premium-sobre h2 { font-size: 1.8rem; }
-      .premium-sobre p { font-size: 1rem; }
+      /* Ajuste espaçamento Mobile */
+      .rows { margin: -30px auto 0; }
       
       /* Fileiras de Piercing/Laser */
       .card { flex: 0 0 160px; height: 100px; }
@@ -1070,7 +1049,6 @@
       </div>
       <div class="nav-links">
         <span onclick="scrollToId('inicio')">Início</span>
-        <span onclick="scrollToId('sobre')">Sobre</span>
         <span onclick="scrollToId('top10')">Estilos</span>
         <span onclick="scrollToId('piercing-row')">Piercing</span>
         <span onclick="scrollToId('remocao-row')">Remoção</span>
@@ -1081,52 +1059,47 @@
 
 <!-- ========= CAPA ========= -->
 <section class="hero reveal" id="inicio">
+  <div class="hero-image-wrapper">
+    <img src="./img/tatuador.jpg" alt="Tatuador NAPELE 67" />
+  </div>
+
   <div class="hero-inner">
-    <div class="hero-type reveal delay-1">SÉRIE ORIGINAL</div>
+    <div class="hero-content">
+      <div class="hero-type reveal delay-1">SÉRIE ORIGINAL</div>
 
-    <div class="hero-badge reveal delay-1">
-      <div class="pill">Top 1</div>
-      em exclusividade na pele
-    </div>
+      <div class="hero-badge reveal delay-1">
+        <div class="pill">Top 1</div>
+        em exclusividade na pele
+      </div>
 
-    <h1 class="hero-title reveal delay-2">Sua Próxima<br/>Tattoo</h1>
+      <h1 class="hero-title reveal delay-2">Sua Próxima<br/>Tattoo</h1>
 
-    <p class="hero-desc reveal delay-3">
-      Escolha seu projeto como quem maratona uma série: Realismo, Lettering, Old School e mais. Direto na pele com maestria, criado sob medida por artistas que entendem de arte e anatomia.
-    </p>
+      <p class="hero-desc reveal delay-3">
+        Escolha seu projeto como quem maratona uma série: Realismo, Lettering, Old School e mais. Direto na pele com maestria, criado sob medida por artistas que entendem de arte e anatomia.
+      </p>
 
-    <div class="hero-buttons reveal delay-3">
-      <button class="btn btn-primary" onclick="toggleWppChat()">
-        <!-- SVG Ícone Nativo -->
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-        Agende seu orçamento
-      </button>
-      <button class="btn btn-secondary" onclick="scrollToId('top10')">
-        <svg style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        Ver Catálogo Completo
-      </button>
-    </div>
-
-    <div class="hero-meta reveal delay-3">
-      Realismo • Lettering • Coberturas • Remoção a laser • Perfurações
+      <div class="hero-buttons reveal delay-3">
+        <button class="btn btn-primary" onclick="toggleWppChat()">
+          <!-- SVG Ícone Nativo -->
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Agende seu orçamento
+        </button>
+        <button class="btn btn-secondary" onclick="scrollToId('top10')">
+          <svg style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Ver Catálogo Completo
+        </button>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ========= SOBRE O STUDIO ========= -->
 <section id="sobre" class="premium-sobre reveal">
-  <h2>Arte, Pele e <span>Exclusividade</span></h2>
-  <p>
-    O NAPELE 67 TATTOO eleva a modificação corporal a um novo patamar. Somos especializados em realismo preto &amp; cinza, lettering chicano, coberturas inteligentes e remoção a laser. 
-  </p>
-  <p>
-    Nossa missão com o NAPELEFLIX é oferecer a você um catálogo imersivo. Entregamos um atendimento humano focado em criar obras de arte autorais, pensadas do zero para a sua estrutura corporal, com um fluxo profissional impecável desde a primeira mensagem até a total cicatrização.
-  </p>
 </section>
 
 <!-- ========= LISTAS ESTILO NETFLIX ========= -->
@@ -1297,8 +1270,9 @@
         Sua pele merece dedicação total. Conecte-se com a nossa equipe agora mesmo e dê o primeiro passo para tirar o seu projeto do papel e torná-lo realidade.
       </p>
       <button class="btn-cta" onclick="toggleWppChat()">
+        <!-- Ícone Oficial do WhatsApp -->
         <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825.001 6.938 3.113 6.939 6.937-.001 3.824-3.114 6.936-6.939 6.943z"/>
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>
         Falar com a Equipe
       </button>
@@ -1320,7 +1294,10 @@
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         </a>
         <a href="#" onclick="toggleWppChat()" aria-label="WhatsApp">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825.001 6.938 3.113 6.939 6.937-.001 3.824-3.114 6.936-6.939 6.943z"/></svg>
+          <!-- Ícone corrigido sem a bola branca -->
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
         </a>
       </div>
     </div>
@@ -1367,15 +1344,19 @@
 
 <!-- ========= WHATSAPP FLUTUANTE (WIDGET) ========= -->
 <div class="wpp-fab" role="button" aria-label="Abrir chat do WhatsApp" tabindex="0" onclick="toggleWppChat()" onkeypress="if(event.key === 'Enter') toggleWppChat()">
-  <svg viewBox="0 0 24 24">
-    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825.001 6.938 3.113 6.939 6.937-.001 3.824-3.114 6.936-6.939 6.943z"/>
+  <!-- Ícone Oficial do WhatsApp -->
+  <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
   </svg>
 </div>
 
 <div class="wpp-chat-window" id="wppWindow">
   <div class="wpp-header">
     <div class="wpp-header-title">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825.001 6.938 3.113 6.939 6.937-.001 3.824-3.114 6.936-6.939 6.943z"/></svg>
+      <!-- Ícone Oficial do WhatsApp -->
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
       Tire suas dúvidas
     </div>
     <!-- aria-label para botões de fechamento -->
