@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>NAPELEFLIX – Netflix da Tattoo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
   <!-- Fonte estilo Netflix -->
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
@@ -25,11 +25,16 @@
       padding: 0;
     }
 
+    /* Trava Anti-Overflow e Fix de Scroll */
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
     body {
       background: var(--bg);
       color: var(--text);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow-x: hidden;
       scroll-behavior: smooth;
     }
 
@@ -53,7 +58,7 @@
     .loader-overlay.hidden {
       opacity: 0;
       visibility: hidden;
-      transform: scale(1.1); /* Dá um leve zoom imersivo ao sumir */
+      transform: scale(1.1);
     }
 
     .loader-circle {
@@ -259,11 +264,11 @@
 
     .hero-title {
       font-family: "Times New Roman", serif;
-      font-size: clamp(3rem, 7vw, 5rem);
+      font-size: clamp(2.5rem, 7vw, 5rem);
       letter-spacing: 0.05em;
       text-transform: uppercase;
       margin: 0 0 16px 0;
-      line-height: 1;
+      line-height: 1.1;
       text-shadow: 0 4px 20px rgba(0,0,0,0.8);
     }
 
@@ -984,12 +989,12 @@
       transform: scale(1.05);
     }
 
-    /* ===== RESPONSIVO ===== */
+    /* ===== RESPONSIVO FOCADO EM MOBILE ===== */
     @media (max-width: 900px) {
       .nav-links { display: none; }
-      .hero-inner { padding: 80px 16px 70px; margin-top: 40px;}
-      .hero { height: 80vh; }
-      .premium-sobre { margin: -30px 16px 40px; padding: 40px 20px;}
+      .hero-inner { padding: 80px 16px 40px; margin-top: 40px; }
+      .hero { height: 85vh; min-height: 550px; }
+      .premium-sobre { margin: -30px 16px 40px; padding: 40px 20px; }
       .top10-card { flex: 0 0 240px; height: 180px; }
       .top10-number { font-size: 5rem; flex: 0 0 70px; -webkit-text-stroke-width: 2px; }
       .top10-card-inner { flex: 0 0 145px; height: 170px; }
@@ -998,10 +1003,48 @@
     }
 
     @media (max-width: 500px) {
-      .card { flex: 0 0 180px; height: 100px; }
-      .hero-title { font-size: 2.5rem; }
-      .wpp-chat-window { width: calc(100vw - 40px); right: 20px; bottom: 100px; }
-      .wpp-fab { right: 20px; bottom: 20px; width: 55px; height: 55px;}
+      /* Ajuste de Navbar */
+      .logo-napeleflix { font-size: 1.4rem; }
+      
+      /* Ajuste de Títulos e Textos Capa */
+      .hero-title { font-size: 2.2rem; margin-bottom: 12px; }
+      .hero-desc { font-size: 0.95rem; }
+      
+      /* Botões Mobile em 100% */
+      .hero-buttons { flex-direction: column; width: 100%; gap: 12px; }
+      .btn { width: 100%; justify-content: center; padding: 14px 20px; }
+      
+      /* Seção Sobre o Studio */
+      .premium-sobre { padding: 30px 16px; margin: -20px 10px 40px; }
+      .premium-sobre h2 { font-size: 1.8rem; }
+      .premium-sobre p { font-size: 1rem; }
+      
+      /* Fileiras de Piercing/Laser */
+      .card { flex: 0 0 160px; height: 100px; }
+      
+      /* Carrossel Top 10 Redimensionado para não estourar a tela */
+      .top10-card { flex: 0 0 210px; height: 150px; gap: 5px; padding-top: 5px; padding-bottom: 5px; }
+      .top10-number { font-size: 4rem; flex: 0 0 50px; -webkit-text-stroke-width: 1.5px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
+      .top10-card-inner { flex: 0 0 140px; height: 140px; }
+      
+      /* CTA Premium Foco */
+      .cta-premium { padding: 40px 16px; margin: 20px 10px 40px; }
+      .cta-premium h2 { font-size: 1.8rem; }
+      .cta-premium p { font-size: 1rem; margin-bottom: 30px; }
+      .btn-cta { width: 100%; justify-content: center; font-size: 1.05rem; padding: 14px 20px; }
+      
+      /* Modal E-mail */
+      .modal-content { width: 95%; padding: 20px; }
+      #modalTitle { font-size: 1.6rem !important; }
+      
+      /* Footer */
+      .premium-footer { padding: 50px 16px 20px; }
+      .footer-grid { gap: 30px; }
+      .footer-brand h3 { font-size: 1.8rem; }
+      
+      /* Botão e Chat do WhatsApp na Direita Segura */
+      .wpp-chat-window { width: calc(100vw - 32px); right: 16px; bottom: 90px; }
+      .wpp-fab { right: 16px; bottom: 16px; width: 55px; height: 55px; }
     }
   </style>
 </head>
@@ -1054,7 +1097,7 @@
 
     <div class="hero-buttons reveal delay-3">
       <button class="btn btn-primary" onclick="toggleWppChat()">
-        <!-- SVG Ícone Nativo em vez do emoji -->
+        <!-- SVG Ícone Nativo -->
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
           <line x1="16" y1="2" x2="16" y2="6"></line>
