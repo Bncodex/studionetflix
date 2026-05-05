@@ -5,6 +5,9 @@
   <title>NAPELEFLIX – Netflix da Tattoo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
+  <!-- Otimização de Performance: Preconnect para carregar as fontes mais rápido -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- Fonte estilo Netflix -->
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -391,7 +394,7 @@
     }
 
     /* 4. INTERAÇÃO TÁTIL: Efeito de pressionar (Mola) */
-    .btn:active, .card:active, .top10-card-inner:active, .wpp-fab:active, .mid-banner:active, .episode-row:active {
+    .btn:active, .card:active, .top10-card-inner:active, .wpp-fab:active, .episode-row:active {
       transform: scale(0.96) !important;
       transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -580,38 +583,35 @@
     /* ===== TOP 10 – ESTILO NETFLIX (MAIORES E COM QUADRO) ===== */
     .top10-card {
       position: relative;
-      flex: 0 0 350px; /* Aumentado consideravelmente para preencher mais */
+      flex: 0 0 auto; /* Adapta-se ao conteúdo e remove o espaço vazio entre os cards */
       height: 280px;   /* Altura maior */
       display: flex;
       align-items: center;
-      gap: 15px;       /* Mais respiro entre o número e a imagem */
       padding-top: 15px;
       padding-bottom: 15px;
     }
 
     .top10-number { 
       font-family: "Anton", sans-serif; 
-      font-size: 8.5rem; 
-      flex: 0 0 120px; 
+      font-size: 11.5rem; /* Número muito maior para dar o efeito cheio do primeiro print */
+      flex: 0 0 140px; /* Área do número maior */
       text-align: right; 
       line-height: 1; 
-      /* Trocado text-shadow por drop-shadow para não bugar o contorno do texto */
       filter: drop-shadow(8px 8px 10px rgba(0,0,0,0.9)); 
       transition: transform 0.4s ease, -webkit-text-fill-color 0.4s ease; 
       z-index: 2; 
-      margin-right: -20px; 
+      margin-right: -35px; /* Avanço do pôster sobre o número (overlap padrão Netflix) */
 
-      /* ----- EFEITO F1: ONDA DE LUZ NO CONTORNO ----- */
+      /* EFEITO F1: ONDA DE LUZ NO CONTORNO */
       color: transparent; 
-      -webkit-text-fill-color: var(--bg); /* Mantém o interior da cor do fundo */
-      -webkit-text-stroke: 3px transparent; /* Stroke transparente para o background assumir a cor da borda */
+      -webkit-text-fill-color: var(--bg); 
+      -webkit-text-stroke: 3px transparent; 
       
-      /* IMPORTANTE: Usar background-image ao invés de background para não resetar o clip */
       background-image: linear-gradient(
         110deg, 
         #444444 0%, 
         #444444 40%, 
-        #ffffff 50%, /* Feixe de luz branco brilhante */
+        #ffffff 50%, 
         #444444 60%, 
         #444444 100%
       );
@@ -626,99 +626,104 @@
       100% { background-position: 0% center; }
     }
 
-    /* Efeito ao passar o mouse */
-    .top10-card:hover .top10-number { 
-      transform: scale(1.05); 
-      -webkit-text-fill-color: rgba(255,255,255,0.05); /* Acende o meio sutilmente */
+    /* Efeito ao passar o mouse apenas em dispositivos com hover */
+    @media (hover: hover) {
+      .top10-card:hover .top10-number { 
+        transform: scale(1.05); 
+        -webkit-text-fill-color: rgba(255,255,255,0.05); 
+      }
     }
 
     .top10-card-inner {
-      flex: 0 0 210px; /* Pôster maior */
-      height: 250px;
-      border-radius: 8px; /* Borda mais refinada */
+      flex: 0 0 230px; 
+      height: 260px; 
+      border-radius: 8px; 
       overflow: hidden;
       position: relative;
       background: #111;
       cursor: pointer;
       transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
-      /* Moldura estilo "Quadro" (Frame de Ouro da Netflix) */
       border: 1px solid rgba(255, 255, 255, 0.15);
       box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 6px 20px rgba(0,0,0,0.6);
       z-index: 1;
     }
 
-    .top10-card-inner:hover {
-      transform: scale(1.1) translateX(10px);
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.4), 0 20px 40px rgba(0,0,0,0.95);
-      border-color: rgba(255, 255, 255, 0.4); /* Quadro acende no hover */
-      z-index: 5;
+    @media (hover: hover) {
+      .top10-card-inner:hover {
+        transform: scale(1.1) translateX(10px);
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.4), 0 20px 40px rgba(0,0,0,0.95);
+        border-color: rgba(255, 255, 255, 0.4); 
+        z-index: 5;
+      }
     }
 
-    /* BANNER INTERMEDIÁRIO */
+    /* ===== NOVO BANNER INTERMEDIÁRIO (AVALIAÇÕES FLUTUANTES) ===== */
     .mid-banner {
       position: relative;
       width: 100%;
-      height: 400px;
+      height: 650px; /* Aumentado de 550px para 650px para não cortar o card de baixo */
       border-radius: 8px;
       overflow: hidden;
-      margin: 20px 0 40px 0;
-      cursor: pointer;
-      display: flex;
-      align-items: flex-end;
-      padding: 40px;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      margin: 40px 0 60px 0;
       background: #111;
-    }
-    
-    .mid-banner:hover {
-      transform: scale(1.02);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
     }
 
     .mid-banner-img {
       position: absolute;
       inset: 0;
       background: url('./img/Studio.jpg') center/cover no-repeat;
-      filter: brightness(0.7) contrast(1.1);
+      filter: brightness(0.6) contrast(1.1);
       transition: filter 0.5s ease;
     }
 
-    .mid-banner:hover .mid-banner-img {
-      filter: brightness(0.9) contrast(1.1);
+    @media (hover: hover) {
+      .mid-banner:hover .mid-banner-img {
+        filter: brightness(0.8) contrast(1.1);
+      }
     }
 
     .mid-banner-gradient {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to right, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.4) 50%, transparent 100%),
+      background: linear-gradient(to right, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.5) 45%, transparent 100%),
                   linear-gradient(to top, rgba(5,5,5,0.9) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .mid-banner-inner {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      gap: 40px;
     }
 
     .mid-banner-content {
-      position: relative;
-      z-index: 2;
       max-width: 500px;
-    }
-
-    .mid-banner-logo {
-      width: 120px;
-      margin-bottom: 16px;
+      flex-shrink: 0;
     }
 
     .mid-banner h4 {
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       font-family: "Anton", sans-serif;
       text-transform: uppercase;
       letter-spacing: 2px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+      line-height: 1.1;
     }
 
     .mid-banner p {
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: #ccc;
       line-height: 1.5;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       text-shadow: 0 2px 5px rgba(0,0,0,0.8);
     }
 
@@ -726,6 +731,189 @@
       display: flex;
       gap: 12px;
     }
+
+    /* BOTÃO GOOGLE 5 ESTRELAS (CANTO INFERIOR ESQUERDO) */
+    .btn-google-stars {
+      position: absolute;
+      bottom: 40px;
+      left: 60px;
+      background: rgba(15, 15, 15, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      text-decoration: none;
+      z-index: 10;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    }
+    
+    @media (hover: hover) {
+      .btn-google-stars:hover {
+        background: #ffffff;
+        color: #000000;
+        transform: scale(1.05) translateY(-3px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 25px rgba(255, 255, 255, 0.3);
+        border-color: #ffffff;
+      }
+    }
+
+    .btn-google-stars .stars {
+      color: #fbbc04;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      line-height: 1;
+      margin-top: -3px;
+    }
+
+    /* CONTÊINER DOS CARDS FLUTUANTES */
+    .floating-reviews-container {
+      position: relative;
+      width: 500px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none; /* Para não bugar o clique nos botões caso passe por cima */
+    }
+
+    /* WRAPPER PARA A ANIMAÇÃO (Separa o float do Hover) */
+    .floating-wrapper {
+      position: absolute;
+      animation: floatAnimation 7s ease-in-out infinite;
+      pointer-events: auto; /* Reativa o clique para o card */
+      transition: z-index 0.3s;
+    }
+
+    /* FIX DESKTOP: Trazer card para a frente ao passar o mouse */
+    @media (hover: hover) {
+      .floating-wrapper:hover {
+        z-index: 50 !important;
+      }
+    }
+
+    .floating-wrapper.r-1 {
+      top: 10%;
+      right: 5%;
+      z-index: 3;
+      animation-delay: 0s;
+    }
+
+    .floating-wrapper.r-2 {
+      top: 38%;
+      right: 35%; /* Empurrado para a esquerda criando a escadinha */
+      z-index: 4;
+      animation-delay: -2s;
+    }
+
+    .floating-wrapper.r-3 {
+      top: 66%;
+      right: 15%;
+      z-index: 5;
+      animation-delay: -4s;
+    }
+
+    @keyframes floatAnimation {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-18px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* O CARD DA AVALIAÇÃO */
+    .floating-review {
+      width: 320px;
+      background: rgba(20, 20, 20, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.02);
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    @media (hover: hover) {
+      .floating-review:hover {
+        transform: scale(1.06);
+        border-color: rgba(229, 9, 20, 0.6); /* Borda acende estilo Netflix */
+        box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 25px rgba(229, 9, 20, 0.25);
+      }
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .review-author-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .review-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent-grad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #fff;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .review-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      display: block;
+    }
+
+    .review-date {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .google-icon {
+      width: 22px;
+      height: 22px;
+    }
+
+    .review-stars {
+      color: #fbbc04;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      margin-top: -5px;
+    }
+
+    .review-text {
+      font-size: 0.9rem;
+      color: #d0d0d0;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-style: italic;
+    }
+    .review-text::before { content: '"'; }
+    .review-text::after { content: '"'; }
+
 
     /* SESSÃO DE EPISÓDIOS (COMO FUNCIONA) */
     .episodes-section {
@@ -769,9 +957,14 @@
       transition: all 0.3s ease;
     }
 
-    .episode-row:hover {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(255,255,255,0.1);
+    @media (hover: hover) {
+      .episode-row:hover {
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(255,255,255,0.1);
+      }
+      .episode-row:hover .episode-number { color: #fff; }
+      .episode-row:hover .episode-thumb::after { background: transparent; }
+      .episode-row:hover .episode-play-icon { opacity: 1; }
     }
 
     .episode-number {
@@ -782,8 +975,6 @@
       text-align: center;
       transition: color 0.3s;
     }
-
-    .episode-row:hover .episode-number { color: #fff; }
 
     .episode-thumb {
       width: 130px;
@@ -802,7 +993,6 @@
       background: rgba(0,0,0,0.3);
       transition: background 0.3s;
     }
-    .episode-row:hover .episode-thumb::after { background: transparent; }
 
     .episode-play-icon {
       position: absolute;
@@ -818,7 +1008,6 @@
       transition: opacity 0.3s;
     }
     .episode-play-icon svg { width: 12px; height: 12px; fill: #fff; margin-left: 2px;}
-    .episode-row:hover .episode-play-icon { opacity: 1; }
 
     .episode-info {
       flex-grow: 1;
@@ -877,7 +1066,10 @@
     .cta-premium h2 { font-size: 3rem; margin-bottom: 20px; font-family: "Times New Roman", serif; letter-spacing: 1px; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     .cta-premium p { font-size: 1.2rem; color: #e5e5e5; margin-bottom: 40px; max-width: 650px; margin-inline: auto; line-height: 1.6; }
     .btn-cta { background: var(--accent-grad); color: #fff; padding: 16px 36px; font-size: 1.2rem; border-radius: 8px; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4); transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: inline-flex; align-items: center; gap: 12px; text-transform: uppercase; letter-spacing: 1px; }
-    .btn-cta:hover { transform: scale(1.08) translateY(-3px); box-shadow: 0 15px 40px rgba(229, 9, 20, 0.6); }
+    
+    @media (hover: hover) {
+      .btn-cta:hover { transform: scale(1.08) translateY(-3px); box-shadow: 0 15px 40px rgba(229, 9, 20, 0.6); }
+    }
 
     /* ===== RODAPÉ ===== */
     .premium-footer { background: #080808; border-top: 1px solid rgba(255,255,255,0.05); padding: 80px 20px 30px; }
@@ -886,26 +1078,46 @@
     .footer-brand p { color: #a0a0a0; font-size: 1rem; line-height: 1.7; margin-bottom: 24px; }
     .social-links { display: flex; gap: 14px; }
     .social-links a { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #fff; transition: all 0.3s; }
-    .social-links a:hover { background: var(--accent); transform: translateY(-4px); box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4); }
+    
+    @media (hover: hover) {
+      .social-links a:hover { background: var(--accent); transform: translateY(-4px); box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4); }
+    }
+    
     .footer-units { display: flex; flex-direction: column; gap: 16px; }
     .unit-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s; }
-    .unit-card:hover { background: rgba(255,255,255,0.06); }
+    
+    @media (hover: hover) {
+      .unit-card:hover { background: rgba(255,255,255,0.06); }
+    }
+    
     .unit-card h4 { color: #fff; font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 600; }
     .unit-card p { color: #a0a0a0; font-size: 0.95rem; line-height: 1.6; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
     .footer-map iframe { width: 100%; height: 280px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); filter: grayscale(80%) contrast(1.2) opacity(0.8); transition: filter 0.4s; }
-    .footer-map iframe:hover { filter: grayscale(0%) contrast(1) opacity(1); }
+    
+    @media (hover: hover) {
+      .footer-map iframe:hover { filter: grayscale(0%) contrast(1) opacity(1); }
+    }
+    
     .footer-bottom { text-align: center; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); color: #555; font-size: 0.85rem; max-width: 1200px; margin: 0 auto; }
 
     /* ===== WHATSAPP WIDGET ===== */
     .wpp-fab { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: var(--accent-grad); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 25px rgba(229, 9, 20, 0.5); z-index: 100; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: #fff; }
-    .wpp-fab:hover { transform: scale(1.15) rotate(5deg); }
+    
+    @media (hover: hover) {
+      .wpp-fab:hover { transform: scale(1.15) rotate(5deg); }
+    }
+    
     .wpp-fab svg { width: 36px; height: 36px; }
     .wpp-chat-window { position: fixed; bottom: 110px; right: 30px; width: 360px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.8); z-index: 99; display: none; flex-direction: column; overflow: hidden; transform-origin: bottom right; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     @keyframes popIn { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
     .wpp-header { background: var(--accent-grad); padding: 18px; display: flex; align-items: center; justify-content: space-between; }
     .wpp-header-title { font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 12px; }
     .wpp-close { cursor: pointer; font-size: 1.5rem; color: #fff; background: rgba(0,0,0,0.2); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-    .wpp-close:hover { background: rgba(0,0,0,0.4); }
+    
+    @media (hover: hover) {
+      .wpp-close:hover { background: rgba(0,0,0,0.4); }
+    }
+    
     .wpp-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; max-height: 400px; overflow-y: auto; }
     .wpp-bubble { background: #2a2a2a; padding: 14px 18px; border-radius: 16px 16px 16px 0; font-size: 0.95rem; color: #fff; line-height: 1.4; align-self: flex-start; max-width: 90%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
     .wpp-typing { display: flex; align-items: center; gap: 5px; height: 24px; padding-left: 5px; }
@@ -913,12 +1125,19 @@
     .wpp-typing span:nth-child(1) { animation-delay: -0.32s; } .wpp-typing span:nth-child(2) { animation-delay: -0.16s; }
     .wpp-chips { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
     .wpp-chip { background: rgba(229, 9, 20, 0.1); border: 1px solid var(--accent); color: #fff; padding: 12px 18px; border-radius: 25px; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-align: left; transition: all 0.2s; }
-    .wpp-chip:hover { background: var(--accent); transform: translateX(5px); }
+    
+    @media (hover: hover) {
+      .wpp-chip:hover { background: var(--accent); transform: translateX(5px); }
+    }
+    
     .wpp-footer { padding: 16px; background: rgba(0,0,0,0.5); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; }
     .wpp-input { flex: 1; background: #000; border: 1px solid #444; border-radius: 25px; padding: 12px 18px; color: #fff; font-size: 0.9rem; outline: none; transition: border-color 0.3s; }
     .wpp-input:focus { border-color: var(--accent); }
     .wpp-send { background: var(--accent-grad); border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; transition: transform 0.2s; }
-    .wpp-send:hover { transform: scale(1.1); }
+    
+    @media (hover: hover) {
+      .wpp-send:hover { transform: scale(1.1); }
+    }
 
     /* MODAL STYLE */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s ease; }
@@ -926,10 +1145,17 @@
     .modal-content { background: #0f0f0f; border: 1px solid var(--glass-border); border-radius: 12px; width: 90%; max-width: 850px; max-height: 85vh; overflow-y: auto; transform: translateY(40px) scale(0.95); transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); padding: 30px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.9); }
     .modal-overlay.open .modal-content { transform: translateY(0) scale(1); }
     .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.5rem; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
-    .modal-close:hover { background: rgba(229, 9, 20, 0.8); }
+    
+    @media (hover: hover) {
+      .modal-close:hover { background: rgba(229, 9, 20, 0.8); }
+    }
+    
     .modal-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
     .modal-gallery img { width: 100%; height: 250px; object-fit: cover; border-radius: 8px; transition: transform 0.3s; cursor: pointer; }
-    .modal-gallery img:hover { transform: scale(1.05); }
+    
+    @media (hover: hover) {
+      .modal-gallery img:hover { transform: scale(1.05); }
+    }
 
     /* RESPONSIVO */
     @media (max-width: 900px) {
@@ -941,18 +1167,69 @@
       .hero-image-wrapper img { width: 100%; object-fit: cover; object-position: center 20%; -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,1) 40%); mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,1) 40%); }
       .hero-content { max-width: 100%; }
       .rows { margin: -50px auto 0; }
-      .top10-card { flex: 0 0 240px; height: 180px; }
-      /* Adiciona largura correta ao número nas telas menores sem perder animação */
-      .top10-number { font-size: 5rem; flex: 0 0 70px; -webkit-text-stroke-width: 2px; }
-      .top10-card-inner { flex: 0 0 145px; height: 170px; }
+      
+      .top10-card { flex: 0 0 auto; height: 180px; }
+      .top10-number { font-size: 6.5rem; flex: 0 0 80px; margin-right: -20px; -webkit-text-stroke-width: 2px; }
+      .top10-card-inner { flex: 0 0 155px; height: 170px; }
+      
       .footer-grid { grid-template-columns: 1fr; gap: 40px; }
       .footer-brand h3 { font-size: 2rem; }
       
-      .mid-banner { height: auto; padding: 30px; }
-      .mid-banner h4 { font-size: 1.8rem; }
+      /* Ajustes para Mobile do Padrão Ouro - Transformando em Scroll Horizontal */
+      .mid-banner { height: auto; }
+      .mid-banner-inner { flex-direction: column; padding: 40px 0; align-items: flex-start; text-align: left; }
+      .mid-banner-content { padding: 0 20px; max-width: 100%; margin-bottom: 10px; }
+      .mid-banner h4 { font-size: 2rem; }
+      
+      .btn-google-stars {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        margin-top: 25px;
+        margin-left: 20px;
+        align-self: flex-start;
+      }
+
+      .floating-reviews-container { 
+        width: 100%; 
+        height: auto; 
+        margin-top: 10px; 
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 16px;
+        padding: 10px 20px 30px;
+        scroll-snap-type: x mandatory;
+        pointer-events: auto; /* Permite arrastar no mobile */
+        justify-content: flex-start;
+      }
+      /* Esconde a barra de rolagem nativa */
+      .floating-reviews-container::-webkit-scrollbar { display: none; }
+      
+      .floating-wrapper { 
+        width: auto;
+        position: relative;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        flex: 0 0 85%; /* Ocupa 85% da tela para deixar a próxima pontinha aparecendo */
+        scroll-snap-align: center;
+        animation: none; /* Remove a animação de flutuar no mobile para facilitar a leitura */
+      }
+      .floating-review {
+        width: 100%;
+        height: 100%;
+      }
+
       .episode-row { flex-wrap: wrap; }
       .episode-number { display: none; }
       .episode-thumb { width: 100px; height: 60px; }
+      
+      /* Garante que o botão play sempre apareça no mobile (já que não há hover) */
+      .episode-play-icon {
+        opacity: 1;
+        background: rgba(0,0,0,0.7);
+      }
     }
 
     @media (max-width: 500px) {
@@ -963,10 +1240,22 @@
       .btn { width: 100%; justify-content: center; padding: 14px 20px; }
       .rows { margin: -30px auto 0; }
       .card { flex: 0 0 160px; height: 100px; }
-      .top10-card { flex: 0 0 210px; height: 150px; gap: 5px; padding-top: 5px; padding-bottom: 5px; }
-      /* Mantém a animação intacta também no responsivo mobile */
-      .top10-number { font-size: 4rem; flex: 0 0 50px; -webkit-text-stroke-width: 1.5px; filter: drop-shadow(4px 4px 5px rgba(0,0,0,0.8)); }
+      
+      .top10-card { flex: 0 0 auto; height: 150px; padding-top: 5px; padding-bottom: 5px; }
+      .top10-number { font-size: 5.5rem; flex: 0 0 60px; margin-right: -15px; -webkit-text-stroke-width: 1.5px; filter: drop-shadow(4px 4px 5px rgba(0,0,0,0.8)); }
       .top10-card-inner { flex: 0 0 140px; height: 140px; }
+      
+      .mid-banner-inner { align-items: flex-start; text-align: left; }
+      .mid-banner h4 { font-size: 1.8rem; }
+      .mid-banner-actions { flex-wrap: wrap; }
+      
+      .btn-google-stars {
+        width: calc(100% - 40px);
+        justify-content: center;
+      }
+
+      .floating-wrapper { flex: 0 0 90%; }
+
       .cta-premium { padding: 40px 16px; margin: 20px 10px 40px; }
       .cta-premium h2 { font-size: 1.8rem; }
       .cta-premium p { font-size: 1rem; margin-bottom: 30px; }
@@ -979,9 +1268,6 @@
       .wpp-chat-window { width: calc(100vw - 32px); right: 16px; bottom: 90px; }
       .wpp-fab { right: 16px; bottom: 16px; width: 55px; height: 55px; }
       
-      .mid-banner { padding: 20px; flex-direction: column; text-align: center; align-items: center;}
-      .mid-banner-gradient { background: linear-gradient(to top, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.7) 100%); }
-      .mid-banner-actions { justify-content: center; flex-wrap: wrap;}
       .episode-thumb { width: 80px; height: 50px; }
       .episode-row { gap: 15px; padding: 10px;}
     }
@@ -1071,79 +1357,79 @@
             <div class="top10-card-inner">
               <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
               <div class="card-gradient"></div>
-              <div class="card-info">Realismo<small>Preto e Cinza • Sombras</small></div>
+              <div class="card-info">Realismo<small>Preto e cinza</small></div>
+            </div>
+          </div>
+          <div class="top10-card" onclick="openStyleModal('finotraco')">
+            <div class="top10-number">2</div>
+            <div class="top10-card-inner">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2709388/pexels-photo-2709388.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Fino Traço<small>Linhas delicadas</small></div>
             </div>
           </div>
           <div class="top10-card" onclick="openStyleModal('lettering')">
-            <div class="top10-number">2</div>
+            <div class="top10-number">3</div>
             <div class="top10-card-inner">
               <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2255355/pexels-photo-2255355.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
               <div class="card-gradient"></div>
-              <div class="card-info">Lettering<small>Chicano • Escritas • Fontes</small></div>
+              <div class="card-info">Lettering<small>Chicano • Escritas</small></div>
             </div>
           </div>
           <div class="top10-card" onclick="openStyleModal('oldschool')">
-            <div class="top10-number">3</div>
+            <div class="top10-number">4</div>
             <div class="top10-card-inner">
               <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702772/pexels-photo-1702772.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
               <div class="card-gradient"></div>
               <div class="card-info">Old School<small>Tradicional • Traços Grossos</small></div>
             </div>
           </div>
-          <div class="top10-card" onclick="openStyleModal('fineline')">
-            <div class="top10-number">4</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2709388/pexels-photo-2709388.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Fine Line<small>Traço Fino • Delicadeza</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('neotradicional')">
+          <div class="top10-card" onclick="openStyleModal('blackwork')">
             <div class="top10-number">5</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702771/pexels-photo-1702771.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Neo Trad.<small>Cores vivas • Ilustração</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('minimalista')">
-            <div class="top10-number">6</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123891/pexels-photo-4123891.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Minimalista<small>Pequena • Simples • Elegante</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('oriental')">
-            <div class="top10-number">7</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Oriental<small>Irezumi • Dragões • Samurais</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('aquarela')">
-            <div class="top10-number">8</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702770/pexels-photo-1702770.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Aquarela<small>Cores fluidas • Sem contorno</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('pontilhismo')">
-            <div class="top10-number">9</div>
             <div class="top10-card-inner">
               <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123890/pexels-photo-4123890.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
               <div class="card-gradient"></div>
-              <div class="card-info">Pontilhismo<small>Dotwork • Sombras em pontos</small></div>
+              <div class="card-info">Black work<small>& Suminagashi</small></div>
             </div>
           </div>
-          <div class="top10-card" onclick="openStyleModal('geometrico')">
-            <div class="top10-number">10</div>
+          <div class="top10-card" onclick="openStyleModal('oriental')">
+            <div class="top10-number">6</div>
+            <div class="top10-card-inner">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Oriental japonês<small>Irezumi</small></div>
+            </div>
+          </div>
+          <div class="top10-card" onclick="openStyleModal('maori')">
+            <div class="top10-number">7</div>
             <div class="top10-card-inner">
               <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123896/pexels-photo-4123896.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
               <div class="card-gradient"></div>
-              <div class="card-info">Geométrico<small>Mandalas • Linhas retas</small></div>
+              <div class="card-info">Maori<small>& Tribal</small></div>
+            </div>
+          </div>
+          <div class="top10-card" onclick="openStyleModal('colorido')">
+            <div class="top10-number">8</div>
+            <div class="top10-card-inner">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702771/pexels-photo-1702771.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Colorido<small>Cores Vivas</small></div>
+            </div>
+          </div>
+          <div class="top10-card" onclick="openStyleModal('anime')">
+            <div class="top10-number">9</div>
+            <div class="top10-card-inner">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702770/pexels-photo-1702770.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Anime<small>& Geek</small></div>
+            </div>
+          </div>
+          <div class="top10-card" onclick="openStyleModal('minimalista')">
+            <div class="top10-number">10</div>
+            <div class="top10-card-inner">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123891/pexels-photo-4123891.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Minimalista<small>Pequena • Elegante</small></div>
             </div>
           </div>
 
@@ -1196,25 +1482,7 @@
       </div>
     </section>
 
-    <!-- BANNER INTERMEDIÁRIO -->
-    <section class="mid-banner reveal delay-2" onclick="chamarWhatsapp('Quero saber mais sobre o protocolo de biossegurança e higiene do estúdio.')">
-      <div class="mid-banner-img"></div>
-      <div class="mid-banner-gradient"></div>
-      <div class="mid-banner-content">
-        <h4 style="font-family: 'Anton', sans-serif; color: #fff;">Padrão Ouro em Higiene</h4>
-        <p>Acompanhe os bastidores do nosso estúdio. Materiais 100% descartáveis, ambiente esterilizado e os melhores pigmentos do mercado internacional.</p>
-        <div class="mid-banner-actions">
-          <button class="btn btn-primary" onclick="event.stopPropagation(); chamarWhatsapp('Gostaria de agendar uma visita ao estúdio.')">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Agendar Visita
-          </button>
-          <button class="btn btn-secondary" onclick="event.stopPropagation(); scrollToId('episodios-row')">
-            Como Funciona
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- PERFURAÇÕES E PIERCING -->
+    <!-- PERFURAÇÕES E PIERCING (Agora acima do Padrão Ouro) -->
     <section class="row reveal delay-1" id="piercing-row">
       <h3 class="row-title">Perfurações e Piercing</h3>
       <div class="row-container">
@@ -1248,7 +1516,7 @@
       </div>
     </section>
 
-    <!-- REMOÇÃO + MICRO -->
+    <!-- REMOÇÃO + MICRO (Agora acima do Padrão Ouro) -->
     <section class="row reveal delay-2" id="remocao-row">
       <h3 class="row-title">Remoção a Laser & Micropigmentação</h3>
       <div class="row-container">
@@ -1278,6 +1546,88 @@
             <div class="card-gradient"></div>
             <div class="card-info">Micro. Labial<small>Revitalização</small></div>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- BANNER INTERMEDIÁRIO (AGORA: AVALIAÇÕES FLUTUANTES) -->
+    <section class="mid-banner reveal delay-2">
+      <div class="mid-banner-img"></div>
+      <div class="mid-banner-gradient"></div>
+      
+      <div class="mid-banner-inner">
+        <div class="mid-banner-content">
+          <h4>Padrão Ouro 5 Estrelas no Google</h4>
+          <p>A experiência Napele 67 vai além da pele. Veja o que nossos clientes reais estão falando sobre nosso estúdio e atendimento de excelência.</p>
+          <div class="mid-banner-actions">
+            <button class="btn btn-primary" onclick="event.stopPropagation(); chamarWhatsapp('Gostaria de agendar uma visita ao estúdio.')">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Agendar Visita
+            </button>
+            <button class="btn btn-secondary" onclick="event.stopPropagation(); scrollToId('episodios-row')">
+              Como Funciona
+            </button>
+          </div>
+        </div>
+
+        <!-- NOVO BOTÃO 5 ESTRELAS NO CANTO INFERIOR ESQUERDO -->
+        <a href="https://www.google.com/search?q=studio+de+tatuagem+campo+grande&sca_esv=39f50cfd4d7ec138&sxsrf=ANbL-n6FlcXd8M52QEybvpfEdJRohpWueQ:1778005838199&udm=1&lsack=Tjf6adbiC6rB5OUPirr28AU&sa=X&ved=2ahUKEwjWwZPz46KUAxWqILkGHQqdHV4QjGp6BAgpEAA&biw=1920&bih=911&dpr=1#sv=CAwS2wMKBmxjbF9wdhJPCgNwdnESSENnMHZaeTh4TVd4eU9UaHpOWFJxSWlVS0gzTjBkV1JwYnlCa1pTQjBZWFIxWVdkbGJTQmpZVzF3YnlCbmNtRnVaR1VRQWhnRBLnAQoDbHFpEt8BQ2g5emRIVmthVzhnWkdVZ2RHRjBkV0ZuWlcwZ1kyRnRjRzhnWjNKaGJtUmxTTEN1c0pUZHNvQ0FDRm94RUFBUUFSQUNFQU1RQkJnQ0dBTVlCQ0lmYzNSMVpHbHZJR1JsSUhSaGRIVmhaMlZ0SUdOaGJYQnZJR2R5WVc1a1paSUJHSFJoZEhSdmIxOWhibVJmY0dsbGNtTnBibWRmYzJodmNKb0JKRU5vWkVSVFZXaE9UVWM1YmxNd1ZrcFJNRVp1VkZWU1FtRkdiRWhWUkdSdVVsSkJRdm9CQkFnQUVEcxJcCgN0YnMSVWxyZjohMm00ITFlMTUhNG0yITE1bTEhMXNoYXNfMXdoZWVsY2hhaXJfMWFjY2Vzc2libGVfMWVudHJhbmNlITJtMSExZTIhMm0xITFlMyEzc0lBRT0SJAoBcRIfc3R1ZGlvIGRlIHRhdHVhZ2VtIGNhbXBvIGdyYW5kZRoSbG9jYWwtcGxhY2Utdmlld2VyGAogrOnCiwU" target="_blank" class="btn-google-stars">
+          Veja como somos 5 estrelas <span class="stars">★★★★★</span>
+        </a>
+
+        <!-- CONTÊINER DOS CARDS FLUTUANTES 3D -->
+        <div class="floating-reviews-container">
+          
+          <div class="floating-wrapper r-1">
+            <article class="floating-review" onclick="window.open('https://maps.app.goo.gl/49AF1djgYM83dsf17', '_blank')">
+              <div class="review-header">
+                <div class="review-author-info">
+                  <div class="review-avatar">M</div>
+                  <div>
+                    <span class="review-name">Mateus Silva</span>
+                    <span class="review-date">Avaliação verificada</span>
+                  </div>
+                </div>
+                <svg class="google-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">Atendimento impecável! O estúdio é lindo, super higienizado e os tatuadores são verdadeiros artistas.</p>
+            </article>
+          </div>
+
+          <div class="floating-wrapper r-2">
+            <article class="floating-review" onclick="window.open('https://maps.app.goo.gl/hosEKSqym5kFskPF8', '_blank')">
+              <div class="review-header">
+                <div class="review-author-info">
+                  <div class="review-avatar" style="background: linear-gradient(135deg, #109d58, #056633);">A</div>
+                  <div>
+                    <span class="review-name">Ana Carolina</span>
+                    <span class="review-date">Avaliação verificada</span>
+                  </div>
+                </div>
+                <svg class="google-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">Melhor experiência que já tive. Traço fino perfeito e a cicatrização foi super tranquila com as orientações deles.</p>
+            </article>
+          </div>
+
+          <div class="floating-wrapper r-3">
+            <article class="floating-review" onclick="window.open('https://maps.app.goo.gl/hoXp1ZSLwy6SWytu8', '_blank')">
+              <div class="review-header">
+                <div class="review-author-info">
+                  <div class="review-avatar" style="background: linear-gradient(135deg, #4285F4, #0b4ab3);">R</div>
+                  <div>
+                    <span class="review-name">Rafael Costa</span>
+                    <span class="review-date">Avaliação verificada</span>
+                  </div>
+                </div>
+                <svg class="google-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">Lugar sensacional. Biossegurança nota 1000. Fizeram meu fechamento e a arte ficou muito além do que eu imaginava.</p>
+            </article>
+          </div>
+
         </div>
       </div>
     </section>
@@ -1381,6 +1731,7 @@
 <footer class="premium-footer reveal">
   <div class="footer-grid">
     
+    <!-- Coluna 1: Marca e Redes Sociais -->
     <div class="footer-brand">
       <h3>NAPELE 67 TATTOO</h3>
       <p>O NAPELE 67 TATTOO eleva a modificação corporal a um novo patamar, com foco em arte exclusiva e atendimento premium desde a primeira mensagem até a total cicatrização.</p>
@@ -1390,6 +1741,7 @@
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         </a>
         <a href="#" onclick="toggleWppChat()" aria-label="WhatsApp">
+          <!-- Ícone corrigido sem a bola branca -->
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
           </svg>
@@ -1397,6 +1749,7 @@
       </div>
     </div>
 
+    <!-- Coluna 2: Unidades -->
     <div class="footer-units">
       <div class="unit-card">
         <h4>
@@ -1423,7 +1776,9 @@
       </div>
     </div>
 
+    <!-- Coluna 3: Mapa -->
     <div class="footer-map">
+      <!-- Exemplo Google Maps - Substitua com o link correto depois -->
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119642.45173167448!2d-54.68537637841315!3d-20.481232811440626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9486e66e7eaeb743%3A0x6fb878b1d6abf7a9!2sCampo%20Grande%2C%20MS!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
     
@@ -1436,6 +1791,7 @@
 
 <!-- ========= WHATSAPP FLUTUANTE (WIDGET) ========= -->
 <div class="wpp-fab" role="button" aria-label="Abrir chat do WhatsApp" tabindex="0" onclick="toggleWppChat()" onkeypress="if(event.key === 'Enter') toggleWppChat()">
+  <!-- Ícone Oficial do WhatsApp -->
   <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
   </svg>
@@ -1444,11 +1800,13 @@
 <div class="wpp-chat-window" id="wppWindow">
   <div class="wpp-header">
     <div class="wpp-header-title">
+      <!-- Ícone Oficial do WhatsApp -->
       <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </svg>
       Tire suas dúvidas
     </div>
+    <!-- aria-label para botões de fechamento -->
     <button class="wpp-close" aria-label="Fechar chat" onclick="toggleWppChat()">×</button>
   </div>
   
@@ -1475,18 +1833,24 @@
   </div>
 </div>
 
-<!-- MODAL E-MAIL STYLE -->
+<!-- ===== MODAL E-MAIL STYLE (DINÂMICO PARA TODOS OS ESTILOS) ===== -->
 <div class="modal-overlay" id="styleModal">
   <div class="modal-content">
     <button class="modal-close" aria-label="Fechar modal de estilo" onclick="closeStyleModal()">×</button>
     <h2 id="modalTitle" style="margin-bottom: 8px; font-family: 'Times New Roman', serif; font-size: 2.2rem; text-transform: uppercase;">Título do Estilo</h2>
-    <p id="modalDesc" style="color: var(--muted); font-size: 1rem; line-height: 1.5;">Descrição da categoria aqui.</p>
-    <div class="modal-gallery" id="modalGallery"></div>
+    <p id="modalDesc" style="color: var(--muted); font-size: 1rem; line-height: 1.5;">
+      Descrição da categoria aqui.
+    </p>
+    
+    <div class="modal-gallery" id="modalGallery">
+      <!-- Imagens inseridas dinamicamente pelo JS -->
+    </div>
   </div>
 </div>
 
 <script>
-  // LOADER DE ENTRADA
+  // ===== LOADER DE ENTRADA =====
+  // Bloqueia a rolagem antes do site carregar
   document.body.style.overflow = 'hidden';
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -1507,41 +1871,75 @@
     }
 
     let progress = 0;
+    // Velocidade do loader (aleatório para parecer carregamento real)
     const interval = setInterval(() => {
-      progress += Math.random() * 5 + 2;
+      progress += Math.random() * 5 + 2; // Incrementa entre 2 e 7 por vez
       
       if (progress >= 100) {
         progress = 100;
         setProgress(progress);
         clearInterval(interval);
         
+        // Espera um pouco em 100% e remove a tela
         setTimeout(() => {
           overlay.classList.add('hidden');
-          document.body.style.overflow = 'auto';
-          window.scrollTo(0, 0);
+          document.body.style.overflow = 'auto'; // Libera o scroll
+          window.scrollTo(0, 0); // Garante que começa do topo
         }, 500);
       } else {
         setProgress(progress);
       }
-    }, 40);
+    }, 40); // Roda a cada 40ms
   });
 
   const WHATSAPP_NUMERO = "5567992856293";
   let chatStarted = false;
 
+  // ===== DADOS DOS ESTILOS PARA O MODAL =====
   const modalData = {
-    realismo: { title: "Realismo Preto & Cinza", desc: "Projetos complexos com foco profundo em texturas, contrastes e sombras sutis. Feito para impactar com precisão fotográfica." },
-    lettering: { title: "Lettering Chicano", desc: "Escritas com personalidade, fontes exclusivas criadas do zero e forte inspiração na cultura chicana de rua." },
-    oldschool: { title: "Old School", desc: "Traços grossos, cores sólidas e designs clássicos (rosas, adagas, panteras) que resistem ao tempo sem desbotar." },
-    fineline: { title: "Fine Line", desc: "Traços absurdamente finos e precisos, trazendo máxima delicadeza, fluidez e elegância para a pele." },
-    neotradicional: { title: "Neo Tradicional", desc: "Cores vivas, paletas ricas, ilustrações marcantes e uma nova roupagem moderna para o tradicional." },
-    minimalista: { title: "Minimalista", desc: "Pequenas, focadas na essência e muito elegantes. Onde 'menos' é definitivamente 'mais'." },
-    oriental: { title: "Oriental / Irezumi", desc: "Dragões, carpas, samurais e lendas. Arte fluida com fundos poderosos e fechamentos que respeitam a anatomia." },
-    aquarela: { title: "Aquarela", desc: "Cores fluidas e vibrantes, sem a necessidade de contornos pretos definidos, simulando tinta jogada na pele." },
-    pontilhismo: { title: "Pontilhismo / Dotwork", desc: "Sombras, profundidade e formas construídas inteiramente por milhares de pontos detalhados." },
-    geometrico: { title: "Geométrico", desc: "Mandalas, linhas simétricas e padrões com perfeição matemática criados milimetricamente." }
+    realismo: {
+      title: "Realismo Preto & Cinza",
+      desc: "Projetos complexos com foco profundo em texturas, contrastes e sombras sutis. Feito para impactar com precisão fotográfica."
+    },
+    finotraco: { 
+      title: "Fino Traço", 
+      desc: "Traços absurdamente finos e precisos, trazendo máxima delicadeza e fluidez para a pele." 
+    },
+    lettering: {
+      title: "Lettering Chicano",
+      desc: "Escritas com personalidade, fontes exclusivas criadas do zero e forte inspiração na cultura chicana de rua."
+    },
+    oldschool: {
+      title: "Old School",
+      desc: "Traços grossos, cores sólidas e designs clássicos (rosas, adagas, panteras) que resistem ao tempo sem desbotar."
+    },
+    blackwork: { 
+      title: "Black work & Suminagashi", 
+      desc: "Arte em tinta preta densa contrastando com a fluidez do Suminagashi, inspirada na marmorização japonesa." 
+    },
+    oriental: {
+      title: "Oriental / Irezumi",
+      desc: "Dragões, carpas, samurais e lendas. Arte fluida com fundos poderosos e fechamentos que respeitam a anatomia."
+    },
+    maori: { 
+      title: "Maori & Tribal", 
+      desc: "Padrões ancestrais, linhas geométricas marcantes e significados profundos baseados nas antigas tribos." 
+    },
+    colorido: { 
+      title: "Colorido", 
+      desc: "Tatuagens vibrantes com pigmentação intensa, misturando técnicas para criar projetos únicos e saturados." 
+    },
+    anime: { 
+      title: "Anime & Geek", 
+      desc: "As suas obras favoritas eternizadas na pele. Traços fiéis aos mangás, animes e cultura pop com cores e texturas incríveis." 
+    },
+    minimalista: {
+      title: "Minimalista",
+      desc: "Pequenas, focadas na essência e muito elegantes. Onde 'menos' é definitivamente 'mais'."
+    }
   };
 
+  // Banco de imagens de teste que serão embaralhadas
   const testImages = [
     "https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800",
     "https://images.pexels.com/photos/1702770/pexels-photo-1702770.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -1551,6 +1949,7 @@
     "https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800"
   ];
 
+  // ===== ROLAGEM SUAVE DOS LINKS =====
   function scrollToId(id) {
     const el = document.getElementById(id);
     if (el) {
@@ -1558,6 +1957,7 @@
     }
   }
 
+  // ===== DRAG TO SCROLL (Navegação por arrasto MOUSE e TOUCH) =====
   const scrollers = document.querySelectorAll('.row-scroller');
   let isDown = false;
   let startX;
@@ -1565,6 +1965,7 @@
   let isDragging = false;
 
   scrollers.forEach(scroller => {
+    // Mouse Events para Desktop
     scroller.addEventListener('mousedown', (e) => {
       isDown = true;
       isDragging = false; 
@@ -1581,6 +1982,7 @@
     scroller.addEventListener('mouseup', () => {
       isDown = false;
       scroller.classList.remove('active-drag');
+      // Delay reset de clique para que o botão não ative pós arrasto
       setTimeout(() => { isDragging = false; }, 50);
     });
     
@@ -1589,14 +1991,16 @@
       e.preventDefault();
       
       const x = e.pageX - scroller.offsetLeft;
-      const walk = (x - startX) * 2;
+      const walk = (x - startX) * 2; // Velocidade do arraste no mouse
       
+      // Se moveu mais que 5 pixels, é considerado um arrasto (bloqueia o click do modal)
       if (Math.abs(walk) > 5) {
           isDragging = true;
       }
       scroller.scrollLeft = scrollLeft - walk;
     });
 
+    // Bloquear clique acidental após arrastar
     scroller.addEventListener('click', (e) => {
       if (isDragging) {
         e.preventDefault();
@@ -1605,6 +2009,7 @@
     }, true); 
   });
 
+  // ===== MODAL LOGIC DINÂMICO =====
   function openStyleModal(styleKey) {
     const data = modalData[styleKey];
     if(!data) return;
@@ -1612,7 +2017,9 @@
     document.getElementById('modalTitle').innerText = data.title;
     document.getElementById('modalDesc').innerHTML = data.desc + '<br/><br/><small style="color:#777;">(Imagens de banco de dados utilizadas apenas para testes)</small>';
     
+    // Embaralha as imagens e as marca com loading="lazy"
     const shuffledImages = [...testImages].sort(() => 0.5 - Math.random());
+    
     const gallery = document.getElementById('modalGallery');
     gallery.innerHTML = shuffledImages.map(img => `<img src="${img}" alt="Exemplo de arte na pele estilo ${data.title}" loading="lazy">`).join('');
 
@@ -1633,6 +2040,7 @@
     }
   });
 
+  // ===== WIDGET WHATSAPP =====
   function chamarWhatsapp(mensagemPronta) {
     const mensagem = encodeURIComponent(mensagemPronta);
     window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${mensagem}`, "_blank");
@@ -1666,6 +2074,7 @@
     }
   }
 
+  // ===== ATUALIZAR TOPO NAVBAR =====
   const topNav = document.getElementById("topNav");
   function atualizarTopo() {
     if (window.scrollY > 50) {
@@ -1677,6 +2086,7 @@
   window.addEventListener("scroll", atualizarTopo);
   atualizarTopo();
 
+  // ===== OBSERVER (ANIMAÇÕES SCROLL REVEAL) =====
   document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("year").textContent = new Date().getFullYear();
 
