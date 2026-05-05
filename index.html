@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
   <!-- Fonte estilo Netflix -->
-  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -34,8 +34,47 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       scroll-behavior: smooth;
+      position: relative; /* Para a textura de ruído */
+    }
+
+    /* 1. PROFUNDIDADE (VIBE CINEMÁTICA): Ruído de filme sutil (Film Grain) */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.8;
+    }
+
+    /* BRILHO AMBIENTE FIXO (SEGUE O SCROLL PARA PREENCHER O VAZIO) */
+    .ambient-glow {
+      position: fixed;
+      top: 15vh;
+      left: -15vw;
+      width: 60vw;
+      height: 80vh;
+      background: radial-gradient(circle at center, rgba(229, 9, 20, 0.15) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 1; /* Flutua acima do fundo mas abaixo do texto */
+      filter: blur(60px);
+      mix-blend-mode: screen; /* Deixa o efeito com aparência de luz real no ambiente */
+      animation: pulseGlow 6s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseGlow { 
+      0% { opacity: 0.6; transform: scale(0.95); } 
+      100% { opacity: 1; transform: scale(1.05); } 
+    }
+
+    /* 2. ACESSIBILIDADE: Anel de foco para teclado (Padrão Netflix) */
+    *:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 4px;
     }
 
     a {
@@ -118,30 +157,34 @@
     .delay-2 { transition-delay: 0.2s; }
     .delay-3 { transition-delay: 0.3s; }
 
-    /* ===== TOPO GLASSMORPHISM ===== */
+    /* ===== TOPO GLASSMORPHISM (UX PRO MAX) ===== */
     .top-nav {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 50;
-      background: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid transparent;
-      transition: all 0.4s ease;
+      /* Netflix usa um gradiente escuro no topo para dar legibilidade à logo mesmo em imagens claras */
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+      transition: background 0.4s ease, backdrop-filter 0.4s ease, padding 0.4s ease;
+      padding-top: 20px;
+      padding-bottom: 30px;
     }
 
     .top-nav.solid {
-      background: rgba(5, 5, 5, 0.85);
-      border-bottom: 1px solid var(--glass-border);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      background: rgba(5, 5, 5, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.8);
+      padding-top: 12px;
+      padding-bottom: 12px;
     }
 
     .top-nav-inner {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 12px 16px;
+      padding: 0 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -187,11 +230,28 @@
       cursor: pointer;
       white-space: nowrap;
       transition: color 0.3s, text-shadow 0.3s;
+      position: relative;
+    }
+
+    /* Efeito de sublinhado animado (Pro Max UI) */
+    .nav-links span::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .nav-links span:hover::after {
+      width: 100%;
     }
 
     .nav-links span:hover {
       color: #ffffff;
-      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+      text-shadow: 0 0 15px rgba(255,255,255,0.6);
     }
 
     /* ===== HERO PRINCIPAL (CAPA) ===== */
@@ -210,7 +270,7 @@
       top: 0;
       right: 0;
       height: 100%;
-      width: 50%;
+      width: 42%; /* Diminuído para afastar do texto e das sessões abaixo */
       display: flex;
       justify-content: flex-end;
       align-items: center;
@@ -277,13 +337,24 @@
     }
 
     .hero-title {
-      font-family: "Times New Roman", serif;
-      font-size: clamp(2.5rem, 7vw, 5rem);
-      letter-spacing: 0.05em;
+      font-family: "Playfair Display", serif; /* Tipografia de Alta Costura/Editorial */
+      font-size: clamp(3.5rem, 8vw, 6.5rem); /* Proporções monumentais */
+      font-weight: 700;
+      letter-spacing: -0.02em; /* Tracking apertado = Vibe de luxo */
       text-transform: uppercase;
-      margin: 0 0 16px 0;
-      line-height: 1.1;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+      margin: 0 0 20px 0;
+      line-height: 0.95; /* Altura de linha colada para títulos grandes */
+      text-shadow: 0 10px 40px rgba(0,0,0,0.95);
+      position: relative;
+      /* Efeito de entrada de cinema */
+      opacity: 0;
+      animation: cinematicTextReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: 0.2s;
+    }
+
+    @keyframes cinematicTextReveal {
+      0% { opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(10px); }
+      100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
     }
 
     .hero-desc {
@@ -315,6 +386,14 @@
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      /* 3. TOUCH TARGETS (Acessibilidade Mobile) */
+      min-height: 44px;
+    }
+
+    /* 4. INTERAÇÃO TÁTIL: Efeito de pressionar (Mola) */
+    .btn:active, .card:active, .top10-card-inner:active, .wpp-fab:active, .mid-banner:active, .episode-row:active {
+      transform: scale(0.96) !important;
+      transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .btn-primary {
@@ -324,9 +403,10 @@
     }
 
     .btn-primary:hover {
-      background: #e6e6e6;
+      background: #ffffff;
       transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(255,255,255,0.4);
+      /* "WOW effect": Brilho vermelho sangrento ao redor do botão branco (Netflix Style) */
+      box-shadow: 0 0 35px rgba(229, 9, 20, 0.6), 0 0 10px rgba(255,255,255,0.8);
     }
 
     .btn-secondary {
@@ -358,7 +438,7 @@
 
     .rows {
       max-width: 1200px;
-      margin: -70px auto 0; /* Puxado para cima para sobrepor o Hero elegantemente */
+      margin: -20px auto 0;
       padding: 0 16px 60px;
       display: flex;
       flex-direction: column;
@@ -379,6 +459,18 @@
       font-weight: 600;
       color: #ffffff;
       letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .row-title-badge {
+      background: var(--accent);
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+      text-transform: uppercase;
     }
 
     .row-container {
@@ -470,506 +562,379 @@
       margin-top: 3px;
     }
 
-    /* ===== TOP 10 – ESTILO NETFLIX ===== */
+    /* PROGRESS BAR (Efeito Continue Assistindo) */
+    .card-progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      z-index: 10;
+    }
+    .card-progress-fill {
+      height: 100%;
+      background: var(--accent);
+    }
+
+    /* ===== TOP 10 – ESTILO NETFLIX (MAIORES E COM QUADRO) ===== */
     .top10-card {
       position: relative;
-      flex: 0 0 280px;
-      height: 200px;
+      flex: 0 0 350px; /* Aumentado consideravelmente para preencher mais */
+      height: 280px;   /* Altura maior */
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding-top: 10px;
-      padding-bottom: 10px;
+      gap: 15px;       /* Mais respiro entre o número e a imagem */
+      padding-top: 15px;
+      padding-bottom: 15px;
     }
 
-    .top10-number {
-      font-family: "Anton", sans-serif;
-      font-size: 6.5rem;
-      -webkit-text-stroke: 3px #555555;
-      color: var(--bg);
-      flex: 0 0 90px;
-      text-align: right;
-      line-height: 1;
-      text-shadow: 5px 5px 15px rgba(0,0,0,0.8);
-      transition: all 0.4s ease;
+    .top10-number { 
+      font-family: "Anton", sans-serif; 
+      font-size: 8.5rem; 
+      flex: 0 0 120px; 
+      text-align: right; 
+      line-height: 1; 
+      /* Trocado text-shadow por drop-shadow para não bugar o contorno do texto */
+      filter: drop-shadow(8px 8px 10px rgba(0,0,0,0.9)); 
+      transition: transform 0.4s ease, -webkit-text-fill-color 0.4s ease; 
+      z-index: 2; 
+      margin-right: -20px; 
+
+      /* ----- EFEITO F1: ONDA DE LUZ NO CONTORNO ----- */
+      color: transparent; 
+      -webkit-text-fill-color: var(--bg); /* Mantém o interior da cor do fundo */
+      -webkit-text-stroke: 3px transparent; /* Stroke transparente para o background assumir a cor da borda */
+      
+      /* IMPORTANTE: Usar background-image ao invés de background para não resetar o clip */
+      background-image: linear-gradient(
+        110deg, 
+        #444444 0%, 
+        #444444 40%, 
+        #ffffff 50%, /* Feixe de luz branco brilhante */
+        #444444 60%, 
+        #444444 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: f1ShineWave 3s linear infinite;
     }
 
-    .top10-card:hover .top10-number {
-      -webkit-text-stroke: 3px #ffffff;
-      color: rgba(255,255,255,0.1);
-      transform: scale(1.05);
+    @keyframes f1ShineWave {
+      0% { background-position: 200% center; }
+      100% { background-position: 0% center; }
+    }
+
+    /* Efeito ao passar o mouse */
+    .top10-card:hover .top10-number { 
+      transform: scale(1.05); 
+      -webkit-text-fill-color: rgba(255,255,255,0.05); /* Acende o meio sutilmente */
     }
 
     .top10-card-inner {
-      flex: 0 0 160px;
-      height: 190px;
-      border-radius: 6px;
+      flex: 0 0 210px; /* Pôster maior */
+      height: 250px;
+      border-radius: 8px; /* Borda mais refinada */
       overflow: hidden;
       position: relative;
       background: #111;
       cursor: pointer;
       transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      /* Moldura estilo "Quadro" (Frame de Ouro da Netflix) */
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 6px 20px rgba(0,0,0,0.6);
+      z-index: 1;
     }
 
     .top10-card-inner:hover {
       transform: scale(1.1) translateX(10px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.9);
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.4), 0 20px 40px rgba(0,0,0,0.95);
+      border-color: rgba(255, 255, 255, 0.4); /* Quadro acende no hover */
       z-index: 5;
     }
 
-    /* ===== NOVO CTA PARA CONVERSÃO ===== */
+    /* BANNER INTERMEDIÁRIO */
+    .mid-banner {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 20px 0 40px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      padding: 40px;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      background: #111;
+    }
+    
+    .mid-banner:hover {
+      transform: scale(1.02);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+    }
+
+    .mid-banner-img {
+      position: absolute;
+      inset: 0;
+      background: url('./img/Studio.jpg') center/cover no-repeat;
+      filter: brightness(0.7) contrast(1.1);
+      transition: filter 0.5s ease;
+    }
+
+    .mid-banner:hover .mid-banner-img {
+      filter: brightness(0.9) contrast(1.1);
+    }
+
+    .mid-banner-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.4) 50%, transparent 100%),
+                  linear-gradient(to top, rgba(5,5,5,0.9) 0%, transparent 40%);
+    }
+
+    .mid-banner-content {
+      position: relative;
+      z-index: 2;
+      max-width: 500px;
+    }
+
+    .mid-banner-logo {
+      width: 120px;
+      margin-bottom: 16px;
+    }
+
+    .mid-banner h4 {
+      font-size: 2.2rem;
+      font-family: "Anton", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    }
+
+    .mid-banner p {
+      font-size: 1rem;
+      color: #ccc;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+    }
+
+    .mid-banner-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* SESSÃO DE EPISÓDIOS (COMO FUNCIONA) */
+    .episodes-section {
+      margin-top: 20px;
+    }
+
+    .episodes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 15px;
+    }
+    
+    .episodes-header h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .episodes-header span {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .episode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .episode-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .episode-row:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .episode-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #555;
+      width: 30px;
+      text-align: center;
+      transition: color 0.3s;
+    }
+
+    .episode-row:hover .episode-number { color: #fff; }
+
+    .episode-thumb {
+      width: 130px;
+      height: 75px;
+      border-radius: 4px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    
+    .episode-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      transition: background 0.3s;
+    }
+    .episode-row:hover .episode-thumb::after { background: transparent; }
+
+    .episode-play-icon {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 30px; height: 30px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .episode-play-icon svg { width: 12px; height: 12px; fill: #fff; margin-left: 2px;}
+    .episode-row:hover .episode-play-icon { opacity: 1; }
+
+    .episode-info {
+      flex-grow: 1;
+    }
+
+    .episode-title-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .episode-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .episode-duration {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .episode-desc {
+      font-size: 0.85rem;
+      color: #aaa;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+
+    /* ===== CTA PREMIUM ===== */
     .cta-premium {
       max-width: 1200px;
-      margin: 20px auto 80px;
+      margin: 40px auto 80px;
       padding: 80px 20px;
       text-align: center;
       background: url('./img/Studio.jpg') center center / cover no-repeat;
       position: relative;
       border-radius: 16px;
       overflow: hidden;
+      border: 2px solid rgba(229, 9, 20, 0.3);
       box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      animation: ctaRedPulse 2.5s infinite alternate ease-in-out;
     }
 
-    .cta-premium::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(5,5,5,0.95), rgba(30,0,0,0.85));
+    @keyframes ctaRedPulse {
+      0% { border-color: rgba(229, 9, 20, 0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(229, 9, 20, 0.1); }
+      100% { border-color: rgba(229, 9, 20, 1); box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 35px rgba(229, 9, 20, 0.5), inset 0 0 60px rgba(229, 9, 20, 0.35); }
     }
 
-    .cta-premium-inner {
-      position: relative;
-      z-index: 2;
-    }
+    .cta-premium::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(5,5,5,0.95), rgba(30,0,0,0.85)); }
+    .cta-premium-inner { position: relative; z-index: 2; }
+    .cta-premium h2 { font-size: 3rem; margin-bottom: 20px; font-family: "Times New Roman", serif; letter-spacing: 1px; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    .cta-premium p { font-size: 1.2rem; color: #e5e5e5; margin-bottom: 40px; max-width: 650px; margin-inline: auto; line-height: 1.6; }
+    .btn-cta { background: var(--accent-grad); color: #fff; padding: 16px 36px; font-size: 1.2rem; border-radius: 8px; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4); transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: inline-flex; align-items: center; gap: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-cta:hover { transform: scale(1.08) translateY(-3px); box-shadow: 0 15px 40px rgba(229, 9, 20, 0.6); }
 
-    .cta-premium h2 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      font-family: "Times New Roman", serif;
-      letter-spacing: 1px;
-      text-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-
-    .cta-premium p {
-      font-size: 1.2rem;
-      color: #e5e5e5;
-      margin-bottom: 40px;
-      max-width: 650px;
-      margin-inline: auto;
-      line-height: 1.6;
-    }
-
-    .btn-cta {
-      background: var(--accent-grad);
-      color: #fff;
-      padding: 16px 36px;
-      font-size: 1.2rem;
-      border-radius: 8px;
-      font-weight: 800;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
-      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .btn-cta:hover {
-      transform: scale(1.08) translateY(-3px);
-      box-shadow: 0 15px 40px rgba(229, 9, 20, 0.6);
-    }
-
-    /* ===== NOVO RODAPÉ PREMIUM (3 COLUNAS) ===== */
-    .premium-footer {
-      background: #080808;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      padding: 80px 20px 30px;
-    }
-
-    .footer-grid {
-      max-width: 1200px;
-      margin: 0 auto 50px;
-      display: grid;
-      grid-template-columns: 1fr 1.2fr 1.5fr;
-      gap: 50px;
-      align-items: start;
-    }
-
-    .footer-brand h3 {
-      font-family: "Anton", sans-serif;
-      font-size: 2.2rem;
-      color: var(--accent);
-      letter-spacing: 0.1em;
-      margin-bottom: 20px;
-    }
-
-    .footer-brand p {
-      color: #a0a0a0;
-      font-size: 1rem;
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 14px;
-    }
-
-    .social-links a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-      color: #fff;
-      transition: all 0.3s;
-    }
-
-    .social-links a:hover {
-      background: var(--accent);
-      transform: translateY(-4px);
-      box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
-    }
-
-    .footer-units {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .unit-card {
-      background: rgba(255,255,255,0.03);
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.05);
-      transition: background 0.3s;
-    }
-    
-    .unit-card:hover {
-      background: rgba(255,255,255,0.06);
-    }
-
-    .unit-card h4 {
-      color: #fff;
-      font-size: 1.1rem;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-    }
-
-    .unit-card p {
-      color: #a0a0a0;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .footer-map iframe {
-      width: 100%;
-      height: 280px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      filter: grayscale(80%) contrast(1.2) opacity(0.8);
-      transition: filter 0.4s;
-    }
-    
-    .footer-map iframe:hover {
-      filter: grayscale(0%) contrast(1) opacity(1);
-    }
-
-    .footer-bottom {
-      text-align: center;
-      padding-top: 24px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      color: #555;
-      font-size: 0.85rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+    /* ===== RODAPÉ ===== */
+    .premium-footer { background: #080808; border-top: 1px solid rgba(255,255,255,0.05); padding: 80px 20px 30px; }
+    .footer-grid { max-width: 1200px; margin: 0 auto 50px; display: grid; grid-template-columns: 1fr 1.2fr 1.5fr; gap: 50px; align-items: start; }
+    .footer-brand h3 { font-family: "Anton", sans-serif; font-size: 2.2rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 20px; }
+    .footer-brand p { color: #a0a0a0; font-size: 1rem; line-height: 1.7; margin-bottom: 24px; }
+    .social-links { display: flex; gap: 14px; }
+    .social-links a { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #fff; transition: all 0.3s; }
+    .social-links a:hover { background: var(--accent); transform: translateY(-4px); box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4); }
+    .footer-units { display: flex; flex-direction: column; gap: 16px; }
+    .unit-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s; }
+    .unit-card:hover { background: rgba(255,255,255,0.06); }
+    .unit-card h4 { color: #fff; font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+    .unit-card p { color: #a0a0a0; font-size: 0.95rem; line-height: 1.6; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .footer-map iframe { width: 100%; height: 280px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); filter: grayscale(80%) contrast(1.2) opacity(0.8); transition: filter 0.4s; }
+    .footer-map iframe:hover { filter: grayscale(0%) contrast(1) opacity(1); }
+    .footer-bottom { text-align: center; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); color: #555; font-size: 0.85rem; max-width: 1200px; margin: 0 auto; }
 
     /* ===== WHATSAPP WIDGET ===== */
-    .wpp-fab {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 65px;
-      height: 65px;
-      background: var(--accent-grad);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(229, 9, 20, 0.5);
-      z-index: 100;
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      color: #fff;
-    }
-    
-    .wpp-fab:hover {
-      transform: scale(1.15) rotate(5deg);
-    }
+    .wpp-fab { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: var(--accent-grad); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 25px rgba(229, 9, 20, 0.5); z-index: 100; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: #fff; }
+    .wpp-fab:hover { transform: scale(1.15) rotate(5deg); }
+    .wpp-fab svg { width: 36px; height: 36px; }
+    .wpp-chat-window { position: fixed; bottom: 110px; right: 30px; width: 360px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.8); z-index: 99; display: none; flex-direction: column; overflow: hidden; transform-origin: bottom right; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    @keyframes popIn { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+    .wpp-header { background: var(--accent-grad); padding: 18px; display: flex; align-items: center; justify-content: space-between; }
+    .wpp-header-title { font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 12px; }
+    .wpp-close { cursor: pointer; font-size: 1.5rem; color: #fff; background: rgba(0,0,0,0.2); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .wpp-close:hover { background: rgba(0,0,0,0.4); }
+    .wpp-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; max-height: 400px; overflow-y: auto; }
+    .wpp-bubble { background: #2a2a2a; padding: 14px 18px; border-radius: 16px 16px 16px 0; font-size: 0.95rem; color: #fff; line-height: 1.4; align-self: flex-start; max-width: 90%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    .wpp-typing { display: flex; align-items: center; gap: 5px; height: 24px; padding-left: 5px; }
+    .wpp-typing span { width: 7px; height: 7px; background: #aaa; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+    .wpp-typing span:nth-child(1) { animation-delay: -0.32s; } .wpp-typing span:nth-child(2) { animation-delay: -0.16s; }
+    .wpp-chips { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+    .wpp-chip { background: rgba(229, 9, 20, 0.1); border: 1px solid var(--accent); color: #fff; padding: 12px 18px; border-radius: 25px; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-align: left; transition: all 0.2s; }
+    .wpp-chip:hover { background: var(--accent); transform: translateX(5px); }
+    .wpp-footer { padding: 16px; background: rgba(0,0,0,0.5); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; }
+    .wpp-input { flex: 1; background: #000; border: 1px solid #444; border-radius: 25px; padding: 12px 18px; color: #fff; font-size: 0.9rem; outline: none; transition: border-color 0.3s; }
+    .wpp-input:focus { border-color: var(--accent); }
+    .wpp-send { background: var(--accent-grad); border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; transition: transform 0.2s; }
+    .wpp-send:hover { transform: scale(1.1); }
 
-    .wpp-fab svg {
-      width: 36px;
-      height: 36px;
-    }
+    /* MODAL STYLE */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s ease; }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal-content { background: #0f0f0f; border: 1px solid var(--glass-border); border-radius: 12px; width: 90%; max-width: 850px; max-height: 85vh; overflow-y: auto; transform: translateY(40px) scale(0.95); transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); padding: 30px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.9); }
+    .modal-overlay.open .modal-content { transform: translateY(0) scale(1); }
+    .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.5rem; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+    .modal-close:hover { background: rgba(229, 9, 20, 0.8); }
+    .modal-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+    .modal-gallery img { width: 100%; height: 250px; object-fit: cover; border-radius: 8px; transition: transform 0.3s; cursor: pointer; }
+    .modal-gallery img:hover { transform: scale(1.05); }
 
-    .wpp-chat-window {
-      position: fixed;
-      bottom: 110px;
-      right: 30px;
-      width: 360px;
-      background: rgba(20, 20, 20, 0.95);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-      z-index: 99;
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-      transform-origin: bottom right;
-      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.8) translateY(20px); }
-      100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    .wpp-header {
-      background: var(--accent-grad);
-      padding: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .wpp-header-title {
-      font-weight: 700;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    .wpp-close {
-      cursor: pointer;
-      font-size: 1.5rem;
-      color: #fff;
-      background: rgba(0,0,0,0.2);
-      border: none;
-      border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-    
-    .wpp-close:hover {
-      background: rgba(0,0,0,0.4);
-    }
-
-    .wpp-body {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .wpp-bubble {
-      background: #2a2a2a;
-      padding: 14px 18px;
-      border-radius: 16px 16px 16px 0;
-      font-size: 0.95rem;
-      color: #fff;
-      line-height: 1.4;
-      align-self: flex-start;
-      max-width: 90%;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    .wpp-typing {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      height: 24px;
-      padding-left: 5px;
-    }
-
-    .wpp-typing span {
-      width: 7px;
-      height: 7px;
-      background: #aaa;
-      border-radius: 50%;
-      animation: bounce 1.4s infinite ease-in-out both;
-    }
-
-    .wpp-typing span:nth-child(1) { animation-delay: -0.32s; }
-    .wpp-typing span:nth-child(2) { animation-delay: -0.16s; }
-    
-    .wpp-chips {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .wpp-chip {
-      background: rgba(229, 9, 20, 0.1);
-      border: 1px solid var(--accent);
-      color: #fff;
-      padding: 12px 18px;
-      border-radius: 25px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.2s;
-    }
-
-    .wpp-chip:hover {
-      background: var(--accent);
-      transform: translateX(5px);
-    }
-
-    .wpp-footer {
-      padding: 16px;
-      background: rgba(0,0,0,0.5);
-      border-top: 1px solid rgba(255,255,255,0.05);
-      display: flex;
-      gap: 10px;
-    }
-
-    .wpp-input {
-      flex: 1;
-      background: #000;
-      border: 1px solid #444;
-      border-radius: 25px;
-      padding: 12px 18px;
-      color: #fff;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    
-    .wpp-input:focus {
-      border-color: var(--accent);
-    }
-
-    .wpp-send {
-      background: var(--accent-grad);
-      border: none;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: #fff;
-      transition: transform 0.2s;
-    }
-    
-    .wpp-send:hover {
-      transform: scale(1.1);
-    }
-
-    /* ===== MODAL E-MAIL STYLE ===== */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.4s ease;
-    }
-    .modal-overlay.open {
-      opacity: 1;
-      visibility: visible;
-    }
-    .modal-content {
-      background: #0f0f0f;
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      width: 90%;
-      max-width: 850px;
-      max-height: 85vh;
-      overflow-y: auto;
-      transform: translateY(40px) scale(0.95);
-      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      padding: 30px;
-      position: relative;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-    }
-    .modal-overlay.open .modal-content {
-      transform: translateY(0) scale(1);
-    }
-    .modal-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255,255,255,0.1);
-      border: none;
-      color: #fff;
-      font-size: 1.5rem;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.3s;
-    }
-    .modal-close:hover {
-      background: rgba(229, 9, 20, 0.8);
-    }
-    .modal-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 24px;
-    }
-    .modal-gallery img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 8px;
-      transition: transform 0.3s;
-      cursor: pointer;
-    }
-    .modal-gallery img:hover {
-      transform: scale(1.05);
-    }
-
-    /* ===== RESPONSIVO FOCADO EM MOBILE ===== */
+    /* RESPONSIVO */
     @media (max-width: 900px) {
       .nav-links { display: none; }
+      .ambient-glow { width: 120vw; left: -40vw; top: 20vh; }
       .hero-inner { padding: 80px 16px 40px; margin-top: 40px; }
       .hero { height: 85vh; min-height: 550px; }
       .hero-image-wrapper { width: 100%; opacity: 0.3; justify-content: center; }
@@ -977,59 +942,54 @@
       .hero-content { max-width: 100%; }
       .rows { margin: -50px auto 0; }
       .top10-card { flex: 0 0 240px; height: 180px; }
+      /* Adiciona largura correta ao número nas telas menores sem perder animação */
       .top10-number { font-size: 5rem; flex: 0 0 70px; -webkit-text-stroke-width: 2px; }
       .top10-card-inner { flex: 0 0 145px; height: 170px; }
       .footer-grid { grid-template-columns: 1fr; gap: 40px; }
       .footer-brand h3 { font-size: 2rem; }
+      
+      .mid-banner { height: auto; padding: 30px; }
+      .mid-banner h4 { font-size: 1.8rem; }
+      .episode-row { flex-wrap: wrap; }
+      .episode-number { display: none; }
+      .episode-thumb { width: 100px; height: 60px; }
     }
 
     @media (max-width: 500px) {
-      /* Ajuste de Navbar */
       .logo-napeleflix { font-size: 1.4rem; }
-      
-      /* Ajuste de Títulos e Textos Capa */
       .hero-title { font-size: 2.2rem; margin-bottom: 12px; }
       .hero-desc { font-size: 0.95rem; }
-      
-      /* Botões Mobile em 100% */
       .hero-buttons { flex-direction: column; width: 100%; gap: 12px; }
       .btn { width: 100%; justify-content: center; padding: 14px 20px; }
-      
-      /* Ajuste espaçamento Mobile */
       .rows { margin: -30px auto 0; }
-      
-      /* Fileiras de Piercing/Laser */
       .card { flex: 0 0 160px; height: 100px; }
-      
-      /* Carrossel Top 10 Redimensionado para não estourar a tela */
       .top10-card { flex: 0 0 210px; height: 150px; gap: 5px; padding-top: 5px; padding-bottom: 5px; }
-      .top10-number { font-size: 4rem; flex: 0 0 50px; -webkit-text-stroke-width: 1.5px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
+      /* Mantém a animação intacta também no responsivo mobile */
+      .top10-number { font-size: 4rem; flex: 0 0 50px; -webkit-text-stroke-width: 1.5px; filter: drop-shadow(4px 4px 5px rgba(0,0,0,0.8)); }
       .top10-card-inner { flex: 0 0 140px; height: 140px; }
-      
-      /* CTA Premium Foco */
       .cta-premium { padding: 40px 16px; margin: 20px 10px 40px; }
       .cta-premium h2 { font-size: 1.8rem; }
       .cta-premium p { font-size: 1rem; margin-bottom: 30px; }
       .btn-cta { width: 100%; justify-content: center; font-size: 1.05rem; padding: 14px 20px; }
-      
-      /* Modal E-mail */
       .modal-content { width: 95%; padding: 20px; }
       #modalTitle { font-size: 1.6rem !important; }
-      
-      /* Footer */
       .premium-footer { padding: 50px 16px 20px; }
       .footer-grid { gap: 30px; }
       .footer-brand h3 { font-size: 1.8rem; }
-      
-      /* Botão e Chat do WhatsApp na Direita Segura */
       .wpp-chat-window { width: calc(100vw - 32px); right: 16px; bottom: 90px; }
       .wpp-fab { right: 16px; bottom: 16px; width: 55px; height: 55px; }
+      
+      .mid-banner { padding: 20px; flex-direction: column; text-align: center; align-items: center;}
+      .mid-banner-gradient { background: linear-gradient(to top, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.7) 100%); }
+      .mid-banner-actions { justify-content: center; flex-wrap: wrap;}
+      .episode-thumb { width: 80px; height: 50px; }
+      .episode-row { gap: 15px; padding: 10px;}
     }
   </style>
 </head>
 <body>
 
-<!-- ========= LOADER DE ENTRADA ========= -->
+<!-- LOADER -->
 <div id="loader-overlay" class="loader-overlay">
   <div class="loader-circle">
     <svg class="progress-ring" viewBox="0 0 150 150">
@@ -1040,7 +1000,10 @@
   </div>
 </div>
 
-<!-- ========= TOPO ========= -->
+<!-- LUZ AMBIENTE (BRILHO FLUTUANTE QUE SEGUE O SCROLL) -->
+<div class="ambient-glow"></div>
+
+<!-- TOPO -->
 <div class="top-nav" id="topNav">
   <div class="top-nav-inner">
     <div class="nav-left">
@@ -1057,30 +1020,25 @@
   </div>
 </div>
 
-<!-- ========= CAPA ========= -->
+<!-- CAPA -->
 <section class="hero reveal" id="inicio">
   <div class="hero-image-wrapper">
-    <img src="./img/tatuador.jpg" alt="Tatuador NAPELE 67" />
+    <img src="./img/tatuador.jpg" alt="" />
   </div>
 
   <div class="hero-inner">
     <div class="hero-content">
       <div class="hero-type reveal delay-1">SÉRIE ORIGINAL</div>
-
       <div class="hero-badge reveal delay-1">
         <div class="pill">Top 1</div>
         em exclusividade na pele
       </div>
-
       <h1 class="hero-title reveal delay-2">Sua Próxima<br/>Tattoo</h1>
-
       <p class="hero-desc reveal delay-3">
         Escolha seu projeto como quem maratona uma série: Realismo, Lettering, Old School e mais. Direto na pele com maestria, criado sob medida por artistas que entendem de arte e anatomia.
       </p>
-
       <div class="hero-buttons reveal delay-3">
         <button class="btn btn-primary" onclick="toggleWppChat()">
-          <!-- SVG Ícone Nativo -->
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -1098,11 +1056,7 @@
   </div>
 </section>
 
-<!-- ========= SOBRE O STUDIO ========= -->
-<section id="sobre" class="premium-sobre reveal">
-</section>
-
-<!-- ========= LISTAS ESTILO NETFLIX ========= -->
+<!-- MAIN -->
 <main>
   <div class="rows">
 
@@ -1110,7 +1064,6 @@
     <section class="row reveal" id="top10">
       <h3 class="row-title">Brasil: Top 10 Estilos de Tatuagem</h3>
       <div class="row-container">
-        
         <div class="row-scroller" id="top10-scroller">
           
           <div class="top10-card" onclick="openStyleModal('realismo')">
@@ -1121,7 +1074,6 @@
               <div class="card-info">Realismo<small>Preto e Cinza • Sombras</small></div>
             </div>
           </div>
-
           <div class="top10-card" onclick="openStyleModal('lettering')">
             <div class="top10-number">2</div>
             <div class="top10-card-inner">
@@ -1130,7 +1082,6 @@
               <div class="card-info">Lettering<small>Chicano • Escritas • Fontes</small></div>
             </div>
           </div>
-
           <div class="top10-card" onclick="openStyleModal('oldschool')">
             <div class="top10-number">3</div>
             <div class="top10-card-inner">
@@ -1139,7 +1090,6 @@
               <div class="card-info">Old School<small>Tradicional • Traços Grossos</small></div>
             </div>
           </div>
-
           <div class="top10-card" onclick="openStyleModal('fineline')">
             <div class="top10-number">4</div>
             <div class="top10-card-inner">
@@ -1148,7 +1098,6 @@
               <div class="card-info">Fine Line<small>Traço Fino • Delicadeza</small></div>
             </div>
           </div>
-
           <div class="top10-card" onclick="openStyleModal('neotradicional')">
             <div class="top10-number">5</div>
             <div class="top10-card-inner">
@@ -1157,7 +1106,6 @@
               <div class="card-info">Neo Trad.<small>Cores vivas • Ilustração</small></div>
             </div>
           </div>
-
           <div class="top10-card" onclick="openStyleModal('minimalista')">
             <div class="top10-number">6</div>
             <div class="top10-card-inner">
@@ -1166,7 +1114,6 @@
               <div class="card-info">Minimalista<small>Pequena • Simples • Elegante</small></div>
             </div>
           </div>
-
           <div class="top10-card" onclick="openStyleModal('oriental')">
             <div class="top10-number">7</div>
             <div class="top10-card-inner">
@@ -1175,7 +1122,6 @@
               <div class="card-info">Oriental<small>Irezumi • Dragões • Samurais</small></div>
             </div>
           </div>
-
           <div class="top10-card" onclick="openStyleModal('aquarela')">
             <div class="top10-number">8</div>
             <div class="top10-card-inner">
@@ -1184,7 +1130,6 @@
               <div class="card-info">Aquarela<small>Cores fluidas • Sem contorno</small></div>
             </div>
           </div>
-
           <div class="top10-card" onclick="openStyleModal('pontilhismo')">
             <div class="top10-number">9</div>
             <div class="top10-card-inner">
@@ -1193,7 +1138,6 @@
               <div class="card-info">Pontilhismo<small>Dotwork • Sombras em pontos</small></div>
             </div>
           </div>
-
           <div class="top10-card" onclick="openStyleModal('geometrico')">
             <div class="top10-number">10</div>
             <div class="top10-card-inner">
@@ -1204,13 +1148,75 @@
           </div>
 
         </div>
-        
+      </div>
+    </section>
+
+    <!-- CONTINUE ASSISTINDO -->
+    <section class="row reveal delay-1">
+      <h3 class="row-title">Continue o seu projeto</h3>
+      <div class="row-container">
+        <div class="row-scroller">
+          
+          <article class="card" onclick="chamarWhatsapp('Quero continuar meu projeto de fechamento de braço.')">
+            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738089/pexels-photo-3738089.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-gradient"></div>
+            <div class="card-info">Fechamento Braço<small>Sessão 3 de 5</small></div>
+            <div class="card-progress-bar"><div class="card-progress-fill" style="width: 60%;"></div></div>
+          </article>
+
+          <article class="card" onclick="chamarWhatsapp('Quero continuar meu projeto de costas.')">
+            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-gradient"></div>
+            <div class="card-info">Projeto Costas<small>Sessão 1 de 6</small></div>
+            <div class="card-progress-bar"><div class="card-progress-fill" style="width: 15%;"></div></div>
+          </article>
+
+          <article class="card" onclick="chamarWhatsapp('Quero marcar o retorno para retoque.')">
+            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-gradient"></div>
+            <div class="card-info">Retoque Especial<small>Fase final</small></div>
+            <div class="card-progress-bar"><div class="card-progress-fill" style="width: 90%;"></div></div>
+          </article>
+          
+          <article class="card" onclick="chamarWhatsapp('Quero saber sobre projeto de perna.')">
+            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702772/pexels-photo-1702772.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-gradient"></div>
+            <div class="card-info">Perna Completa<small>Projeto em criação</small></div>
+            <div class="card-progress-bar"><div class="card-progress-fill" style="width: 5%;"></div></div>
+          </article>
+
+          <article class="card" onclick="chamarWhatsapp('Dúvida sobre cobertura de tatuagem antiga.')">
+            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2255355/pexels-photo-2255355.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-gradient"></div>
+            <div class="card-info">Cobertura (Cover Up)<small>Sessão 2 de 3</small></div>
+            <div class="card-progress-bar"><div class="card-progress-fill" style="width: 66%;"></div></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- BANNER INTERMEDIÁRIO -->
+    <section class="mid-banner reveal delay-2" onclick="chamarWhatsapp('Quero saber mais sobre o protocolo de biossegurança e higiene do estúdio.')">
+      <div class="mid-banner-img"></div>
+      <div class="mid-banner-gradient"></div>
+      <div class="mid-banner-content">
+        <h4 style="font-family: 'Anton', sans-serif; color: #fff;">Padrão Ouro em Higiene</h4>
+        <p>Acompanhe os bastidores do nosso estúdio. Materiais 100% descartáveis, ambiente esterilizado e os melhores pigmentos do mercado internacional.</p>
+        <div class="mid-banner-actions">
+          <button class="btn btn-primary" onclick="event.stopPropagation(); chamarWhatsapp('Gostaria de agendar uma visita ao estúdio.')">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Agendar Visita
+          </button>
+          <button class="btn btn-secondary" onclick="event.stopPropagation(); scrollToId('episodios-row')">
+            Como Funciona
+          </button>
+        </div>
       </div>
     </section>
 
     <!-- PERFURAÇÕES E PIERCING -->
     <section class="row reveal delay-1" id="piercing-row">
-      <h3 class="row-title">Perfurações e piercing</h3>
+      <h3 class="row-title">Perfurações e Piercing</h3>
       <div class="row-container">
         <div class="row-scroller" id="piercing-scroller">
           <article class="card" onclick="chamarWhatsapp('Quero informações sobre piercing de septo.')">
@@ -1218,17 +1224,25 @@
             <div class="card-gradient"></div>
             <div class="card-info">Piercing de septo<small>Cicatrização orientada</small></div>
           </article>
-
           <article class="card" onclick="chamarWhatsapp('Tenho interesse em piercing de orelha múltiplo.')">
             <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3864109/pexels-photo-3864109.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
             <div class="card-gradient"></div>
-            <div class="card-info">Orelha curated<small>Vários pontos</small></div>
+            <div class="card-info">Orelha Curated<small>Vários pontos</small></div>
           </article>
-
           <article class="card" onclick="chamarWhatsapp('Quero saber valores para piercing no umbigo.')">
             <div class="card-img" style="background-image:url('https://images.pexels.com/photos/6311564/pexels-photo-6311564.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
             <div class="card-gradient"></div>
-            <div class="card-info">Umbigo<small>Jóias de qualidade</small></div>
+            <div class="card-info">Umbigo<small>Jóias de Titânio</small></div>
+          </article>
+          <article class="card" onclick="chamarWhatsapp('Quero colocar um piercing no nariz (Nostril).')">
+            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2787341/pexels-photo-2787341.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-gradient"></div>
+            <div class="card-info">Nostril<small>Aba nasal delicada</small></div>
+          </article>
+          <article class="card" onclick="chamarWhatsapp('Preciso trocar a jóia do meu piercing atual.')">
+            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3760852/pexels-photo-3760852.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-gradient"></div>
+            <div class="card-info">Troca de Jóia<small>Assistência Profissional</small></div>
           </article>
         </div>
       </div>
@@ -1236,7 +1250,7 @@
 
     <!-- REMOÇÃO + MICRO -->
     <section class="row reveal delay-2" id="remocao-row">
-      <h3 class="row-title">Remoção de tatuagem a Laser & Micropigmentação</h3>
+      <h3 class="row-title">Remoção a Laser & Micropigmentação</h3>
       <div class="row-container">
         <div class="row-scroller" id="remocao-scroller">
           <article class="card" onclick="chamarWhatsapp('Tenho uma tattoo antiga para remover, quero entender como funcionam as sessões.')">
@@ -1244,25 +1258,108 @@
             <div class="card-gradient"></div>
             <div class="card-info">Remoção a Laser<small>Despigmentação segura</small></div>
           </article>
-
           <article class="card" onclick="chamarWhatsapp('Quero remover ou clarear micropigmentação de sobrancelha.')">
             <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738341/pexels-photo-3738341.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
             <div class="card-gradient"></div>
             <div class="card-info">Micro. Sobrancelha<small>Clareamento / correção</small></div>
           </article>
-
           <article class="card" onclick="chamarWhatsapp('Tenho interesse em remover parcialmente para cobrir depois.')">
             <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738089/pexels-photo-3738089.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
             <div class="card-gradient"></div>
-            <div class="card-info">Remoção + cobertura<small>Projeto planejado</small></div>
+            <div class="card-info">Remoção + Cobertura<small>Projeto planejado</small></div>
+          </article>
+          <article class="card" onclick="chamarWhatsapp('Como é o pós-laser? Dói muito?')">
+            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-gradient"></div>
+            <div class="card-info">Avaliação a Laser<small>Dúvidas Frequentes</small></div>
+          </article>
+          <article class="card" onclick="chamarWhatsapp('Gostaria de saber sobre micropigmentação labial.')">
+            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738341/pexels-photo-3738341.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-gradient"></div>
+            <div class="card-info">Micro. Labial<small>Revitalização</small></div>
           </article>
         </div>
       </div>
     </section>
 
+    <!-- SESSÃO "EPISÓDIOS" (COMO FUNCIONA O ESTÚDIO) -->
+    <section class="episodes-section reveal delay-3" id="episodios-row">
+      <div class="episodes-header">
+        <h3>Temporada 1: Sua Jornada na Pele</h3>
+        <span>Estúdio Napele 67</span>
+      </div>
+      
+      <div class="episode-list">
+        <div class="episode-row" onclick="chamarWhatsapp('Gostaria de começar o Episódio 1: Fazer meu orçamento.')">
+          <div class="episode-number">1</div>
+          <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/4123896/pexels-photo-4123896.jpeg?auto=compress&cs=tinysrgb&w=800');">
+            <div class="episode-play-icon">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="episode-info">
+            <div class="episode-title-bar">
+              <span class="episode-title">O Orçamento via WhatsApp</span>
+              <span class="episode-duration">Etapa 1</span>
+            </div>
+            <p class="episode-desc">Tudo começa com um clique. Envie sua ideia, referências, local do corpo e tamanho aproximado. Nossa equipe filtra, entende a sua visão e te passa estimativas iniciais.</p>
+          </div>
+        </div>
+
+        <div class="episode-row" onclick="chamarWhatsapp('Queria saber como funciona a parte de criação da arte.')">
+          <div class="episode-number">2</div>
+          <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/1702771/pexels-photo-1702771.jpeg?auto=compress&cs=tinysrgb&w=800');">
+            <div class="episode-play-icon">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="episode-info">
+            <div class="episode-title-bar">
+              <span class="episode-title">O Projeto Exclusivo</span>
+              <span class="episode-duration">Etapa 2</span>
+            </div>
+            <p class="episode-desc">Com a data agendada, o tatuador cria uma arte única baseada nas suas ideias. O decalque é testado no seu corpo no dia da sessão para garantir o encaixe perfeito na anatomia.</p>
+          </div>
+        </div>
+
+        <div class="episode-row" onclick="chamarWhatsapp('Como devo me preparar para a sessão de tatuagem?')">
+          <div class="episode-number">3</div>
+          <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');">
+            <div class="episode-play-icon">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="episode-info">
+            <div class="episode-title-bar">
+              <span class="episode-title">O Dia da Sessão (Gravação)</span>
+              <span class="episode-duration">Etapa 3</span>
+            </div>
+            <p class="episode-desc">Venha bem alimentado e descansado. O estúdio oferece um ambiente climatizado e preparado para que sua experiência seja a mais confortável e épica possível.</p>
+          </div>
+        </div>
+
+        <div class="episode-row" onclick="chamarWhatsapp('Quais são os cuidados para a cicatrização?')">
+          <div class="episode-number">4</div>
+          <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/1559821/pexels-photo-1559821.jpeg?auto=compress&cs=tinysrgb&w=800');">
+            <div class="episode-play-icon">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="episode-info">
+            <div class="episode-title-bar">
+              <span class="episode-title">Os Créditos Finais (Cicatrização)</span>
+              <span class="episode-duration">Etapa 4</span>
+            </div>
+            <p class="episode-desc">A tattoo não termina quando você sai do estúdio. Fornecemos um manual completo em PDF para os cuidados das próximas semanas. Nosso WhatsApp segue aberto para acompanhamento.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </div>
 
-  <!-- ========= NOVO CTA CONVERSÃO ========= -->
+  <!-- ========= CTA CONVERSÃO ========= -->
   <section class="cta-premium reveal">
     <div class="cta-premium-inner">
       <h2>Pronto para a sua próxima obra de arte?</h2>
@@ -1280,11 +1377,10 @@
   </section>
 </main>
 
-<!-- ========= NOVO RODAPÉ PREMIUM 3 COLUNAS ========= -->
+<!-- ========= RODAPÉ PREMIUM 3 COLUNAS ========= -->
 <footer class="premium-footer reveal">
   <div class="footer-grid">
     
-    <!-- Coluna 1: Marca e Redes Sociais -->
     <div class="footer-brand">
       <h3>NAPELE 67 TATTOO</h3>
       <p>O NAPELE 67 TATTOO eleva a modificação corporal a um novo patamar, com foco em arte exclusiva e atendimento premium desde a primeira mensagem até a total cicatrização.</p>
@@ -1294,7 +1390,6 @@
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         </a>
         <a href="#" onclick="toggleWppChat()" aria-label="WhatsApp">
-          <!-- Ícone corrigido sem a bola branca -->
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
           </svg>
@@ -1302,7 +1397,6 @@
       </div>
     </div>
 
-    <!-- Coluna 2: Unidades -->
     <div class="footer-units">
       <div class="unit-card">
         <h4>
@@ -1329,9 +1423,7 @@
       </div>
     </div>
 
-    <!-- Coluna 3: Mapa -->
     <div class="footer-map">
-      <!-- Exemplo Google Maps - Substitua com o link correto depois -->
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119642.45173167448!2d-54.68537637841315!3d-20.481232811440626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9486e66e7eaeb743%3A0x6fb878b1d6abf7a9!2sCampo%20Grande%2C%20MS!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
     
@@ -1344,7 +1436,6 @@
 
 <!-- ========= WHATSAPP FLUTUANTE (WIDGET) ========= -->
 <div class="wpp-fab" role="button" aria-label="Abrir chat do WhatsApp" tabindex="0" onclick="toggleWppChat()" onkeypress="if(event.key === 'Enter') toggleWppChat()">
-  <!-- Ícone Oficial do WhatsApp -->
   <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
   </svg>
@@ -1353,13 +1444,11 @@
 <div class="wpp-chat-window" id="wppWindow">
   <div class="wpp-header">
     <div class="wpp-header-title">
-      <!-- Ícone Oficial do WhatsApp -->
       <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </svg>
       Tire suas dúvidas
     </div>
-    <!-- aria-label para botões de fechamento -->
     <button class="wpp-close" aria-label="Fechar chat" onclick="toggleWppChat()">×</button>
   </div>
   
@@ -1386,24 +1475,18 @@
   </div>
 </div>
 
-<!-- ===== MODAL E-MAIL STYLE (DINÂMICO PARA TODOS OS ESTILOS) ===== -->
+<!-- MODAL E-MAIL STYLE -->
 <div class="modal-overlay" id="styleModal">
   <div class="modal-content">
     <button class="modal-close" aria-label="Fechar modal de estilo" onclick="closeStyleModal()">×</button>
     <h2 id="modalTitle" style="margin-bottom: 8px; font-family: 'Times New Roman', serif; font-size: 2.2rem; text-transform: uppercase;">Título do Estilo</h2>
-    <p id="modalDesc" style="color: var(--muted); font-size: 1rem; line-height: 1.5;">
-      Descrição da categoria aqui.
-    </p>
-    
-    <div class="modal-gallery" id="modalGallery">
-      <!-- Imagens inseridas dinamicamente pelo JS -->
-    </div>
+    <p id="modalDesc" style="color: var(--muted); font-size: 1rem; line-height: 1.5;">Descrição da categoria aqui.</p>
+    <div class="modal-gallery" id="modalGallery"></div>
   </div>
 </div>
 
 <script>
-  // ===== LOADER DE ENTRADA =====
-  // Bloqueia a rolagem antes do site carregar
+  // LOADER DE ENTRADA
   document.body.style.overflow = 'hidden';
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -1424,75 +1507,41 @@
     }
 
     let progress = 0;
-    // Velocidade do loader (aleatório para parecer carregamento real)
     const interval = setInterval(() => {
-      progress += Math.random() * 5 + 2; // Incrementa entre 2 e 7 por vez
+      progress += Math.random() * 5 + 2;
       
       if (progress >= 100) {
         progress = 100;
         setProgress(progress);
         clearInterval(interval);
         
-        // Espera um pouco em 100% e remove a tela
         setTimeout(() => {
           overlay.classList.add('hidden');
-          document.body.style.overflow = 'auto'; // Libera o scroll
-          window.scrollTo(0, 0); // Garante que começa do topo
+          document.body.style.overflow = 'auto';
+          window.scrollTo(0, 0);
         }, 500);
       } else {
         setProgress(progress);
       }
-    }, 40); // Roda a cada 40ms
+    }, 40);
   });
 
   const WHATSAPP_NUMERO = "5567992856293";
   let chatStarted = false;
 
-  // ===== DADOS DOS ESTILOS PARA O MODAL =====
   const modalData = {
-    realismo: {
-      title: "Realismo Preto & Cinza",
-      desc: "Projetos complexos com foco profundo em texturas, contrastes e sombras sutis. Feito para impactar com precisão fotográfica."
-    },
-    lettering: {
-      title: "Lettering Chicano",
-      desc: "Escritas com personalidade, fontes exclusivas criadas do zero e forte inspiração na cultura chicana de rua."
-    },
-    oldschool: {
-      title: "Old School",
-      desc: "Traços grossos, cores sólidas e designs clássicos (rosas, adagas, panteras) que resistem ao tempo sem desbotar."
-    },
-    fineline: {
-      title: "Fine Line",
-      desc: "Traços absurdamente finos e precisos, trazendo máxima delicadeza, fluidez e elegância para a pele."
-    },
-    neotradicional: {
-      title: "Neo Tradicional",
-      desc: "Cores vivas, paletas ricas, ilustrações marcantes e uma nova roupagem moderna para o tradicional."
-    },
-    minimalista: {
-      title: "Minimalista",
-      desc: "Pequenas, focadas na essência e muito elegantes. Onde 'menos' é definitivamente 'mais'."
-    },
-    oriental: {
-      title: "Oriental / Irezumi",
-      desc: "Dragões, carpas, samurais e lendas. Arte fluida com fundos poderosos e fechamentos que respeitam a anatomia."
-    },
-    aquarela: {
-      title: "Aquarela",
-      desc: "Cores fluidas e vibrantes, sem a necessidade de contornos pretos definidos, simulando tinta jogada na pele."
-    },
-    pontilhismo: {
-      title: "Pontilhismo / Dotwork",
-      desc: "Sombras, profundidade e formas construídas inteiramente por milhares de pontos detalhados."
-    },
-    geometrico: {
-      title: "Geométrico",
-      desc: "Mandalas, linhas simétricas e padrões com perfeição matemática criados milimetricamente."
-    }
+    realismo: { title: "Realismo Preto & Cinza", desc: "Projetos complexos com foco profundo em texturas, contrastes e sombras sutis. Feito para impactar com precisão fotográfica." },
+    lettering: { title: "Lettering Chicano", desc: "Escritas com personalidade, fontes exclusivas criadas do zero e forte inspiração na cultura chicana de rua." },
+    oldschool: { title: "Old School", desc: "Traços grossos, cores sólidas e designs clássicos (rosas, adagas, panteras) que resistem ao tempo sem desbotar." },
+    fineline: { title: "Fine Line", desc: "Traços absurdamente finos e precisos, trazendo máxima delicadeza, fluidez e elegância para a pele." },
+    neotradicional: { title: "Neo Tradicional", desc: "Cores vivas, paletas ricas, ilustrações marcantes e uma nova roupagem moderna para o tradicional." },
+    minimalista: { title: "Minimalista", desc: "Pequenas, focadas na essência e muito elegantes. Onde 'menos' é definitivamente 'mais'." },
+    oriental: { title: "Oriental / Irezumi", desc: "Dragões, carpas, samurais e lendas. Arte fluida com fundos poderosos e fechamentos que respeitam a anatomia." },
+    aquarela: { title: "Aquarela", desc: "Cores fluidas e vibrantes, sem a necessidade de contornos pretos definidos, simulando tinta jogada na pele." },
+    pontilhismo: { title: "Pontilhismo / Dotwork", desc: "Sombras, profundidade e formas construídas inteiramente por milhares de pontos detalhados." },
+    geometrico: { title: "Geométrico", desc: "Mandalas, linhas simétricas e padrões com perfeição matemática criados milimetricamente." }
   };
 
-  // Banco de imagens de teste que serão embaralhadas
   const testImages = [
     "https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800",
     "https://images.pexels.com/photos/1702770/pexels-photo-1702770.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -1502,7 +1551,6 @@
     "https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800"
   ];
 
-  // ===== ROLAGEM SUAVE DOS LINKS =====
   function scrollToId(id) {
     const el = document.getElementById(id);
     if (el) {
@@ -1510,7 +1558,6 @@
     }
   }
 
-  // ===== DRAG TO SCROLL (Navegação por arrasto MOUSE e TOUCH) =====
   const scrollers = document.querySelectorAll('.row-scroller');
   let isDown = false;
   let startX;
@@ -1518,7 +1565,6 @@
   let isDragging = false;
 
   scrollers.forEach(scroller => {
-    // Mouse Events para Desktop
     scroller.addEventListener('mousedown', (e) => {
       isDown = true;
       isDragging = false; 
@@ -1535,7 +1581,6 @@
     scroller.addEventListener('mouseup', () => {
       isDown = false;
       scroller.classList.remove('active-drag');
-      // Delay reset de clique para que o botão não ative pós arrasto
       setTimeout(() => { isDragging = false; }, 50);
     });
     
@@ -1544,16 +1589,14 @@
       e.preventDefault();
       
       const x = e.pageX - scroller.offsetLeft;
-      const walk = (x - startX) * 2; // Velocidade do arraste no mouse
+      const walk = (x - startX) * 2;
       
-      // Se moveu mais que 5 pixels, é considerado um arrasto (bloqueia o click do modal)
       if (Math.abs(walk) > 5) {
           isDragging = true;
       }
       scroller.scrollLeft = scrollLeft - walk;
     });
 
-    // Bloquear clique acidental após arrastar
     scroller.addEventListener('click', (e) => {
       if (isDragging) {
         e.preventDefault();
@@ -1562,7 +1605,6 @@
     }, true); 
   });
 
-  // ===== MODAL LOGIC DINÂMICO =====
   function openStyleModal(styleKey) {
     const data = modalData[styleKey];
     if(!data) return;
@@ -1570,9 +1612,7 @@
     document.getElementById('modalTitle').innerText = data.title;
     document.getElementById('modalDesc').innerHTML = data.desc + '<br/><br/><small style="color:#777;">(Imagens de banco de dados utilizadas apenas para testes)</small>';
     
-    // Embaralha as imagens e as marca com loading="lazy"
     const shuffledImages = [...testImages].sort(() => 0.5 - Math.random());
-    
     const gallery = document.getElementById('modalGallery');
     gallery.innerHTML = shuffledImages.map(img => `<img src="${img}" alt="Exemplo de arte na pele estilo ${data.title}" loading="lazy">`).join('');
 
@@ -1593,7 +1633,6 @@
     }
   });
 
-  // ===== WIDGET WHATSAPP =====
   function chamarWhatsapp(mensagemPronta) {
     const mensagem = encodeURIComponent(mensagemPronta);
     window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${mensagem}`, "_blank");
@@ -1627,7 +1666,6 @@
     }
   }
 
-  // ===== ATUALIZAR TOPO NAVBAR =====
   const topNav = document.getElementById("topNav");
   function atualizarTopo() {
     if (window.scrollY > 50) {
@@ -1639,7 +1677,6 @@
   window.addEventListener("scroll", atualizarTopo);
   atualizarTopo();
 
-  // ===== OBSERVER (ANIMAÇÕES SCROLL REVEAL) =====
   document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("year").textContent = new Date().getFullYear();
 
