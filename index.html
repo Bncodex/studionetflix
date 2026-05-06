@@ -28,7 +28,6 @@
       padding: 0;
     }
 
-    /* OTIMIZAÇÃO: Correção do bug da Dupla Barra de Rolagem */
     html {
       width: 100%;
     }
@@ -40,7 +39,7 @@
       scroll-behavior: smooth;
       position: relative; 
       width: 100%;
-      overflow-x: hidden; /* Mantido apenas no body para evitar conflitos de renderização no iOS */
+      overflow-x: hidden;
     }
 
     /* 1. PROFUNDIDADE (VIBE CINEMÁTICA): Ruído de filme sutil (Film Grain) */
@@ -52,25 +51,26 @@
       z-index: 9999;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
       opacity: 0.8;
-      /* OTIMIZAÇÃO: Aceleração por hardware */
       transform: translateZ(0);
     }
 
-    /* BRILHO AMBIENTE FIXO (SEGUE O SCROLL PARA PREENCHER O VAZIO) */
+    /* BRILHO AMBIENTE FIXO */
     .ambient-glow {
       position: fixed;
       top: 15vh;
       left: -15vw;
       width: 60vw;
       height: 80vh;
-      /* OTIMIZAÇÃO DE GPU: Gradiente suave nativo no lugar de 'filter: blur()' que travava o scroll */
       background: radial-gradient(circle at center, rgba(229, 9, 20, 0.12) 0%, rgba(229, 9, 20, 0.05) 40%, transparent 70%);
       pointer-events: none;
       z-index: 1; 
       mix-blend-mode: screen; 
-      animation: pulseGlow 6s infinite alternate ease-in-out;
       transform: translateZ(0);
-      will-change: opacity;
+      opacity: 0; /* Esconde no carregamento */
+    }
+
+    body.loaded .ambient-glow {
+      animation: pulseGlow 6s infinite alternate ease-in-out 1s; /* Inicia o pulso após 1s da tela carregada */
     }
 
     @keyframes pulseGlow { 
@@ -78,7 +78,6 @@
       100% { opacity: 1; } 
     }
 
-    /* 2. ACESSIBILIDADE: Anel de foco para teclado (Padrão Netflix) */
     *:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 4px;
@@ -90,63 +89,77 @@
       text-decoration: none;
     }
 
-    /* ===== LOADER DE ENTRADA (NETFLIX STYLE) ===== */
-    .loader-overlay {
+    /* ===== NOVO LOADER PREMIUM (SLIDING DOORS / LASER CUT) ===== */
+    .loader-wrapper {
       position: fixed;
       inset: 0;
-      background: #000000;
       z-index: 99999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.6s ease, visibility 0.6s ease, transform 0.8s ease;
-    }
-    
-    .loader-overlay.hidden {
-      opacity: 0;
-      visibility: hidden;
-      transform: scale(1.1);
+      pointer-events: none;
     }
 
-    .loader-circle {
-      position: relative;
-      width: 140px;
-      height: 140px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 40px rgba(229, 9, 20, 0.1);
-      border-radius: 50%;
-    }
-
-    .progress-ring {
+    .loader-half {
       position: absolute;
       top: 0;
-      left: 0;
-      width: 100%;
+      height: 100vh;
+      width: 50vw;
+      background: #050505;
+      z-index: 1;
+      transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1) 0.5s;
+      pointer-events: auto; /* Bloqueia cliques até a animação acabar */
+    }
+    
+    .loader-left { left: 0; }
+    .loader-right { right: 0; }
+
+    /* Barra central fina e elegante */
+    .loader-line-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 150px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.08);
+      z-index: 2;
+      /* Animação que faz a linha encolher na largura e crescer na altura formando o feixe */
+      transition: width 0.4s cubic-bezier(0.86, 0, 0.07, 1) 0.1s, 
+                  height 0.4s cubic-bezier(0.86, 0, 0.07, 1) 0.1s,
+                  opacity 0.3s ease 0.8s;
+    }
+
+    .loader-line-fill {
       height: 100%;
-      transform: rotate(-90deg);
-      filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.6));
+      width: 0%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      transition: width 0.1s linear;
     }
 
-    .progress-ring__circle-bg {
-      stroke: rgba(255, 255, 255, 0.05);
+    /* Classes acionadas pelo JS quando carrega (body.loaded) */
+    body.loaded .loader-left { transform: translateX(-100%); }
+    body.loaded .loader-right { transform: translateX(100%); }
+    
+    body.loaded .loader-line-container {
+      width: 2px; /* Transforma a linha horizontal em vertical */
+      height: 100vh; /* Corta a tela de cima a baixo */
+      opacity: 0;
     }
 
-    .progress-ring__circle {
-      stroke: var(--accent);
-      stroke-dasharray: 439.822; 
-      stroke-dashoffset: 439.822;
-      transition: stroke-dashoffset 0.05s linear;
-      stroke-linecap: round;
+    body.loaded .loader-wrapper {
+      visibility: hidden;
+      transition: visibility 0s linear 1.5s; /* Remove o loader do DOM visualmente para não bugar cliques */
     }
 
-    .loader-text {
-      font-family: "Anton", sans-serif;
-      font-size: 2rem;
-      color: var(--text);
-      letter-spacing: 2px;
-      text-shadow: 0 2px 10px rgba(229, 9, 20, 0.5);
+    /* O site vem de trás com profundidade */
+    .site-content {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 1s ease 0.4s, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s;
+    }
+
+    body.loaded .site-content {
+      opacity: 1;
+      transform: none; /* CORREÇÃO DO BUG: Remove o scale para não quebrar a posição fixa do WhatsApp */
     }
 
     /* ===== ANIMAÇÕES (EFEITOS DE SCROLL) ===== */
@@ -174,10 +187,16 @@
       right: 0;
       z-index: 50;
       background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
-      transition: background 0.4s ease, backdrop-filter 0.4s ease, padding 0.4s ease;
-      padding-top: 20px;
-      padding-bottom: 30px;
       transform: translateZ(0);
+      /* Oculta no momento do load para dar o efeito de entrada em cascata */
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    body.loaded .top-nav {
+      opacity: 1;
+      pointer-events: auto;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease, padding 0.4s ease, opacity 1s ease 0.8s;
     }
 
     .top-nav.solid {
@@ -273,7 +292,6 @@
       overflow: hidden;
     }
 
-    /* OTIMIZAÇÃO: Trocado 'blur' pesado por gradiente suave com fade */
     .hero::before {
       content: "";
       position: absolute;
@@ -319,7 +337,7 @@
     }
 
     .hero-content {
-      max-width: 600px; 
+      max-width: 600px;
     }
 
     .hero-type {
@@ -441,6 +459,13 @@
       box-shadow: 0 0 20px rgba(255,255,255,0.1);
     }
 
+    .hero-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
     /* ===== ÁREA PRINCIPAL DAS LISTAS ===== */
     main {
       margin-top: 0;
@@ -469,6 +494,18 @@
       font-weight: 600;
       color: #ffffff;
       letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .row-title-badge {
+      background: var(--accent);
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+      text-transform: uppercase;
     }
 
     .row-container {
@@ -489,8 +526,8 @@
       cursor: grab;
       user-select: none;
       -webkit-user-select: none;
-      -webkit-overflow-scrolling: touch; /* Suavidade nativa no iOS */
-      transform: translateZ(0); /* Aceleração de hardware */
+      -webkit-overflow-scrolling: touch; 
+      transform: translateZ(0); 
     }
     
     .row-scroller.active-drag {
@@ -509,7 +546,7 @@
       border-radius: 6px;
       overflow: hidden;
       position: relative;
-      background: #000; /* Fundo preto obrigatório para a opacidade funcionar */
+      background: #000; 
       cursor: pointer;
       transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
     }
@@ -520,7 +557,6 @@
       z-index: 5;
     }
 
-    /* OTIMIZAÇÃO: Opacidade sobre fundo preto ao invés de filtro CSS (Resolve travamentos) */
     .card-img {
       position: absolute;
       inset: 0;
@@ -583,7 +619,7 @@
     /* ===== TOP 10 – ESTILO NETFLIX ===== */
     .top10-card {
       position: relative;
-      flex: 0 0 335px; /* Trava a largura pro Safari iOS não amassar */
+      flex: 0 0 335px; 
       width: 335px;
       height: 280px;   
       display: flex;
@@ -665,12 +701,11 @@
       border-radius: 8px;
       overflow: hidden;
       margin: 40px 0 60px 0;
-      background: #000; /* Previne bug se a imagem demorar */
+      background: #000; 
       display: flex;
       align-items: center;
     }
 
-    /* OTIMIZAÇÃO: Retirada de Filter e uso de Opacity */
     .mid-banner-img {
       position: absolute;
       inset: 0;
@@ -934,10 +969,25 @@
     @media (hover: hover) { .footer-map iframe:hover { filter: grayscale(0%) contrast(1) opacity(1); } }
     .footer-bottom { text-align: center; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); color: #555; font-size: 0.85rem; max-width: 1200px; margin: 0 auto; }
 
-    /* ===== WHATSAPP WIDGET ===== */
-    .wpp-fab { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: var(--accent-grad); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 25px rgba(229, 9, 20, 0.5); z-index: 100; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: #fff; }
-    @media (hover: hover) { .wpp-fab:hover { transform: scale(1.15) rotate(5deg); } }
-    .wpp-fab svg { width: 36px; height: 36px; }
+    /* ===== WHATSAPP E INSTAGRAM WIDGETS ===== */
+    .wpp-fab, .ig-fab { 
+      position: fixed; right: 30px; width: 65px; height: 65px; background: var(--accent-grad); 
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; 
+      box-shadow: 0 10px 25px rgba(229, 9, 20, 0.5); color: #fff; 
+      /* Oculta no momento do load para dar o efeito de entrada em cascata */
+      opacity: 0; pointer-events: none;
+    }
+    
+    .wpp-fab { bottom: 30px; z-index: 100; }
+    .ig-fab { bottom: 110px; z-index: 98; text-decoration: none; } /* Z-index 98 para ficar atrás do chat quando aberto */
+
+    body.loaded .wpp-fab, body.loaded .ig-fab {
+      opacity: 1; pointer-events: auto;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s ease 1s;
+    }
+
+    @media (hover: hover) { .wpp-fab:hover, .ig-fab:hover { transform: scale(1.15) rotate(5deg); } }
+    .wpp-fab svg, .ig-fab svg { width: 36px; height: 36px; }
     .wpp-chat-window { position: fixed; bottom: 110px; right: 30px; width: 360px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.8); z-index: 99; display: none; flex-direction: column; overflow: hidden; transform-origin: bottom right; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     @keyframes popIn { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
     .wpp-header { background: var(--accent-grad); padding: 18px; display: flex; align-items: center; justify-content: space-between; }
@@ -973,14 +1023,13 @@
     @media (max-width: 900px) {
       .nav-links { display: none; }
       
-      /* OTIMIZAÇÃO: Desativa o Filtro SVG (Filmgrain) em dispositivos móveis, pois ele mata o FPS do Safari iOS durante o Scroll */
+      /* OTIMIZAÇÃO: Desativa o Filtro SVG (Filmgrain) em dispositivos móveis */
       body::after { display: none; }
       
       .ambient-glow { 
         width: 120vw; 
         left: -40vw; 
         top: 20vh; 
-        /* OTIMIZAÇÃO: Remove o Mix-Blend-Mode no mobile para evitar lag na GPU */
         mix-blend-mode: normal;
       }
       
@@ -998,7 +1047,6 @@
       .footer-grid { grid-template-columns: 1fr; gap: 40px; }
       .footer-brand h3 { font-size: 2rem; }
       
-      /* Ajustes Mobile do Padrão Ouro */
       .mid-banner { height: auto; }
       .mid-banner-inner { flex-direction: column; padding: 40px 0; align-items: flex-start; text-align: left; }
       .mid-banner-content { padding: 0 20px; max-width: 100%; margin-bottom: 10px; }
@@ -1034,14 +1082,13 @@
         top: auto !important;
         left: auto !important;
         right: auto !important;
-        flex: 0 0 85%; 
+        flex: 0 0 85%; /* Ocupa 85% da tela para deixar a próxima pontinha aparecendo */
         scroll-snap-align: center;
-        animation: none; 
+        animation: none; /* Remove a animação de flutuar no mobile para facilitar a leitura */
       }
       .floating-review {
         width: 100%;
         height: 100%;
-        /* OTIMIZAÇÃO: Desativa vidro fosco no mobile para rolagem a 60fps */
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
         background: rgba(20, 20, 20, 0.95);
@@ -1051,7 +1098,7 @@
       .episode-number { display: none; }
       .episode-thumb { width: 100px; height: 60px; }
       
-      /* Garante que o botão play sempre apareça no mobile (já que não há hover) */
+      /* Garante que o botão play sempre apareça no mobile */
       .episode-play-icon {
         opacity: 1;
         background: rgba(0,0,0,0.7);
@@ -1091,8 +1138,11 @@
       .premium-footer { padding: 50px 16px 20px; }
       .footer-grid { gap: 30px; }
       .footer-brand h3 { font-size: 1.8rem; }
-      .wpp-chat-window { width: calc(100vw - 32px); right: 16px; bottom: 90px; }
+      
+      /* Ajuste dinâmico dos widgets no Mobile */
       .wpp-fab { right: 16px; bottom: 16px; width: 55px; height: 55px; }
+      .ig-fab { right: 16px; bottom: 85px; width: 55px; height: 55px; }
+      .wpp-chat-window { width: calc(100vw - 32px); right: 16px; bottom: 90px; }
       
       .episode-thumb { width: 80px; height: 50px; }
       .episode-row { gap: 15px; padding: 10px;}
@@ -1101,14 +1151,12 @@
 </head>
 <body>
 
-<!-- LOADER -->
-<div id="loader-overlay" class="loader-overlay">
-  <div class="loader-circle">
-    <svg class="progress-ring" viewBox="0 0 150 150">
-      <circle class="progress-ring__circle-bg" stroke-width="4" fill="transparent" r="70" cx="75" cy="75"/>
-      <circle id="progress-ring-circle" class="progress-ring__circle" stroke-width="4" fill="transparent" r="70" cx="75" cy="75"/>
-    </svg>
-    <div id="loader-text" class="loader-text">0%</div>
+<!-- NOVO LOADER PREMIUM (SLIDING DOORS / LASER CUT) -->
+<div id="loader-wrapper" class="loader-wrapper">
+  <div class="loader-half loader-left"></div>
+  <div class="loader-half loader-right"></div>
+  <div class="loader-line-container">
+    <div id="loader-progress-fill" class="loader-line-fill"></div>
   </div>
 </div>
 
@@ -1125,499 +1173,503 @@
       <div class="nav-links">
         <span onclick="scrollToId('inicio')">Início</span>
         <span onclick="scrollToId('top10')">Estilos</span>
-        <span onclick="scrollToId('piercing-row')">Piercing</span>
-        <span onclick="scrollToId('remocao-row')">Remoção</span>
+        <span onclick="scrollToId('servicos-tattoo')">Tatuagem</span>
+        <span onclick="scrollToId('servicos-piercing')">Piercing</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- CAPA -->
-<section class="hero reveal" id="inicio">
-  <div class="hero-image-wrapper">
-    <img src="./img/tatuador.jpg" alt="" />
-  </div>
-
-  <div class="hero-inner">
-    <div class="hero-content">
-      <div class="hero-type reveal delay-1">SÉRIE ORIGINAL</div>
-      <div class="hero-badge reveal delay-1">
-        <div class="pill">Top 1</div>
-        em exclusividade na pele
-      </div>
-      <h1 class="hero-title reveal delay-2">Sua Próxima<br/>Tattoo</h1>
-      <p class="hero-desc reveal delay-3">
-        Escolha seu projeto como quem maratona uma série: Realismo, Lettering, Old School e mais. Direto na pele com maestria, criado sob medida por artistas que entendem de arte e anatomia.
-      </p>
-      <div class="hero-buttons reveal delay-3">
-        <button class="btn btn-primary" onclick="toggleWppChat()">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
-          </svg>
-          Agende seu orçamento
-        </button>
-        <button class="btn btn-secondary" onclick="scrollToId('top10')">
-          <svg style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-          Ver Catálogo Completo
-        </button>
-      </div>
+<!-- CONTEÚDO PRINCIPAL (COM A ANIMAÇÃO DE ENTRADA) -->
+<div class="site-content">
+  <!-- CAPA -->
+  <section class="hero reveal" id="inicio">
+    <div class="hero-image-wrapper">
+      <img src="./img/tatuador.jpg" alt="" />
     </div>
-  </div>
-</section>
 
-<!-- MAIN -->
-<main>
-  <div class="rows">
-
-    <!-- TOP 10 ESTILOS -->
-    <section class="row reveal" id="top10">
-      <h3 class="row-title">Brasil: Top 10 Estilos de Tatuagem</h3>
-      <div class="row-container">
-        <div class="row-scroller" id="top10-scroller">
-          
-          <div class="top10-card" onclick="openStyleModal('realismo')">
-            <div class="top10-number">1</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Realismo<small>Preto e cinza</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('finotraco')">
-            <div class="top10-number">2</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2709388/pexels-photo-2709388.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Fino Traço<small>Linhas delicadas</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('lettering')">
-            <div class="top10-number">3</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2255355/pexels-photo-2255355.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Lettering<small>Chicano • Escritas</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('oldschool')">
-            <div class="top10-number">4</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702772/pexels-photo-1702772.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Old School<small>Tradicional • Traços Grossos</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('blackwork')">
-            <div class="top10-number">5</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123890/pexels-photo-4123890.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Black work<small>& Suminagashi</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('oriental')">
-            <div class="top10-number">6</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Oriental japonês<small>Irezumi</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('maori')">
-            <div class="top10-number">7</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123896/pexels-photo-4123896.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Maori<small>& Tribal</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('colorido')">
-            <div class="top10-number">8</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702771/pexels-photo-1702771.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Colorido<small>Cores Vivas</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('anime')">
-            <div class="top10-number">9</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702770/pexels-photo-1702770.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Anime<small>& Geek</small></div>
-            </div>
-          </div>
-          <div class="top10-card" onclick="openStyleModal('minimalista')">
-            <div class="top10-number">10</div>
-            <div class="top10-card-inner">
-              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123891/pexels-photo-4123891.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-              <div class="card-gradient"></div>
-              <div class="card-info">Minimalista<small>Pequena • Elegante</small></div>
-            </div>
-          </div>
-
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-type reveal delay-1">SÉRIE ORIGINAL</div>
+        <div class="hero-badge reveal delay-1">
+          <div class="pill">Top 1</div>
+          em exclusividade na pele
+        </div>
+        <h1 class="hero-title reveal delay-2">Sua Próxima<br/>Tattoo</h1>
+        <p class="hero-desc reveal delay-3">
+          Escolha seu projeto como quem maratona uma série: Realismo, Lettering, Old School e mais. Direto na pele com maestria, criado sob medida por artistas que entendem de arte e anatomia.
+        </p>
+        <div class="hero-buttons reveal delay-3">
+          <button class="btn btn-primary" onclick="toggleWppChat()">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Agende seu orçamento
+          </button>
+          <button class="btn btn-secondary" onclick="scrollToId('top10')">
+            <svg style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Ver Catálogo Completo
+          </button>
         </div>
       </div>
-    </section>
-
-    <!-- CONTINUE ASSISTINDO -->
-    <section class="row reveal delay-1">
-      <h3 class="row-title">Continue o seu projeto</h3>
-      <div class="row-container">
-        <div class="row-scroller">
-          
-          <article class="card" onclick="chamarWhatsapp('Quero continuar meu projeto de fechamento de braço.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738089/pexels-photo-3738089.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Fechamento Braço<small>Sessão 3 de 5</small></div>
-            <div class="card-progress-bar"><div class="card-progress-fill" style="width: 60%;"></div></div>
-          </article>
-
-          <article class="card" onclick="chamarWhatsapp('Quero continuar meu projeto de costas.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Projeto Costas<small>Sessão 1 de 6</small></div>
-            <div class="card-progress-bar"><div class="card-progress-fill" style="width: 15%;"></div></div>
-          </article>
-
-          <article class="card" onclick="chamarWhatsapp('Quero marcar o retorno para retoque.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Retoque Especial<small>Fase final</small></div>
-            <div class="card-progress-bar"><div class="card-progress-fill" style="width: 90%;"></div></div>
-          </article>
-          
-          <article class="card" onclick="chamarWhatsapp('Quero saber sobre projeto de perna.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702772/pexels-photo-1702772.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Perna Completa<small>Projeto em criação</small></div>
-            <div class="card-progress-bar"><div class="card-progress-fill" style="width: 5%;"></div></div>
-          </article>
-
-          <article class="card" onclick="chamarWhatsapp('Dúvida sobre cobertura de tatuagem antiga.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2255355/pexels-photo-2255355.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Cobertura (Cover Up)<small>Sessão 2 de 3</small></div>
-            <div class="card-progress-bar"><div class="card-progress-fill" style="width: 66%;"></div></div>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- PERFURAÇÕES E PIERCING (Agora acima do Padrão Ouro) -->
-    <section class="row reveal delay-1" id="piercing-row">
-      <h3 class="row-title">Perfurações e Piercing</h3>
-      <div class="row-container">
-        <div class="row-scroller" id="piercing-scroller">
-          <article class="card" onclick="chamarWhatsapp('Quero informações sobre piercing de septo.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3760852/pexels-photo-3760852.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Piercing de septo<small>Cicatrização orientada</small></div>
-          </article>
-          <article class="card" onclick="chamarWhatsapp('Tenho interesse em piercing de orelha múltiplo.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3864109/pexels-photo-3864109.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Orelha Curated<small>Vários pontos</small></div>
-          </article>
-          <article class="card" onclick="chamarWhatsapp('Quero saber valores para piercing no umbigo.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/6311564/pexels-photo-6311564.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Umbigo<small>Jóias de Titânio</small></div>
-          </article>
-          <article class="card" onclick="chamarWhatsapp('Quero colocar um piercing no nariz (Nostril).')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2787341/pexels-photo-2787341.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Nostril<small>Aba nasal delicada</small></div>
-          </article>
-          <article class="card" onclick="chamarWhatsapp('Preciso trocar a jóia do meu piercing atual.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3760852/pexels-photo-3760852.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Troca de Jóia<small>Assistência Profissional</small></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- REMOÇÃO + MICRO (Agora acima do Padrão Ouro) -->
-    <section class="row reveal delay-2" id="remocao-row">
-      <h3 class="row-title">Remoção a Laser & Micropigmentação</h3>
-      <div class="row-container">
-        <div class="row-scroller" id="remocao-scroller">
-          <article class="card" onclick="chamarWhatsapp('Tenho uma tattoo antiga para remover, quero entender como funcionam as sessões.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Remoção a Laser<small>Despigmentação segura</small></div>
-          </article>
-          <article class="card" onclick="chamarWhatsapp('Quero remover ou clarear micropigmentação de sobrancelha.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738341/pexels-photo-3738341.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Micro. Sobrancelha<small>Clareamento / correção</small></div>
-          </article>
-          <article class="card" onclick="chamarWhatsapp('Tenho interesse em remover parcialmente para cobrir depois.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738089/pexels-photo-3738089.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Remoção + Cobertura<small>Projeto planejado</small></div>
-          </article>
-          <article class="card" onclick="chamarWhatsapp('Como é o pós-laser? Dói muito?')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Avaliação a Laser<small>Dúvidas Frequentes</small></div>
-          </article>
-          <article class="card" onclick="chamarWhatsapp('Gostaria de saber sobre micropigmentação labial.')">
-            <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738341/pexels-photo-3738341.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
-            <div class="card-gradient"></div>
-            <div class="card-info">Micro. Labial<small>Revitalização</small></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- BANNER INTERMEDIÁRIO (AGORA: AVALIAÇÕES FLUTUANTES) -->
-    <section class="mid-banner reveal delay-2">
-      <div class="mid-banner-img"></div>
-      <div class="mid-banner-gradient"></div>
-      
-      <div class="mid-banner-inner">
-        <div class="mid-banner-content">
-          <h4>Padrão Ouro 5 Estrelas no Google</h4>
-          <p>A experiência Napele 67 vai além da pele. Veja o que nossos clientes reais estão falando sobre nosso estúdio e atendimento de excelência.</p>
-          <div class="mid-banner-actions">
-            <button class="btn btn-primary" onclick="event.stopPropagation(); chamarWhatsapp('Gostaria de agendar uma visita ao estúdio.')">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Agendar Visita
-            </button>
-            <button class="btn btn-secondary" onclick="event.stopPropagation(); scrollToId('episodios-row')">
-              Como Funciona
-            </button>
-          </div>
-        </div>
-
-        <!-- NOVO BOTÃO 5 ESTRELAS NO CANTO INFERIOR ESQUERDO -->
-        <a href="https://www.google.com/search?q=studio+de+tatuagem+campo+grande&sca_esv=39f50cfd4d7ec138&sxsrf=ANbL-n6FlcXd8M52QEybvpfEdJRohpWueQ:1778005838199&udm=1&lsack=Tjf6adbiC6rB5OUPirr28AU&sa=X&ved=2ahUKEwjWwZPz46KUAxWqILkGHQqdHV4QjGp6BAgpEAA&biw=1920&bih=911&dpr=1#sv=CAwS2wMKBmxjbF9wdhJPCgNwdnESSENnMHZaeTh4TVd4eU9UaHpOWFJxSWlVS0gzTjBkV1JwYnlCa1pTQjBZWFIxWVdkbGJTQmpZVzF3YnlCbmNtRnVaR1VRQWhnRBLnAQoDbHFpEt8BQ2g5emRIVmthVzhnWkdVZ2RHRjBkV0ZuWlcwZ1kyRnRjRzhnWjNKaGJtUmxTTEN1c0pUZHNvQ0FDRm94RUFBUUFSQUNFQU1RQkJnQ0dBTVlCQ0lmYzNSMVpHbHZJR1JsSUhSaGRIVmhaMlZ0SUdOaGJYQnZJR2R5WVc1a1paSUJHSFJoZEhSdmIxOWhibVJmY0dsbGNtTnBibWRmYzJodmNKb0JKRU5vWkVSVFZXaE9UVWM1YmxNd1ZrcFJNRVp1VkZWU1FtRkdiRWhWUkdSdVVsSkJRdm9CQkFnQUVEcxJcCgN0YnMSVWxyZjohMm00ITFlMTUhNG0yITE1bTEhMXNoYXNfMXdoZWVsY2hhaXJfMWFjY2Vzc2libGVfMWVudHJhbmNlITJtMSExZTIhMm0xITFlMyEzc0lBRT0SJAoBcRIfc3R1ZGlvIGRlIHRhdHVhZ2VtIGNhbXBvIGdyYW5kZRoSbG9jYWwtcGxhY2Utdmlld2VyGAogrOnCiwU" target="_blank" class="btn-google-stars">
-          Veja como somos 5 estrelas <span class="stars">★★★★★</span>
-        </a>
-
-        <!-- CONTÊINER DOS CARDS FLUTUANTES 3D -->
-        <div class="floating-reviews-container">
-          
-          <div class="floating-wrapper r-1">
-            <article class="floating-review" onclick="window.open('https://maps.app.goo.gl/49AF1djgYM83dsf17', '_blank')">
-              <div class="review-header">
-                <div class="review-author-info">
-                  <div class="review-avatar">M</div>
-                  <div>
-                    <span class="review-name">Mateus Silva</span>
-                    <span class="review-date">Avaliação verificada</span>
-                  </div>
-                </div>
-                <svg class="google-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-              </div>
-              <div class="review-stars">★★★★★</div>
-              <p class="review-text">Atendimento impecável! O estúdio é lindo, super higienizado e os tatuadores são verdadeiros artistas.</p>
-            </article>
-          </div>
-
-          <div class="floating-wrapper r-2">
-            <article class="floating-review" onclick="window.open('https://maps.app.goo.gl/hosEKSqym5kFskPF8', '_blank')">
-              <div class="review-header">
-                <div class="review-author-info">
-                  <div class="review-avatar" style="background: linear-gradient(135deg, #109d58, #056633);">A</div>
-                  <div>
-                    <span class="review-name">Ana Carolina</span>
-                    <span class="review-date">Avaliação verificada</span>
-                  </div>
-                </div>
-                <svg class="google-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-              </div>
-              <div class="review-stars">★★★★★</div>
-              <p class="review-text">Melhor experiência que já tive. Traço fino perfeito e a cicatrização foi super tranquila com as orientações deles.</p>
-            </article>
-          </div>
-
-          <div class="floating-wrapper r-3">
-            <article class="floating-review" onclick="window.open('https://maps.app.goo.gl/hoXp1ZSLwy6SWytu8', '_blank')">
-              <div class="review-header">
-                <div class="review-author-info">
-                  <div class="review-avatar" style="background: linear-gradient(135deg, #4285F4, #0b4ab3);">R</div>
-                  <div>
-                    <span class="review-name">Rafael Costa</span>
-                    <span class="review-date">Avaliação verificada</span>
-                  </div>
-                </div>
-                <svg class="google-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-              </div>
-              <div class="review-stars">★★★★★</div>
-              <p class="review-text">Lugar sensacional. Biossegurança nota 1000. Fizeram meu fechamento e a arte ficou muito além do que eu imaginava.</p>
-            </article>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- SESSÃO "EPISÓDIOS" (COMO FUNCIONA O ESTÚDIO) -->
-    <section class="episodes-section reveal delay-3" id="episodios-row">
-      <div class="episodes-header">
-        <h3>Temporada 1: Sua Jornada na Pele</h3>
-        <span>Estúdio Napele 67</span>
-      </div>
-      
-      <div class="episode-list">
-        <div class="episode-row" onclick="chamarWhatsapp('Gostaria de começar o Episódio 1: Fazer meu orçamento.')">
-          <div class="episode-number">1</div>
-          <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/4123896/pexels-photo-4123896.jpeg?auto=compress&cs=tinysrgb&w=800');">
-            <div class="episode-play-icon">
-              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </div>
-          </div>
-          <div class="episode-info">
-            <div class="episode-title-bar">
-              <span class="episode-title">O Orçamento via WhatsApp</span>
-              <span class="episode-duration">Etapa 1</span>
-            </div>
-            <p class="episode-desc">Tudo começa com um clique. Envie sua ideia, referências, local do corpo e tamanho aproximado. Nossa equipe filtra, entende a sua visão e te passa estimativas iniciais.</p>
-          </div>
-        </div>
-
-        <div class="episode-row" onclick="chamarWhatsapp('Queria saber como funciona a parte de criação da arte.')">
-          <div class="episode-number">2</div>
-          <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/1702771/pexels-photo-1702771.jpeg?auto=compress&cs=tinysrgb&w=800');">
-            <div class="episode-play-icon">
-              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </div>
-          </div>
-          <div class="episode-info">
-            <div class="episode-title-bar">
-              <span class="episode-title">O Projeto Exclusivo</span>
-              <span class="episode-duration">Etapa 2</span>
-            </div>
-            <p class="episode-desc">Com a data agendada, o tatuador cria uma arte única baseada nas suas ideias. O decalque é testado no seu corpo no dia da sessão para garantir o encaixe perfeito na anatomia.</p>
-          </div>
-        </div>
-
-        <div class="episode-row" onclick="chamarWhatsapp('Como devo me preparar para a sessão de tatuagem?')">
-          <div class="episode-number">3</div>
-          <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');">
-            <div class="episode-play-icon">
-              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </div>
-          </div>
-          <div class="episode-info">
-            <div class="episode-title-bar">
-              <span class="episode-title">O Dia da Sessão (Gravação)</span>
-              <span class="episode-duration">Etapa 3</span>
-            </div>
-            <p class="episode-desc">Venha bem alimentado e descansado. O estúdio oferece um ambiente climatizado e preparado para que sua experiência seja a mais confortável e épica possível.</p>
-          </div>
-        </div>
-
-        <div class="episode-row" onclick="chamarWhatsapp('Quais são os cuidados para a cicatrização?')">
-          <div class="episode-number">4</div>
-          <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/1559821/pexels-photo-1559821.jpeg?auto=compress&cs=tinysrgb&w=800');">
-            <div class="episode-play-icon">
-              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </div>
-          </div>
-          <div class="episode-info">
-            <div class="episode-title-bar">
-              <span class="episode-title">Os Créditos Finais (Cicatrização)</span>
-              <span class="episode-duration">Etapa 4</span>
-            </div>
-            <p class="episode-desc">A tattoo não termina quando você sai do estúdio. Fornecemos um manual completo em PDF para os cuidados das próximas semanas. Nosso WhatsApp segue aberto para acompanhamento.</p>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-  </div>
-
-  <!-- ========= CTA CONVERSÃO ========= -->
-  <section class="cta-premium reveal">
-    <div class="cta-premium-inner">
-      <h2>Pronto para a sua próxima obra de arte?</h2>
-      <p>
-        Sua pele merece dedicação total. Conecte-se com a nossa equipe agora mesmo e dê o primeiro passo para tirar o seu projeto do papel e torná-lo realidade.
-      </p>
-      <button class="btn-cta" onclick="toggleWppChat()">
-        <!-- Ícone Oficial do WhatsApp -->
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-        Falar com a Equipe
-      </button>
     </div>
   </section>
-</main>
 
-<!-- ========= RODAPÉ PREMIUM 3 COLUNAS ========= -->
-<footer class="premium-footer reveal">
-  <div class="footer-grid">
-    
-    <!-- Coluna 1: Marca e Redes Sociais -->
-    <div class="footer-brand">
-      <h3>NAPELE 67 TATTOO</h3>
-      <p>O NAPELE 67 TATTOO eleva a modificação corporal a um novo patamar, com foco em arte exclusiva e atendimento premium desde a primeira mensagem até a total cicatrização.</p>
-      
-      <div class="social-links">
-        <a href="https://instagram.com/NaPele67Tattoo" target="_blank" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        </a>
-        <a href="#" onclick="toggleWppChat()" aria-label="WhatsApp">
-          <!-- Ícone corrigido sem a bola branca -->
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+  <!-- MAIN -->
+  <main>
+    <div class="rows">
+
+      <!-- TOP 10 ESTILOS -->
+      <section class="row reveal" id="top10">
+        <h3 class="row-title">Brasil: Top 10 Estilos de Tatuagem</h3>
+        <div class="row-container">
+          <div class="row-scroller" id="top10-scroller">
+            
+            <div class="top10-card" onclick="openStyleModal('realismo')">
+              <div class="top10-number">1</div>
+              <div class="top10-card-inner">
+                <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Realismo<small>Preto e cinza</small></div>
+              </div>
+            </div>
+            <div class="top10-card" onclick="openStyleModal('finotraco')">
+              <div class="top10-number">2</div>
+              <div class="top10-card-inner">
+                <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2709388/pexels-photo-2709388.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Fino Traço<small>Linhas delicadas</small></div>
+              </div>
+            </div>
+            <div class="top10-card" onclick="openStyleModal('lettering')">
+              <div class="top10-number">3</div>
+              <div class="top10-card-inner">
+                <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2255355/pexels-photo-2255355.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Lettering<small>Chicano • Escritas</small></div>
+              </div>
+            </div>
+            <div class="top10-card" onclick="openStyleModal('oldschool')">
+              <div class="top10-number">4</div>
+              <div class="top10-card-inner">
+                <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702772/pexels-photo-1702772.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Old School<small>Tradicional • Traços Grossos</small></div>
+              </div>
+            </div>
+            <div class="top10-card" onclick="openStyleModal('blackwork')">
+              <div class="top10-number">5</div>
+              <div class="top10-card-inner">
+                <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123890/pexels-photo-4123890.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Black work<small>& Suminagashi</small></div>
+              </div>
+            </div>
+            <div class="top10-card" onclick="openStyleModal('oriental')">
+              <div class="top10-number">6</div>
+              <div class="top10-card-inner">
+                <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Oriental japonês<small>Irezumi</small></div>
+              </div>
+            </div>
+            <div class="top10-card" onclick="openStyleModal('maori')">
+              <div class="top10-number">7</div>
+              <div class="top10-card-inner">
+                <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123896/pexels-photo-4123896.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Maori<small>& Tribal</small></div>
+              </div>
+            </div>
+            <div class="top10-card" onclick="openStyleModal('colorido')">
+              <div class="top10-number">8</div>
+              <div class="top10-card-inner">
+                <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702771/pexels-photo-1702771.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Colorido<small>Cores Vivas</small></div>
+              </div>
+            </div>
+            <div class="top10-card" onclick="openStyleModal('anime')">
+              <div class="top10-number">9</div>
+              <div class="top10-card-inner">
+                <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702770/pexels-photo-1702770.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Anime<small>& Geek</small></div>
+              </div>
+            </div>
+            <div class="top10-card" onclick="openStyleModal('minimalista')">
+              <div class="top10-number">10</div>
+              <div class="top10-card-inner">
+                <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123891/pexels-photo-4123891.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Minimalista<small>Pequena • Elegante</small></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTINUE ASSISTINDO -->
+      <section class="row reveal delay-1">
+        <h3 class="row-title">Continue o seu projeto</h3>
+        <div class="row-container">
+          <div class="row-scroller">
+            
+            <article class="card" onclick="chamarWhatsapp('Quero continuar meu projeto de fechamento de braço.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738089/pexels-photo-3738089.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Fechamento Braço<small>Sessão 3 de 5</small></div>
+              <div class="card-progress-bar"><div class="card-progress-fill" style="width: 60%;"></div></div>
+            </article>
+
+            <article class="card" onclick="chamarWhatsapp('Quero continuar meu projeto de costas.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Projeto Costas<small>Sessão 1 de 6</small></div>
+              <div class="card-progress-bar"><div class="card-progress-fill" style="width: 15%;"></div></div>
+            </article>
+
+            <article class="card" onclick="chamarWhatsapp('Quero marcar o retorno para retoque.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Retoque Especial<small>Fase final</small></div>
+              <div class="card-progress-bar"><div class="card-progress-fill" style="width: 90%;"></div></div>
+            </article>
+            
+            <article class="card" onclick="chamarWhatsapp('Quero saber sobre projeto de perna.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702772/pexels-photo-1702772.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Perna Completa<small>Projeto em criação</small></div>
+              <div class="card-progress-bar"><div class="card-progress-fill" style="width: 5%;"></div></div>
+            </article>
+
+            <article class="card" onclick="chamarWhatsapp('Dúvida sobre cobertura de tatuagem antiga.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2255355/pexels-photo-2255355.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Cobertura (Cover Up)<small>Sessão 2 de 3</small></div>
+              <div class="card-progress-bar"><div class="card-progress-fill" style="width: 66%;"></div></div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVIÇOS DE TATUAGEM E ESTÉTICA -->
+      <section class="row reveal delay-1" id="servicos-tattoo">
+        <h3 class="row-title">Serviços de Tatuagem e Estética</h3>
+        <div class="row-container">
+          <div class="row-scroller" id="tattoo-scroller">
+            <article class="card" onclick="chamarWhatsapp('Gostaria de fazer uma nova tatuagem.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Novas Tatuagens<small>Projetos exclusivos</small></div>
+            </article>
+            <article class="card" onclick="chamarWhatsapp('Tenho interesse em reformar uma tatuagem antiga.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/1702772/pexels-photo-1702772.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Reforma de Tatuagem<small>Revitalização de arte antiga</small></div>
+            </article>
+            <article class="card" onclick="chamarWhatsapp('Preciso fazer uma cobertura (cover up) de uma tatuagem.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2255355/pexels-photo-2255355.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Cobertura (Cover Up)<small>Esconda o passado</small></div>
+            </article>
+            <article class="card" onclick="chamarWhatsapp('Quero saber mais sobre a remoção de tatuagem a laser.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Remoção a Laser<small>Despigmentação segura</small></div>
+            </article>
+            <article class="card" onclick="chamarWhatsapp('Gostaria de remover uma micropigmentação.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738341/pexels-photo-3738341.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Remoção de Micro<small>Sobrancelhas e Lábios</small></div>
+            </article>
+            <article class="card" onclick="chamarWhatsapp('Gostaria de saber sobre remoção de manchas solares e naturais.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3738089/pexels-photo-3738089.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Remoção de Manchas<small>Solares e Naturais</small></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ESTÚDIO DE PIERCING -->
+      <section class="row reveal delay-2" id="servicos-piercing">
+        <h3 class="row-title">Estúdio de Piercing</h3>
+        <div class="row-container">
+          <div class="row-scroller" id="piercing-scroller">
+            <article class="card" onclick="chamarWhatsapp('Gostaria de fazer uma perfuração de piercing.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3760852/pexels-photo-3760852.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Perfuração<small>Biossegurança e assepsia</small></div>
+            </article>
+            <article class="card" onclick="chamarWhatsapp('Gostaria de conhecer o catálogo de venda de joias.')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/2787341/pexels-photo-2787341.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Venda de Joias<small>Titânio e Ouro 18k</small></div>
+            </article>
+            <article class="card" onclick="chamarWhatsapp('Tenho interesse em fazer um projeto auricular (visagismo).')">
+              <div class="card-img" style="background-image:url('https://images.pexels.com/photos/3864109/pexels-photo-3864109.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+              <div class="card-gradient"></div>
+              <div class="card-info">Projeto Auricular<small>Visagismo de orelha</small></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- BANNER INTERMEDIÁRIO (AVALIAÇÕES FLUTUANTES) -->
+      <section class="mid-banner reveal delay-2">
+        <div class="mid-banner-img"></div>
+        <div class="mid-banner-gradient"></div>
+        
+        <div class="mid-banner-inner">
+          <div class="mid-banner-content">
+            <h4>Padrão Ouro 5 Estrelas no Google</h4>
+            <p>A experiência Napele 67 vai além da pele. Veja o que nossos clientes reais estão falando sobre nosso estúdio e atendimento de excelência.</p>
+            <div class="mid-banner-actions">
+              <button class="btn btn-primary" onclick="event.stopPropagation(); chamarWhatsapp('Gostaria de agendar uma visita ao estúdio.')">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Agendar Visita
+              </button>
+              <button class="btn btn-secondary" onclick="event.stopPropagation(); scrollToId('episodios-row')">
+                Como Funciona
+              </button>
+            </div>
+          </div>
+
+          <a href="https://www.google.com/search?q=studio+de+tatuagem+campo+grande&sca_esv=39f50cfd4d7ec138&sxsrf=ANbL-n6FlcXd8M52QEybvpfEdJRohpWueQ:1778005838199&udm=1&lsack=Tjf6adbiC6rB5OUPirr28AU&sa=X&ved=2ahUKEwjWwZPz46KUAxWqILkGHQqdHV4QjGp6BAgpEAA&biw=1920&bih=911&dpr=1#sv=CAwS2wMKBmxjbF9wdhJPCgNwdnESSENnMHZaeTh4TVd4eU9UaHpOWFJxSWlVS0gzTjBkV1JwYnlCa1pTQjBZWFIxWVdkbGJTQmpZVzF3YnlCbmNtRnVaR1VRQWhnRBLnAQoDbHFpEt8BQ2g5emRIVmthVzhnWkdVZ2RHRjBkV0ZuWlcwZ1kyRnRjRzhnWjNKaGJtUmxTTEN1c0pUZHNvQ0FDRm94RUFBUUFSQUNFQU1RQkJnQ0dBTVlCQ0lmYzNSMVpHbHZJR1JsSUhSaGRIVmhaMlZ0SUdOaGJYQnZJR2R5WVc1a1paSUJHSFJoZEhSdmIxOWhibVJmY0dsbGNtTnBibWRmYzJodmNKb0JKRU5vWkVSVFZXaE9UVWM1YmxNd1ZrcFJNRVp1VkZWU1FtRkdiRWhWUkdSdVVsSkJRdm9CQkFnQUVEcxJcCgN0YnMSVWxyZjohMm00ITFlMTUhNG0yITE1bTEhMXNoYXNfMXdoZWVsY2hhaXJfMWFjY2Vzc2libGVfMWVudHJhbmNlITJtMSExZTIhMm0xITFlMyEzc0lBRT0SJAoBcRIfc3R1ZGlvIGRlIHRhdHVhZ2VtIGNhbXBvIGdyYW5kZRoSbG9jYWwtcGxhY2Utdmlld2VyGAogrOnCiwU" target="_blank" class="btn-google-stars">
+            Veja como somos 5 estrelas <span class="stars">★★★★★</span>
+          </a>
+
+          <!-- CONTÊINER DOS CARDS FLUTUANTES 3D -->
+          <div class="floating-reviews-container">
+            
+            <div class="floating-wrapper r-1">
+              <article class="floating-review" onclick="window.open('https://maps.app.goo.gl/49AF1djgYM83dsf17', '_blank')">
+                <div class="review-header">
+                  <div class="review-author-info">
+                    <div class="review-avatar">M</div>
+                    <div>
+                      <span class="review-name">Mateus Silva</span>
+                      <span class="review-date">Avaliação verificada</span>
+                    </div>
+                  </div>
+                  <svg class="google-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                </div>
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">Atendimento impecável! O estúdio é lindo, super higienizado e os tatuadores são verdadeiros artistas.</p>
+              </article>
+            </div>
+
+            <div class="floating-wrapper r-2">
+              <article class="floating-review" onclick="window.open('https://maps.app.goo.gl/hosEKSqym5kFskPF8', '_blank')">
+                <div class="review-header">
+                  <div class="review-author-info">
+                    <div class="review-avatar" style="background: linear-gradient(135deg, #109d58, #056633);">A</div>
+                    <div>
+                      <span class="review-name">Ana Carolina</span>
+                      <span class="review-date">Avaliação verificada</span>
+                    </div>
+                  </div>
+                  <svg class="google-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                </div>
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">Melhor experiência que já tive. Traço fino perfeito e a cicatrização foi super tranquila com as orientações deles.</p>
+              </article>
+            </div>
+
+            <div class="floating-wrapper r-3">
+              <article class="floating-review" onclick="window.open('https://maps.app.goo.gl/hoXp1ZSLwy6SWytu8', '_blank')">
+                <div class="review-header">
+                  <div class="review-author-info">
+                    <div class="review-avatar" style="background: linear-gradient(135deg, #4285F4, #0b4ab3);">R</div>
+                    <div>
+                      <span class="review-name">Rafael Costa</span>
+                      <span class="review-date">Avaliação verificada</span>
+                    </div>
+                  </div>
+                  <svg class="google-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                </div>
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">Lugar sensacional. Biossegurança nota 1000. Fizeram meu fechamento e a arte ficou muito além do que eu imaginava.</p>
+              </article>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- SESSÃO "EPISÓDIOS" (COMO FUNCIONA O ESTÚDIO) -->
+      <section class="episodes-section reveal delay-3" id="episodios-row">
+        <div class="episodes-header">
+          <h3>Temporada 1: Sua Jornada na Pele</h3>
+          <span>Estúdio Napele 67</span>
+        </div>
+        
+        <div class="episode-list">
+          <div class="episode-row" onclick="chamarWhatsapp('Gostaria de começar o Episódio 1: Fazer meu orçamento.')">
+            <div class="episode-number">1</div>
+            <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/4123896/pexels-photo-4123896.jpeg?auto=compress&cs=tinysrgb&w=800');">
+              <div class="episode-play-icon">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="episode-info">
+              <div class="episode-title-bar">
+                <span class="episode-title">O Orçamento via WhatsApp</span>
+                <span class="episode-duration">Etapa 1</span>
+              </div>
+              <p class="episode-desc">Tudo começa com um clique. Envie sua ideia, referências, local do corpo e tamanho aproximado. Nossa equipe filtra, entende a sua visão e te passa estimativas iniciais.</p>
+            </div>
+          </div>
+
+          <div class="episode-row" onclick="chamarWhatsapp('Queria saber como funciona a parte de criação da arte.')">
+            <div class="episode-number">2</div>
+            <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/1702771/pexels-photo-1702771.jpeg?auto=compress&cs=tinysrgb&w=800');">
+              <div class="episode-play-icon">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="episode-info">
+              <div class="episode-title-bar">
+                <span class="episode-title">O Projeto Exclusivo</span>
+                <span class="episode-duration">Etapa 2</span>
+              </div>
+              <p class="episode-desc">Com a data agendada, o tatuador cria uma arte única baseada nas suas ideias. O decalque é testado no seu corpo no dia da sessão para garantir o encaixe perfeito na anatomia.</p>
+            </div>
+          </div>
+
+          <div class="episode-row" onclick="chamarWhatsapp('Como devo me preparar para a sessão de tatuagem?')">
+            <div class="episode-number">3</div>
+            <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');">
+              <div class="episode-play-icon">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="episode-info">
+              <div class="episode-title-bar">
+                <span class="episode-title">O Dia da Sessão (Gravação)</span>
+                <span class="episode-duration">Etapa 3</span>
+              </div>
+              <p class="episode-desc">Venha bem alimentado e descansado. O estúdio oferece um ambiente climatizado e preparado para que sua experiência seja a mais confortável e épica possível.</p>
+            </div>
+          </div>
+
+          <div class="episode-row" onclick="chamarWhatsapp('Quais são os cuidados para a cicatrização?')">
+            <div class="episode-number">4</div>
+            <div class="episode-thumb" style="background-image: url('https://images.pexels.com/photos/1559821/pexels-photo-1559821.jpeg?auto=compress&cs=tinysrgb&w=800');">
+              <div class="episode-play-icon">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="episode-info">
+              <div class="episode-title-bar">
+                <span class="episode-title">Os Créditos Finais (Cicatrização)</span>
+                <span class="episode-duration">Etapa 4</span>
+              </div>
+              <p class="episode-desc">A tattoo não termina quando você sai do estúdio. Fornecemos um manual completo em PDF para os cuidados das próximas semanas. Nosso WhatsApp segue aberto para acompanhamento.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ========= CTA CONVERSÃO ========= -->
+    <section class="cta-premium reveal">
+      <div class="cta-premium-inner">
+        <h2>Pronto para a sua próxima obra de arte?</h2>
+        <p>
+          Sua pele merece dedicação total. Conecte-se com a nossa equipe agora mesmo e dê o primeiro passo para tirar o seu projeto do papel e torná-lo realidade.
+        </p>
+        <button class="btn-cta" onclick="toggleWppChat()">
+          <!-- Ícone Oficial do WhatsApp -->
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
           </svg>
-        </a>
+          Falar com a Equipe
+        </button>
       </div>
-    </div>
+    </section>
 
-    <!-- Coluna 2: Unidades -->
-    <div class="footer-units">
-      <div class="unit-card">
-        <h4>
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          Campo Grande - MS
-        </h4>
-        <p>Endereço completo aqui (rua, número, bairro).</p>
-        <p>
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          Seg a Sex, 10h30 às 20h · Sáb, 09h às 17h
-        </p>
+    <!-- ========= RODAPÉ PREMIUM 3 COLUNAS ========= -->
+    <footer class="premium-footer reveal">
+      <div class="footer-grid">
+        
+        <!-- Coluna 1: Marca e Redes Sociais -->
+        <div class="footer-brand">
+          <h3>NAPELE 67 TATTOO</h3>
+          <p>O NAPELE 67 TATTOO eleva a modificação corporal a um novo patamar, com foco em arte exclusiva e atendimento premium desde a primeira mensagem até a total cicatrização.</p>
+          
+          <div class="social-links">
+            <a href="https://instagram.com/NaPele67Tattoo" target="_blank" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="#" onclick="toggleWppChat()" aria-label="WhatsApp">
+              <!-- Ícone corrigido sem a bola branca -->
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Coluna 2: Unidades -->
+        <div class="footer-units">
+          <div class="unit-card">
+            <h4>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              Campo Grande - MS
+            </h4>
+            <p>Endereço completo aqui (rua, número, bairro).</p>
+            <p>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              Seg a Sex, 10h30 às 20h · Sáb, 09h às 17h
+            </p>
+          </div>
+
+          <div class="unit-card">
+            <h4>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              Dourados - MS
+            </h4>
+            <p>Atendimento exclusivo.</p>
+            <p>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              Consultar agenda e disponibilidade.
+            </p>
+          </div>
+        </div>
+
+        <!-- Coluna 3: Mapa -->
+        <div class="footer-map">
+          <!-- Exemplo Google Maps - Substitua com o link correto depois -->
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119642.45173167448!2d-54.68537637841315!3d-20.481232811440626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9486e66e7eaeb743%3A0x6fb878b1d6abf7a9!2sCampo%20Grande%2C%20MS!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        
       </div>
-
-      <div class="unit-card">
-        <h4>
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          Dourados - MS
-        </h4>
-        <p>Atendimento exclusivo.</p>
-        <p>
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          Consultar agenda e disponibilidade.
-        </p>
+      
+      <div class="footer-bottom">
+        © <span id="year"></span> NAPELEFLIX · NAPELE 67 TATTOO — Todos os direitos reservados.
       </div>
-    </div>
+    </footer>
+</div> <!-- FIM DO SITE-CONTENT -->
 
-    <!-- Coluna 3: Mapa -->
-    <div class="footer-map">
-      <!-- Exemplo Google Maps - Substitua com o link correto depois -->
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119642.45173167448!2d-54.68537637841315!3d-20.481232811440626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9486e66e7eaeb743%3A0x6fb878b1d6abf7a9!2sCampo%20Grande%2C%20MS!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
-    
-  </div>
-  
-  <div class="footer-bottom">
-    © <span id="year"></span> NAPELEFLIX · NAPELE 67 TATTOO — Todos os direitos reservados.
-  </div>
-</footer>
+<!-- ========= ELEMENTOS FIXOS (FORA DA ÁREA COM ZOOM PARA EVITAR BUGS) ========= -->
 
-<!-- ========= WHATSAPP FLUTUANTE (WIDGET) ========= -->
+<!-- INSTAGRAM WIDGET FLUTUANTE -->
+<a href="https://www.instagram.com/napele67tattoo/" target="_blank" class="ig-fab" aria-label="Acessar Instagram">
+  <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </svg>
+</a>
+
+<!-- WHATSAPP WIDGET FLUTUANTE -->
 <div class="wpp-fab" role="button" aria-label="Abrir chat do WhatsApp" tabindex="0" onclick="toggleWppChat()" onkeypress="if(event.key === 'Enter') toggleWppChat()">
-  <!-- Ícone Oficial do WhatsApp -->
   <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
   </svg>
@@ -1626,13 +1678,11 @@
 <div class="wpp-chat-window" id="wppWindow">
   <div class="wpp-header">
     <div class="wpp-header-title">
-      <!-- Ícone Oficial do WhatsApp -->
       <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </svg>
       Tire suas dúvidas
     </div>
-    <!-- aria-label para botões de fechamento -->
     <button class="wpp-close" aria-label="Fechar chat" onclick="toggleWppChat()">×</button>
   </div>
   
@@ -1659,113 +1709,62 @@
   </div>
 </div>
 
-<!-- ===== MODAL E-MAIL STYLE (DINÂMICO PARA TODOS OS ESTILOS) ===== -->
+<!-- MODAL E-MAIL STYLE -->
 <div class="modal-overlay" id="styleModal">
   <div class="modal-content">
     <button class="modal-close" aria-label="Fechar modal de estilo" onclick="closeStyleModal()">×</button>
     <h2 id="modalTitle" style="margin-bottom: 8px; font-family: 'Times New Roman', serif; font-size: 2.2rem; text-transform: uppercase;">Título do Estilo</h2>
-    <p id="modalDesc" style="color: var(--muted); font-size: 1rem; line-height: 1.5;">
-      Descrição da categoria aqui.
-    </p>
-    
-    <div class="modal-gallery" id="modalGallery">
-      <!-- Imagens inseridas dinamicamente pelo JS -->
-    </div>
+    <p id="modalDesc" style="color: var(--muted); font-size: 1rem; line-height: 1.5;">Descrição da categoria aqui.</p>
+    <div class="modal-gallery" id="modalGallery"></div>
   </div>
 </div>
 
 <script>
-  // ===== LOADER DE ENTRADA =====
-  // Bloqueia a rolagem antes do site carregar
+  // LOADER DE ENTRADA
   document.body.style.overflow = 'hidden';
 
   document.addEventListener("DOMContentLoaded", () => {
-    const circle = document.getElementById('progress-ring-circle');
-    const text = document.getElementById('loader-text');
-    const overlay = document.getElementById('loader-overlay');
+    const fill = document.getElementById('loader-progress-fill');
     
-    const radius = circle.r.baseVal.value;
-    const circumference = radius * 2 * Math.PI;
-
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = circumference;
-
-    function setProgress(percent) {
-      const offset = circumference - (percent / 100) * circumference;
-      circle.style.strokeDashoffset = offset;
-      text.innerText = Math.floor(percent) + '%';
-    }
-
     let progress = 0;
-    // Velocidade do loader (aleatório para parecer carregamento real)
     const interval = setInterval(() => {
-      progress += Math.random() * 5 + 2; // Incrementa entre 2 e 7 por vez
+      progress += Math.random() * 8 + 2; 
       
       if (progress >= 100) {
         progress = 100;
-        setProgress(progress);
+        fill.style.width = '100%';
         clearInterval(interval);
         
-        // Espera um pouco em 100% e remove a tela
         setTimeout(() => {
-          overlay.classList.add('hidden');
-          document.body.style.overflow = 'auto'; // Libera o scroll
-          window.scrollTo(0, 0); // Garante que começa do topo
-        }, 500);
+          document.body.classList.add('loaded');
+          
+          setTimeout(() => {
+            document.body.style.overflow = 'auto'; 
+            window.scrollTo(0, 0); 
+          }, 1000); 
+        }, 300); 
       } else {
-        setProgress(progress);
+        fill.style.width = `${progress}%`;
       }
-    }, 40); // Roda a cada 40ms
+    }, 40);
   });
 
   const WHATSAPP_NUMERO = "5567992856293";
   let chatStarted = false;
 
-  // ===== DADOS DOS ESTILOS PARA O MODAL =====
   const modalData = {
-    realismo: {
-      title: "Realismo Preto & Cinza",
-      desc: "Projetos complexos com foco profundo em texturas, contrastes e sombras sutis. Feito para impactar com precisão fotográfica."
-    },
-    finotraco: { 
-      title: "Fino Traço", 
-      desc: "Traços absurdamente finos e precisos, trazendo máxima delicadeza e fluidez para a pele." 
-    },
-    lettering: {
-      title: "Lettering Chicano",
-      desc: "Escritas com personalidade, fontes exclusivas criadas do zero e forte inspiração na cultura chicana de rua."
-    },
-    oldschool: {
-      title: "Old School",
-      desc: "Traços grossos, cores sólidas e designs clássicos (rosas, adagas, panteras) que resistem ao tempo sem desbotar."
-    },
-    blackwork: { 
-      title: "Black work & Suminagashi", 
-      desc: "Arte em tinta preta densa contrastando com a fluidez do Suminagashi, inspirada na marmorização japonesa." 
-    },
-    oriental: {
-      title: "Oriental / Irezumi",
-      desc: "Dragões, carpas, samurais e lendas. Arte fluida com fundos poderosos e fechamentos que respeitam a anatomia."
-    },
-    maori: { 
-      title: "Maori & Tribal", 
-      desc: "Padrões ancestrais, linhas geométricas marcantes e significados profundos baseados nas antigas tribos." 
-    },
-    colorido: { 
-      title: "Colorido", 
-      desc: "Tatuagens vibrantes com pigmentação intensa, misturando técnicas para criar projetos únicos e saturados." 
-    },
-    anime: { 
-      title: "Anime & Geek", 
-      desc: "As suas obras favoritas eternizadas na pele. Traços fiéis aos mangás, animes e cultura pop com cores e texturas incríveis." 
-    },
-    minimalista: {
-      title: "Minimalista",
-      desc: "Pequenas, focadas na essência e muito elegantes. Onde 'menos' é definitivamente 'mais'."
-    }
+    realismo: { title: "Realismo (Preto e cinza)", desc: "Projetos complexos com foco profundo em texturas, contrastes e sombras sutis. Feito para impactar com precisão fotográfica." },
+    finotraco: { title: "Fino Traço", desc: "Traços absurdamente finos e precisos, trazendo máxima delicadeza e fluidez para a pele." },
+    lettering: { title: "Lettering", desc: "Escritas com personalidade, fontes exclusivas criadas do zero e forte inspiração na cultura chicana de rua." },
+    oldschool: { title: "Old School", desc: "Traços grossos, cores sólidas e designs clássicos (rosas, adagas, panteras) que resistem ao tempo sem desbotar." },
+    blackwork: { title: "Black work & Suminagashi", desc: "Arte em tinta preta densa contrastando com a fluidez do Suminagashi, inspirada na marmorização japonesa." },
+    oriental: { title: "Oriental japonês", desc: "Dragões, carpas, samurais e lendas. Arte fluida com fundos poderosos e fechamentos clássicos." },
+    maori: { title: "Maori & Tribal", desc: "Padrões ancestrais, linhas geométricas marcantes e significados profundos baseados nas antigas tribos." },
+    colorido: { title: "Colorido", desc: "Tatuagens vibrantes com pigmentação intensa, misturando técnicas para criar projetos únicos e saturados." },
+    anime: { title: "Anime & Geek", desc: "As suas obras favoritas eternizadas na pele. Traços fiéis aos mangás, animes e cultura pop com cores e texturas incríveis." },
+    minimalista: { title: "Minimalista", desc: "Pequenas, focadas na essência e muito elegantes. Onde 'menos' é definitivamente 'mais'." }
   };
 
-  // Banco de imagens de teste que serão embaralhadas
   const testImages = [
     "https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800",
     "https://images.pexels.com/photos/1702770/pexels-photo-1702770.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -1775,80 +1774,45 @@
     "https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800"
   ];
 
-  // ===== ROLAGEM SUAVE DOS LINKS =====
   function scrollToId(id) {
     const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    if (el) { el.scrollIntoView({ behavior: "smooth" }); }
   }
 
-  // ===== DRAG TO SCROLL (Navegação por arrasto MOUSE e TOUCH) =====
   const scrollers = document.querySelectorAll('.row-scroller');
-  let isDown = false;
-  let startX;
-  let scrollLeft;
-  let isDragging = false;
+  let isDown = false, startX, scrollLeft, isDragging = false;
 
   scrollers.forEach(scroller => {
-    // Mouse Events para Desktop
     scroller.addEventListener('mousedown', (e) => {
-      isDown = true;
-      isDragging = false; 
-      scroller.classList.add('active-drag');
-      startX = e.pageX - scroller.offsetLeft;
-      scrollLeft = scroller.scrollLeft;
+      isDown = true; isDragging = false; scroller.classList.add('active-drag');
+      startX = e.pageX - scroller.offsetLeft; scrollLeft = scroller.scrollLeft;
     });
-    
-    scroller.addEventListener('mouseleave', () => {
-      isDown = false;
-      scroller.classList.remove('active-drag');
-    });
-    
+    scroller.addEventListener('mouseleave', () => { isDown = false; scroller.classList.remove('active-drag'); });
     scroller.addEventListener('mouseup', () => {
-      isDown = false;
-      scroller.classList.remove('active-drag');
-      // Delay reset de clique para que o botão não ative pós arrasto
+      isDown = false; scroller.classList.remove('active-drag');
       setTimeout(() => { isDragging = false; }, 50);
     });
-    
     scroller.addEventListener('mousemove', (e) => {
       if (!isDown) return;
       e.preventDefault();
-      
       const x = e.pageX - scroller.offsetLeft;
-      const walk = (x - startX) * 2; // Velocidade do arraste no mouse
-      
-      // Se moveu mais que 5 pixels, é considerado um arrasto (bloqueia o click do modal)
-      if (Math.abs(walk) > 5) {
-          isDragging = true;
-      }
+      const walk = (x - startX) * 2;
+      if (Math.abs(walk) > 5) { isDragging = true; }
       scroller.scrollLeft = scrollLeft - walk;
     });
-
-    // Bloquear clique acidental após arrastar
     scroller.addEventListener('click', (e) => {
-      if (isDragging) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+      if (isDragging) { e.preventDefault(); e.stopPropagation(); }
     }, true); 
   });
 
-  // ===== MODAL LOGIC DINÂMICO =====
   function openStyleModal(styleKey) {
     const data = modalData[styleKey];
     if(!data) return;
-
     document.getElementById('modalTitle').innerText = data.title;
     document.getElementById('modalDesc').innerHTML = data.desc + '<br/><br/><small style="color:#777;">(Imagens de banco de dados utilizadas apenas para testes)</small>';
-    
-    // Embaralha as imagens e as marca com loading="lazy"
     const shuffledImages = [...testImages].sort(() => 0.5 - Math.random());
-    
     const gallery = document.getElementById('modalGallery');
     gallery.innerHTML = shuffledImages.map(img => `<img src="${img}" alt="Exemplo de arte na pele estilo ${data.title}" loading="lazy">`).join('');
-
     const modal = document.getElementById('styleModal');
     modal.classList.add('open');
     document.body.style.overflow = 'hidden'; 
@@ -1861,12 +1825,9 @@
   }
 
   document.getElementById('styleModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-      closeStyleModal();
-    }
+    if (e.target === this) { closeStyleModal(); }
   });
 
-  // ===== WIDGET WHATSAPP =====
   function chamarWhatsapp(mensagemPronta) {
     const mensagem = encodeURIComponent(mensagemPronta);
     window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${mensagem}`, "_blank");
@@ -1875,16 +1836,12 @@
 
   function sendCustomWpp() {
     const input = document.getElementById('wppInput');
-    if(input.value.trim() !== '') {
-      chamarWhatsapp(input.value);
-      input.value = '';
-    }
+    if(input.value.trim() !== '') { chamarWhatsapp(input.value); input.value = ''; }
   }
 
   function toggleWppChat() {
     const win = document.getElementById('wppWindow');
     const isHidden = win.style.display === 'none' || win.style.display === '';
-    
     if (isHidden) {
       win.style.display = 'flex';
       if (!chatStarted) {
@@ -1900,28 +1857,17 @@
     }
   }
 
-  // ===== ATUALIZAR TOPO NAVBAR =====
   const topNav = document.getElementById("topNav");
   function atualizarTopo() {
-    if (window.scrollY > 50) {
-      topNav.classList.add("solid");
-    } else {
-      topNav.classList.remove("solid");
-    }
+    if (window.scrollY > 50) { topNav.classList.add("solid"); } 
+    else { topNav.classList.remove("solid"); }
   }
   window.addEventListener("scroll", atualizarTopo);
   atualizarTopo();
 
-  // ===== OBSERVER (ANIMAÇÕES SCROLL REVEAL) =====
   document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("year").textContent = new Date().getFullYear();
-
-    const observerOptions = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.15
-    };
-
+    const observerOptions = { root: null, rootMargin: "0px", threshold: 0.15 };
     const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -1930,10 +1876,7 @@
         }
       });
     }, observerOptions);
-
-    document.querySelectorAll(".reveal").forEach(el => {
-      observer.observe(el);
-    });
+    document.querySelectorAll(".reveal").forEach(el => { observer.observe(el); });
   });
 
 </script>
