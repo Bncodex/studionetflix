@@ -2250,10 +2250,85 @@
       <div class="rows">
 
         <!-- TOP 10 ESTILOS -->
+        <style>
+          @media (max-width: 900px) {
+            .mobile-scroll-hint {
+              display: flex !important;
+              animation: pulseScrollHint 2s infinite;
+            }
+          }
+          @keyframes pulseScrollHint {
+            0%, 100% { opacity: 0.4; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(5px); }
+          }
+          .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(10, 10, 10, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+          }
+          .row-container:hover .nav-btn {
+            opacity: 1;
+          }
+          .nav-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+            background: rgba(229, 9, 20, 0.8);
+            border-color: rgba(229, 9, 20, 1);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
+          }
+          .nav-prev { left: 10px; display: none; }
+          .nav-next { right: 10px; animation: gentlePulse 2s infinite; }
+          .nav-next:hover { animation: none; }
+          @keyframes gentlePulse {
+            0%, 100% { border-color: rgba(255, 255, 255, 0.15); }
+            50% { border-color: var(--accent); }
+          }
+          @media (max-width: 900px) {
+            .nav-btn {
+              width: 28px;
+              height: 28px;
+              font-size: 1rem;
+            }
+          }
+        </style>
+        <script>
+          function scrollRow(id, dir) {
+            const el = document.getElementById(id);
+            el.scrollBy({ left: dir * window.innerWidth * 0.6, behavior: 'smooth' });
+          }
+          function handleScrollCheck(el) {
+            const container = el.closest('.row-container');
+            const prev = container.querySelector('.nav-prev');
+            const next = container.querySelector('.nav-next');
+            if(prev) prev.style.display = el.scrollLeft > 10 ? 'flex' : 'none';
+            if(next) next.style.display = (Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth - 10) ? 'none' : 'flex';
+          }
+        </script>
         <section class="row reveal" id="top10">
-          <h3 class="row-title">Brasil: Top 10 Estilos de Tatuagem</h3>
+          <h3 class="row-title" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Brasil: Top 10 Estilos de Tatuagem</span>
+            <span class="mobile-scroll-hint" style="font-size: 0.75rem; font-weight: normal; color: var(--muted); display: none; align-items: center; gap: 4px; text-transform: none; letter-spacing: 0;">Deslize ⟶</span>
+          </h3>
           <div class="row-container">
-            <div class="row-scroller" id="top10-scroller">
+            <button class="nav-btn nav-prev" aria-label="Rolar para esquerda" onclick="scrollRow('top10-scroller', -1)">‹</button>
+            <div class="row-scroller" id="top10-scroller" onscroll="handleScrollCheck(this)">
 
               <div class="top10-card" onclick="openStyleModal('realismo')">
                 <div class="top10-number">1</div>
@@ -2316,7 +2391,7 @@
                 <div class="top10-number">7</div>
                 <div class="top10-card-inner">
                   <div class="card-img"
-                    style="background-image:url('img/7-Maori/D94F4030-40E3-494C-8C3D-7A2EC4282EC1.JPG.jpeg');">
+                    style="background-image:url('img/7-Maori/IMG_1766.JPG.jpeg');">
                   </div>
                   <div class="card-gradient"></div>
                   <div class="card-info">Maori<small>& Tribal</small></div>
@@ -2334,7 +2409,7 @@
               <div class="top10-card" onclick="openStyleModal('anime')">
                 <div class="top10-number">9</div>
                 <div class="top10-card-inner">
-                  <div class="card-img" style="background-image:url('img/9-anime/Anime.jpeg.jpg');">
+                  <div class="card-img" style="background-image:url('img/9-anime/IMG_1735.JPG.jpeg');">
                   </div>
                   <div class="card-gradient"></div>
                   <div class="card-info">Anime<small>& Geek</small></div>
@@ -2351,6 +2426,7 @@
               </div>
 
             </div>
+            <button class="nav-btn nav-next" aria-label="Rolar para direita" onclick="scrollRow('top10-scroller', 1)">›</button>
           </div>
         </section>
 
@@ -2924,7 +3000,7 @@
         </div>
 
         <div class="footer-bottom">
-          © <span id="year"></span> NAPELEFLIX · NAPELE 67 TATTOO — Todos os direitos reservados.
+          © <span id="year"></span> NAPELEFLIX · NAPELE 67 TATTOO — Todos os direitos reservados. <span style="opacity: 0.5; margin: 0 8px;">|</span> Criado por <a href="https://wa.me/5521969942906?text=Ol%C3%A1%2C%20gostei%20do%20site%20e%20gostaria%20de%20um%20or%C3%A7amento%20de%20um%20site." target="_blank" style="color: #fff; text-decoration: underline; text-underline-offset: 4px; font-weight: 500; transition: color 0.3s ease;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#fff'">Bernardo</a>
         </div>
       </footer>
   </div> <!-- FIM DO SITE-CONTENT -->
@@ -2997,9 +3073,9 @@
     <div class="modal-content">
       <button class="modal-close" aria-label="Fechar modal de estilo" onclick="closeStyleModal()">×</button>
       <h2 id="modalTitle"
-        style="margin-bottom: 8px; font-family: 'Times New Roman', serif; font-size: 2.2rem; text-transform: uppercase;">
+        style="margin-bottom: 8px; font-family: 'Times New Roman', serif; font-size: 2.2rem; text-transform: uppercase; padding-right: 40px; word-wrap: break-word;">
         Título do Estilo</h2>
-      <p id="modalDesc" style="color: var(--muted); font-size: 1rem; line-height: 1.5;">Descrição da categoria aqui.</p>
+      <p id="modalDesc" style="color: var(--muted); font-size: 1rem; line-height: 1.5; padding-right: 40px;">Descrição da categoria aqui.</p>
       <div class="modal-gallery" id="modalGallery"></div>
     </div>
   </div>
@@ -3064,16 +3140,16 @@
     let chatStarted = false;
 
     const modalData = {
-      realismo: { title: "Realismo (Preto e cinza)", desc: "Projetos complexos com foco profundo em texturas, contrastes e sombras sutis. Feito para impactar com precisão fotográfica.", images: ["img/1-realismo/30C0C9C1-87C1-467E-9ABD-A9DB8269D004.JPG.jpeg", "img/1-realismo/42BBAF0E-91B5-4343-9F3F-9DE09B4018F6.JPG.jpeg", "img/1-realismo/IMG_3946.JPG.jpeg", "img/1-realismo/BB75F0C6-6A17-4A69-96D9-8479AE6469E1.JPG.jpeg", "img/1-realismo/E44780C8-01AB-431C-B5E7-F739E3210AE3.JPG.jpeg", "img/1-realismo/IMG_1738.JPG.jpeg"] },
-      finotraco: { title: "Fino Traço", desc: "Traços absurdamente finos e precisos, trazendo máxima delicadeza e fluidez para a pele.", images: ["img/2-fine line/4784013E-BBE3-4BC7-AEF8-39010D70EEC2.JPG.jpeg", "img/2-fine line/IMG_1733.JPG.jpeg", "img/2-fine line/IMG_1760.JPG.jpeg", "img/2-fine line/IMG_1844.JPG.jpeg", "img/2-fine line/IMG_1848.JPG.jpeg", "img/2-fine line/IMG_1873.JPG.jpeg"] },
-      lettering: { title: "Lettering", desc: "Escritas com personalidade, fontes exclusivas criadas do zero e forte inspiração na cultura chicana de rua.", images: ["img/3-Lettering/067E87D5-F3F9-4DAC-A751-27543A9C2F5D.JPG.jpeg", "img/3-Lettering/IMG_1740.JPG.jpeg", "img/3-Lettering/IMG_1875.JPG.jpeg", "img/3-Lettering/IMG_3227.JPG.jpeg"] },
-      oldschool: { title: "Old School", desc: "Traços grossos, cores sólidas e designs clássicos (rosas, adagas, panteras) que resistem ao tempo sem desbotar." },
-      blackwork: { title: "Black work & Suminagashi", desc: "Arte em tinta preta densa contrastando com a fluidez do Suminagashi, inspirada na marmorização japonesa.", images: ["img/5-Blackwork/1C4BE1ED-128B-4D01-AA2C-5925E8F63200.JPG.jpeg", "img/5-Blackwork/D6EF3F82-5EF3-4C63-8B29-81CC66CA698A.JPG.jpeg", "img/5-Blackwork/IMG_1850.JPG.jpeg", "img/5-Blackwork/IMG_3033.JPG.jpeg"] },
+      realismo: { title: "Realismo (Preto e cinza)", desc: "Projetos complexos com foco profundo em texturas, contrastes e sombras sutis. Feito para impactar com precisão fotográfica.", images: ["img/1-realismo/30C0C9C1-87C1-467E-9ABD-A9DB8269D004.JPG.jpeg", "img/1-realismo/42BBAF0E-91B5-4343-9F3F-9DE09B4018F6.JPG.jpeg", "img/1-realismo/IMG_3946.JPG.jpeg", "img/1-realismo/BB75F0C6-6A17-4A69-96D9-8479AE6469E1.JPG.jpeg", "img/1-realismo/E44780C8-01AB-431C-B5E7-F739E3210AE3.JPG.jpeg", "img/1-realismo/WhatsApp Image 2026-05-14 at 01.30.18.jpeg"] },
+      finotraco: { title: "Fino Traço", desc: "Traços absurdamente finos e precisos, trazendo máxima delicadeza e fluidez para a pele.", images: ["img/2-fine line/IMG_1733.JPG.jpeg", "img/2-fine line/IMG_1757.JPG.jpeg", "img/2-fine line/4784013E-BBE3-4BC7-AEF8-39010D70EEC2.JPG.jpeg"] },
+      lettering: { title: "Lettering", desc: "Escritas com personalidade, fontes exclusivas criadas do zero e forte inspiração na cultura chicana de rua.", images: ["img/3-Lettering/067E87D5-F3F9-4DAC-A751-27543A9C2F5D.JPG.jpeg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.22.45.jpeg", "img/3-Lettering/IMG_1875.JPG.jpeg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.27.10.jpeg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.22.15.jpeg"] },
+      oldschool: { title: "Old School", desc: "Traços grossos, cores sólidas e designs clássicos (rosas, adagas, panteras) que resistem ao tempo sem desbotar.", images: ["img/4-Oldschool/WhatsApp Image 2026-05-14 at 01.20.21.jpeg"] },
+      blackwork: { title: "Black work & Suminagashi", desc: "Arte em tinta preta densa contrastando com a fluidez do Suminagashi, inspirada na marmorização japonesa.", images: ["img/5-Blackwork/1C4BE1ED-128B-4D01-AA2C-5925E8F63200.JPG.jpeg", "img/5-Blackwork/D6EF3F82-5EF3-4C63-8B29-81CC66CA698A.JPG.jpeg", "img/5-Blackwork/IMG_1850.JPG.jpeg", "img/5-Blackwork/IMG_3033.JPG.jpeg", "img/5-Blackwork/WhatsApp Image 2026-05-14 at 01.22.55.jpeg", "img/5-Blackwork/WhatsApp Image 2026-05-14 at 01.20.51.jpeg"] },
       oriental: { title: "Oriental japonês", desc: "Dragões, carpas, samurais e lendas. Arte fluida com fundos poderosos e fechamentos clássicos." },
-      maori: { title: "Maori & Tribal", desc: "Padrões ancestrais, linhas geométricas marcantes e significados profundos baseados nas antigas tribos.", images: ["img/7-Maori/IMG_1766.JPG.jpeg"] },
-      colorido: { title: "Colorido", desc: "Tatuagens vibrantes com pigmentação intensa, misturando técnicas para criar projetos únicos e saturados.", images: ["img/8-Colorido/IMG_1841.JPG.jpeg", "img/8-Colorido/IMG_1852.JPG.jpeg", "img/8-Colorido/IMG_1882.JPG.jpeg", "img/8-Colorido/IMG_3578.JPG.jpeg", "img/8-Colorido/IMG_7981.JPG.jpeg", "img/8-Colorido/1D5A553C-3B11-4EAE-8237-EE32282F11D6.JPG.jpeg"] },
-      anime: { title: "Anime & Geek", desc: "As suas obras favoritas eternizadas na pele. Traços fiéis aos mangás, animes e cultura pop com cores e texturas incríveis.", images: ["img/9-anime/IMG_1735.JPG.jpeg"] },
-      minimalista: { title: "Minimalista", desc: "Pequenas, focadas na essência e muito elegantes. Onde 'menos' é definitivamente 'mais'.", images: ["img/10-minimalista/IMG_1757.JPG.jpeg", "img/10-minimalista/IMG_1761.JPG.jpeg", "img/10-minimalista/IMG_3928.JPG.jpeg"] }
+      maori: { title: "Maori & Tribal", desc: "Padrões ancestrais, linhas geométricas marcantes e significados profundos baseados nas antigas tribos.", images: ["img/7-Maori/D94F4030-40E3-494C-8C3D-7A2EC4282EC1.JPG.jpeg"] },
+      colorido: { title: "Colorido", desc: "Tatuagens vibrantes com pigmentação intensa, misturando técnicas para criar projetos únicos e saturados.", images: ["img/8-Colorido/IMG_1852.JPG.jpeg", "img/8-Colorido/IMG_1882.JPG.jpeg", "img/8-Colorido/IMG_3578.JPG.jpeg", "img/8-Colorido/IMG_7981.JPG.jpeg", "img/8-Colorido/1D5A553C-3B11-4EAE-8237-EE32282F11D6.JPG.jpeg", "img/8-Colorido/WhatsApp Image 2026-05-14 at 01.44.22.jpeg"] },
+      anime: { title: "Anime & Geek", desc: "As suas obras favoritas eternizadas na pele. Traços fiéis aos mangás, animes e cultura pop com cores e texturas incríveis.", images: ["img/9-anime/Anime.jpeg.jpg", "img/9-anime/IMG_1841.JPG.jpeg"] },
+      minimalista: { title: "Minimalista", desc: "Pequenas, focadas na essência e muito elegantes. Onde 'menos' é definitivamente 'mais'.", images: ["img/10-minimalista/WhatsApp Image 2026-05-14 at 01.29.41.jpeg", "img/10-minimalista/6FD21235-9411-4EB2-BCF3-9C83982AB3B1.JPG.jpeg", "img/10-minimalista/IMG_1761.JPG.jpeg", "img/10-minimalista/IMG_3928.JPG.jpeg"] }
     };
 
     const testImages = [
