@@ -694,6 +694,39 @@
       background: var(--accent);
     }
 
+    /* PLAY BUTTON NETFLIX STYLE FOR CARDS */
+    .play-button-netflix {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      opacity: 0.9;
+      transition: all 0.3s ease;
+      z-index: 8;
+      pointer-events: none;
+    }
+
+    .play-button-netflix svg {
+      margin-left: 2px;
+    }
+
+    .card:hover .play-button-netflix {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
+    }
+
     /* ===== TOP 10 – ESTILO NETFLIX ===== */
     .top10-card {
       position: relative;
@@ -2552,28 +2585,38 @@
           </div>
         </section>
 
-        <!-- UNIDADES -->
+        <!-- CONTINUE ASSISTINDO -->
         <section class="row reveal delay-1">
-          <h3 class="row-title">Unidade Campo Grande / Unidade Dourados</h3>
+          <h3 class="row-title">Continue assistindo</h3>
           <div class="row-container">
             <div class="row-scroller">
 
-              <article class="card" onclick="chamarWhatsapp('Olá! Gostaria de falar com a Unidade Campo Grande.')">
+              <article class="card" onclick="openVideoModal('Campo Grande')">
                 <div class="card-img"
                   style="background-image:url('https://images.pexels.com/photos/3738089/pexels-photo-3738089.jpeg?auto=compress&cs=tinysrgb&w=800');">
                 </div>
                 <div class="card-gradient"></div>
+                <div class="play-button-netflix">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
                 <div class="card-info">Unidade Campo Grande<small>Assista ao vídeo</small></div>
                 <div class="card-progress-bar">
                   <div class="card-progress-fill" style="width: 100%;"></div>
                 </div>
               </article>
 
-              <article class="card" onclick="chamarWhatsapp('Olá! Gostaria de falar com a Unidade Dourados.')">
+              <article class="card" onclick="openVideoModal('Dourados')">
                 <div class="card-img"
                   style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');">
                 </div>
                 <div class="card-gradient"></div>
+                <div class="play-button-netflix">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
                 <div class="card-info">Unidade Dourados<small>Assista ao vídeo</small></div>
                 <div class="card-progress-bar">
                   <div class="card-progress-fill" style="width: 100%;"></div>
@@ -2900,7 +2943,7 @@
                 <p style="font-size: 0.95rem; color: var(--muted);" id="epActionText">Quer entender mais? Clique em…
                 </p>
                 <button class="btn btn-primary episode-details-btn" id="epWppBtn"
-                  onclick="chamarWhatsapp('Olá! Gostaria de agendar meu orçamento presencial para iniciar meu projeto.')">
+                  onclick="openVideoModal('Avaliação Presencial', 'dQw4w9WgXcQ')">
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                     <path d="M8 5v14l11-7z" />
                   </svg>
@@ -3277,16 +3320,33 @@
 
 
     // LOGICA DO MODAL DE VÍDEO ATUALIZADA
-    function openVideoModal() {
+    function openVideoModal(sourceName, videoId) {
       const modal = document.getElementById('videoModal');
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
-      if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
+
+      const targetVideoId = videoId || 'dQw4w9WgXcQ';
+      if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+        ytPlayer.loadVideoById(targetVideoId);
+      } else if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
         ytPlayer.playVideo();
       }
+
       const overlay = document.getElementById('videoWppBtnContainer');
       overlay.style.opacity = '0';
       overlay.style.pointerEvents = 'none';
+
+      // Dinamicamente altera a mensagem do botão WhatsApp no modal
+      const btnCta = document.querySelector('#videoModal .btn-cta');
+      if (btnCta) {
+        let msg = 'Olá! Assisti ao vídeo explicativo e gostaria de agendar meu orçamento presencial.';
+        if (sourceName === 'Campo Grande' || sourceName === 'Dourados') {
+          msg = `Olá! Assisti ao vídeo explicativo e gostaria de agendar meu orçamento presencial para a Unidade ${sourceName}.`;
+        } else if (sourceName) {
+          msg = `Olá! Assisti ao vídeo sobre "${sourceName}" e gostaria de agendar meu orçamento presencial.`;
+        }
+        btnCta.setAttribute('onclick', `chamarWhatsapp('${msg}')`);
+      }
     }
 
     function closeVideoModal() {
@@ -3367,28 +3427,32 @@
         match: "100% Relevante para você",
         desc: "Acreditamos que uma tatuagem é uma obra de arte que te acompanha para sempre. Por isso, a primeira etapa é fundamental:<br><br><ul><li><strong>Reunião Criativa:</strong> É o momento que você expõe todas as suas ideias em um bate-papo presencial diretamente com o artista para que ele possa absorver e aperfeiçoar toda a essência do seu projeto.</li><li><strong>Estudo Anatômico:</strong> O projeto é criado fluindo e se encaixando com a anatomia do seu corpo, garantindo harmonia.</li><li><strong>Transparência Total:</strong> Tiramos todas as suas dúvidas com relação ao tempo necessário para a execução do serviço, sessões, valores, formas de pagamento e disponibilidade da agenda do estúdio.</li></ul>",
         btnText: "Iniciar Episódio 1",
-        wppText: "Olá! Gostaria de agendar meu orçamento presencial para iniciar meu projeto."
+        wppText: "Olá! Gostaria de agendar meu orçamento presencial para iniciar meu projeto.",
+        videoId: "dQw4w9WgXcQ"
       },
       2: {
         title: "Projeto Personalizado",
         match: "100% Biosseguro e Regulamentado",
         desc: "Na hora da sessão, o foco é a sua segurança e conforto. Trabalhamos seguindo os protocolos mais rígidos:<br><br><ul><li><strong>Materiais Descartáveis:</strong> Agulhas e biqueiras 100% descartáveis, abertas sempre na sua frente.</li><li><strong>Assepsia Total:</strong> Superfícies isoladas e higienizadas com produtos hospitalares.</li><li><strong>Conforto Premium:</strong> Ambiente climatizado, trilha sonora agradável e pausas caso você precise, para uma sessão tranquila.</li></ul>",
         btnText: "Saber mais sobre as sessões",
-        wppText: "Gostaria de saber mais sobre a infraestrutura e como funciona o dia da sessão."
+        wppText: "Gostaria de saber mais sobre a infraestrutura e como funciona o dia da sessão.",
+        videoId: ""
       },
       3: {
         title: "Acompanhamento Pós-Procedimento",
         match: "Flexível para o seu momento",
         desc: "Não queremos que o orçamento seja um obstáculo para você ter uma arte incrível. Por isso, facilitamos:<br><br><ul><li><strong>Pix e Dinheiro:</strong> Com descontos especiais e facilidade na transferência.</li><li><strong>Cartão de Crédito:</strong> Parcelamos o seu projeto para que ele caiba no seu bolso de forma tranquila.</li><li><strong>Sessões Fracionadas:</strong> Para fechamentos de braço/perna, cobramos por sessão realizada.</li></ul>",
         btnText: "Consultar Pagamentos",
-        wppText: "Poderiam me explicar as formas de parcelamento para um projeto maior?"
+        wppText: "Poderiam me explicar as formas de parcelamento para um projeto maior?",
+        videoId: ""
       },
       4: {
         title: "Garantia de Serviço",
         match: "Compromisso vitalício com a arte",
         desc: "Nossa relação não acaba quando a agulha desliga. O Napele 67 se compromete com a cicatrização perfeita:<br><br><ul><li><strong>Kit Cuidados:</strong> Orientamos detalhadamente sobre pomadas e sabonetes (e muitas vezes fornecemos opções no estúdio).</li><li><strong>Acompanhamento:</strong> Você envia fotos da cicatrização para nossa equipe avaliar o progresso via WhatsApp.</li><li><strong>Garantia de Retoque:</strong> Se houver necessidade técnica, o retoque após 30 dias está incluso. Excelência até o fim.</li></ul>",
         btnText: "Falar com a Equipe",
-        wppText: "Quais são os cuidados no pós-atendimento e como funciona a garantia de retoque?"
+        wppText: "Quais são os cuidados no pós-atendimento e como funciona a garantia de retoque?",
+        videoId: ""
       }
     };
 
@@ -3410,7 +3474,12 @@
 
         const btn = document.getElementById('epWppBtn');
         btn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> ${data.btnText}`;
-        btn.onclick = () => chamarWhatsapp(data.wppText);
+        
+        if (data.videoId) {
+          btn.onclick = () => openVideoModal(data.title, data.videoId);
+        } else {
+          btn.onclick = () => chamarWhatsapp(data.wppText);
+        }
 
         panel.style.opacity = 1;
       }, 200);
