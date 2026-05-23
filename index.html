@@ -1833,6 +1833,48 @@
       }
     }
 
+    /* ===== VÍDEO LIGHTBOX RESPONSIVO (VERTICAL E HORIZONTAL) ===== */
+    .video-container {
+      position: relative;
+      width: 100%;
+      margin: auto;
+      transition: max-width 0.3s ease;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+    }
+    .video-container.landscape {
+      aspect-ratio: 16 / 9;
+      max-width: 800px;
+    }
+    .video-container.portrait {
+      aspect-ratio: 9 / 16;
+      max-width: min(380px, 45vh);
+    }
+    .video-container iframe,
+    .video-container div[id="budgetVideo"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    #videoWppBtnContainer h3 {
+      font-size: clamp(1.3rem, 5.5vw, 2.2rem) !important;
+      padding: 0 16px;
+      line-height: 1.2;
+    }
+    #videoWppBtnContainer .btn-cta {
+      font-size: clamp(0.85rem, 4vw, 1.15rem) !important;
+      padding: 12px 20px !important;
+      white-space: normal !important;
+      text-align: center;
+      max-width: 90%;
+    }
+
     /* ===== RESPONSIVO ===== */
     @media (max-width: 900px) {
       .nav-links {
@@ -2843,7 +2885,8 @@
               <div class="episode-row active" onclick="selectEpisode(1, this)">
                 <div class="episode-number">1</div>
                 <div class="episode-thumb"
-                  style="background-image: url('https://images.pexels.com/photos/4123896/pexels-photo-4123896.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  style="background-image: url('https://images.pexels.com/photos/4123896/pexels-photo-4123896.jpeg?auto=compress&cs=tinysrgb&w=800');"
+                  onclick="event.stopPropagation(); openVideoModal('Avaliação Presencial', 'KgZnGrwbC2Q');">
                   <div class="episode-play-icon"><svg viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
                     </svg></div>
@@ -2860,7 +2903,8 @@
               <div class="episode-row" onclick="selectEpisode(2, this)">
                 <div class="episode-number">2</div>
                 <div class="episode-thumb"
-                  style="background-image: url('https://images.pexels.com/photos/3864109/pexels-photo-3864109.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  style="background-image: url('https://images.pexels.com/photos/3864109/pexels-photo-3864109.jpeg?auto=compress&cs=tinysrgb&w=800');"
+                  onclick="event.stopPropagation(); openVideoModal('Projeto Personalizado', 'wR5aR2YB9mY');">
                   <div class="episode-play-icon"><svg viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
                     </svg></div>
@@ -3151,28 +3195,28 @@
     </div>
   </div>
 
-  <!-- MODAL DE VÍDEO (ORÇAMENTO) -->
   <div class="modal-overlay" id="videoModal">
     <div class="modal-content"
-      style="max-width: 800px; padding: 0; background: #000; overflow: hidden; position: relative;">
-      <button class="modal-close" style="z-index: 30;" aria-label="Fechar vídeo" onclick="closeVideoModal()">×</button>
-      <div style="padding: 56.25% 0 0 0; position: relative;">
-        <div id="budgetVideo" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
-      </div>
+      style="max-width: 800px; padding: 0; background: transparent; overflow: visible; border: none; position: relative; box-shadow: none; margin: auto; width: 90%; display: flex; align-items: center; justify-content: center;">
+      <button class="modal-close" style="z-index: 30; position: absolute; top: -55px; right: 0; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.25);" aria-label="Fechar vídeo" onclick="closeVideoModal()">×</button>
+      
+      <div id="videoContainer" class="video-container landscape">
+        <div id="budgetVideo"></div>
 
-      <div id="videoWppBtnContainer"
-        style="position: absolute; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 20; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;">
-        <h3
-          style="color: #fff; font-family: 'Anton', sans-serif; font-size: 2.2rem; letter-spacing: 1px; margin-bottom: 20px; text-shadow: 0 4px 15px rgba(0,0,0,0.8); text-align: center;">
-          PRONTO PARA COMEÇAR?</h3>
-        <button class="btn-cta"
-          onclick="chamarWhatsapp('Olá! Assisti ao vídeo explicativo e gostaria de agendar meu orçamento presencial.')">
-          <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-            <path
-              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-          </svg>
-          Agendar Orçamento Presencial
-        </button>
+        <div id="videoWppBtnContainer"
+          style="position: absolute; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 20; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;">
+          <h3
+            style="color: #fff; font-family: 'Anton', sans-serif; font-size: 2.2rem; letter-spacing: 1px; margin-bottom: 20px; text-shadow: 0 4px 15px rgba(0,0,0,0.8); text-align: center;">
+            PRONTO PARA COMEÇAR?</h3>
+          <button class="btn-cta"
+            onclick="chamarWhatsapp('Olá! Assisti ao vídeo explicativo e gostaria de agendar meu orçamento presencial.')">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+            Agendar Orçamento Presencial
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -3326,6 +3370,18 @@
       document.body.style.overflow = 'hidden';
 
       const targetVideoId = videoId || 'dQw4w9WgXcQ';
+
+      // Gerenciar a responsividade e proporção (9:16 ou 16:9) dinamicamente
+      const container = document.getElementById('videoContainer');
+      const verticalVideos = ['KgZnGrwbC2Q', 'wR5aR2YB9mY'];
+      if (verticalVideos.includes(targetVideoId)) {
+        container.classList.remove('landscape');
+        container.classList.add('portrait');
+      } else {
+        container.classList.remove('portrait');
+        container.classList.add('landscape');
+      }
+
       if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
         ytPlayer.loadVideoById(targetVideoId);
       } else if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
@@ -3428,7 +3484,7 @@
         desc: "Acreditamos que uma tatuagem é uma obra de arte que te acompanha para sempre. Por isso, a primeira etapa é fundamental:<br><br><ul><li><strong>Reunião Criativa:</strong> É o momento que você expõe todas as suas ideias em um bate-papo presencial diretamente com o artista para que ele possa absorver e aperfeiçoar toda a essência do seu projeto.</li><li><strong>Estudo Anatômico:</strong> O projeto é criado fluindo e se encaixando com a anatomia do seu corpo, garantindo harmonia.</li><li><strong>Transparência Total:</strong> Tiramos todas as suas dúvidas com relação ao tempo necessário para a execução do serviço, sessões, valores, formas de pagamento e disponibilidade da agenda do estúdio.</li></ul>",
         btnText: "Iniciar Episódio 1",
         wppText: "Olá! Gostaria de agendar meu orçamento presencial para iniciar meu projeto.",
-        videoId: "dQw4w9WgXcQ"
+        videoId: "KgZnGrwbC2Q"
       },
       2: {
         title: "Projeto Personalizado",
@@ -3436,7 +3492,7 @@
         desc: "Na hora da sessão, o foco é a sua segurança e conforto. Trabalhamos seguindo os protocolos mais rígidos:<br><br><ul><li><strong>Materiais Descartáveis:</strong> Agulhas e biqueiras 100% descartáveis, abertas sempre na sua frente.</li><li><strong>Assepsia Total:</strong> Superfícies isoladas e higienizadas com produtos hospitalares.</li><li><strong>Conforto Premium:</strong> Ambiente climatizado, trilha sonora agradável e pausas caso você precise, para uma sessão tranquila.</li></ul>",
         btnText: "Saber mais sobre as sessões",
         wppText: "Gostaria de saber mais sobre a infraestrutura e como funciona o dia da sessão.",
-        videoId: ""
+        videoId: "wR5aR2YB9mY"
       },
       3: {
         title: "Acompanhamento Pós-Procedimento",
