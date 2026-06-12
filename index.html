@@ -1845,14 +1845,17 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
     }
+
     .video-container.landscape {
       aspect-ratio: 16 / 9;
       max-width: 800px;
     }
+
     .video-container.portrait {
       aspect-ratio: 9 / 16;
       max-width: min(380px, 45vh);
     }
+
     .video-container iframe,
     .video-container div[id="budgetVideo"] {
       position: absolute;
@@ -1862,11 +1865,13 @@
       height: 100%;
       border: none;
     }
+
     #videoWppBtnContainer h3 {
       font-size: clamp(1.3rem, 5.5vw, 2.2rem) !important;
       padding: 0 16px;
       line-height: 1.2;
     }
+
     #videoWppBtnContainer .btn-cta {
       font-size: clamp(0.85rem, 4vw, 1.15rem) !important;
       padding: 12px 20px !important;
@@ -2037,7 +2042,7 @@
       }
 
       .episode-row {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
       }
 
       .episode-number {
@@ -2497,14 +2502,13 @@
                   <div class="card-info">Black Work</div>
                 </div>
               </div>
-              <div class="top10-card" onclick="openStyleModal('oriental')">
+              <div class="top10-card" onclick="openStyleModal('suminagashi')">
                 <div class="top10-number">6</div>
                 <div class="top10-card-inner">
-                  <div class="card-img"
-                    style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  <div class="card-img" style="background-image:url('img/6-Suminagashi/IMG_7658.jpg');">
                   </div>
                   <div class="card-gradient"></div>
-                  <div class="card-info">Oriental japonês<small>Irezumi</small></div>
+                  <div class="card-info">Suminagashi<small>Cyber & Geométrico</small></div>
                 </div>
               </div>
               <div class="top10-card" onclick="openStyleModal('maori')">
@@ -2529,7 +2533,7 @@
               <div class="top10-card" onclick="openStyleModal('anime')">
                 <div class="top10-number">9</div>
                 <div class="top10-card-inner">
-                  <div class="card-img" style="background-image:url('img/9-anime/IMG_1735.JPG.jpeg');">
+                  <div class="card-img" style="background-image:url('img/9-anime/PHOTOgoku-2026-06-12-14-18-30.jpg');">
                   </div>
                   <div class="card-gradient"></div>
                   <div class="card-info">Anime<small>& Geek</small></div>
@@ -2921,17 +2925,19 @@
               <div class="episode-row" onclick="selectEpisode(3, this)">
                 <div class="episode-number">3</div>
                 <div class="episode-thumb"
-                  style="background-image: url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  style="background-image: url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');"
+                  onclick="event.stopPropagation(); openVideoModal('Acompanhamento Pós-Procedimento & Garantia de Serviço', 'xBZ0bVhEpFM');">
                   <div class="episode-play-icon"><svg viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
                     </svg></div>
                 </div>
                 <div class="episode-info">
                   <div class="episode-title-bar">
-                    <span class="episode-title">Acompanhamento Pós-Procedimento</span>
+                    <span class="episode-title">Acompanhamento Pós-Procedimento & Garantia de Serviço</span>
                     <span class="episode-duration">Etapa 3</span>
                   </div>
-                  <p class="episode-desc">Condições facilitadas para você realizar o projeto dos seus sonhos sem aperto.
+                  <p class="episode-desc">Condições facilitadas para você realizar o projeto dos seus sonhos sem aperto
+                    e com uma garantia que só nós oferecemos.
                   </p>
                 </div>
               </div>
@@ -2989,7 +2995,7 @@
                 <button class="btn btn-primary episode-details-btn" id="epWppBtn"
                   onclick="openVideoModal('Avaliação Presencial', 'KgZnGrwbC2Q')">
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path d="M8 5v14l11-7z" />
+                    <pahttps: //github.com/sickn33/antigravity-awesome-skills.gitth d="M8 5v14l11-7z" />
                   </svg>
                   Iniciar Episódio 1
                 </button>
@@ -3198,8 +3204,10 @@
   <div class="modal-overlay" id="videoModal">
     <div class="modal-content"
       style="max-width: 800px; padding: 0; background: transparent; overflow: visible; border: none; position: relative; box-shadow: none; margin: auto; width: 90%; display: flex; align-items: center; justify-content: center;">
-      <button class="modal-close" style="z-index: 30; position: absolute; top: -55px; right: 0; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.25);" aria-label="Fechar vídeo" onclick="closeVideoModal()">×</button>
-      
+      <button class="modal-close"
+        style="z-index: 30; position: absolute; top: -55px; right: 0; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.25);"
+        aria-label="Fechar vídeo" onclick="closeVideoModal()">×</button>
+
       <div id="videoContainer" class="video-container landscape">
         <div id="budgetVideo"></div>
 
@@ -3255,15 +3263,15 @@
     let chatStarted = false;
 
     const modalData = {
-      realismo: { title: "Realismo (Preto e cinza)", desc: "Artes tridimensionais ultra-realistas com foco obsessivo em texturas de pele, microdetalhes, contrastes dramáticos de sombras e profundidade. Cada projeto é planejado para alcançar a máxima fidelidade fotográfica na pele.", images: ["img/1-realismo/30C0C9C1-87C1-467E-9ABD-A9DB8269D004.JPG.jpeg", "img/1-realismo/42BBAF0E-91B5-4343-9F3F-9DE09B4018F6.JPG.jpeg", "img/1-realismo/IMG_3946.JPG.jpeg", "img/1-realismo/BB75F0C6-6A17-4A69-96D9-8479AE6469E1.JPG.jpeg", "img/1-realismo/E44780C8-01AB-431C-B5E7-F739E3210AE3.JPG.jpeg", "img/1-realismo/WhatsApp Image 2026-05-14 at 01.30.18.jpeg"] },
+      realismo: { title: "Realismo (Preto e cinza)", desc: "Artes tridimensionais ultra-realistas com foco obsessivo em texturas de pele, microdetalhes, contrastes dramáticos de sombras e profundidade. Cada projeto é planejado para alcançar a máxima fidelidade fotográfica na pele.", images: ["img/1-realismo/30C0C9C1-87C1-467E-9ABD-A9DB8269D004.JPG.jpeg", "img/1-realismo/42BBAF0E-91B5-4343-9F3F-9DE09B4018F6.JPG.jpeg", "img/1-realismo/IMG_3946.JPG.jpeg", "img/1-realismo/BB75F0C6-6A17-4A69-96D9-8479AE6469E1.JPG.jpeg", "img/1-realismo/E44780C8-01AB-431C-B5E7-F739E3210AE3.JPG.jpeg", "img/1-realismo/WhatsApp Image 2026-05-14 at 01.30.18.jpeg", "img/1-realismo/PHOTOJesus-2026-06-12-14-37-03 (1).jpg", "img/1-realismo/PHOTO-2026-06-12-14-37-03.jpg"] },
       finotraco: { title: "Fino Traço", desc: "A sofisticação do traço ultra-fino, preciso e minimalista. Perfeito para projetos delicados, florais detalhados, geometria sagrada e desenhos fluidos que se harmonizam com as linhas naturais do corpo.", images: ["img/2-fine line/IMG_1733.JPG.jpeg", "img/2-fine line/IMG_1757.JPG.jpeg", "img/2-fine line/4784013E-BBE3-4BC7-AEF8-39010D70EEC2.JPG.jpeg"] },
       lettering: { title: "Lettering", desc: "A caligrafia artística elevada ao nível de obra de arte. Letras exclusivas desenhadas à mão (custom lettering), inspiradas na cultura chicana e no graffiti, com contrastes marcantes e fluidez anatômica.", images: ["img/3-Lettering/067E87D5-F3F9-4DAC-A751-27543A9C2F5D.JPG.jpeg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.22.45.jpeg", "img/3-Lettering/IMG_1875.JPG.jpeg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.27.10.jpeg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.22.15.jpeg"] },
       oldschool: { title: "Old School", desc: "A essência da tatuagem tradicional ocidental. Linhas pretas bold e sólidas, paleta de cores primárias marcante e designs icônicos carregados de história e simbolismo clássico com durabilidade vitalícia garantida.", images: ["img/4-Oldschool/old.jpeg.jpg"] },
       blackwork: { title: "Black Work", desc: "A potência do preto puro em composições ricas de alto contraste. Fusões artísticas que combinam texturas densas, geometrias complexas, pontilhismo fino e a fluidez orgânica inspirada no Suminagashi japonês.", images: ["img/5-Blackwork/1C4BE1ED-128B-4D01-AA2C-5925E8F63200.JPG.jpeg", "img/5-Blackwork/IMG_1850.JPG.jpeg", "img/5-Blackwork/IMG_3033.JPG.jpeg", "img/5-Blackwork/WhatsApp Image 2026-05-14 at 01.22.55.jpeg", "img/5-Blackwork/WhatsApp Image 2026-05-14 at 01.20.51.jpeg"] },
-      oriental: { title: "Oriental japonês", desc: "Arte tradicional Irezumi repaginada. Composições majestosas com dragões, carpas, samurais e gueixas, contornados por fundos fluidos de ondas, ventos e nuvens que criam fechamentos de braços e costas monumentais." },
+      suminagashi: { title: "Suminagashi, Cyber & Geométrico", desc: "A fusão perfeita entre a fluidez da técnica tradicional de pintura Suminagashi, a estética cibernética/cyberpunk futurista (Cyber) e a precisão cirúrgica de formas e padrões geométricos tridimensionais.", images: ["img/6-Suminagashi/D6EF3F82-5EF3-4C63-8B29-81CC66CA698A.jpg", "img/6-Suminagashi/IMG_5718.png", "img/6-Suminagashi/IMG_5721.jpg", "img/6-Suminagashi/IMG_7658.jpg"] },
       maori: { title: "Maori & Tribal", desc: "Simbolismo sagrado ancestral eternizado na pele. Padrões geométricos tribais complexos com linhas pretas sólidas e cortes precisos, onde cada curva e detalhe contam a história de força, proteção e conquistas do cliente.", images: ["img/7-Maori/D94F4030-40E3-494C-8C3D-7A2EC4282EC1.JPG.jpeg", "img/7-Maori/IMG_1766.JPG.jpeg"] },
       colorido: { title: "Colorido", desc: "Explosão de cores vibrantes com técnicas de saturação avançadas e transições de degradê perfeitas (color fusion). Projetos únicos com contraste marcante para garantir que as cores permaneçam radiantes ao longo dos anos.", images: ["img/4-Oldschool/WhatsApp Image 2026-05-14 at 01.20.21.jpeg", "img/8-Colorido/IMG_3578.JPG.jpeg", "img/8-Colorido/IMG_7981.JPG.jpeg", "img/8-Colorido/1D5A553C-3B11-4EAE-8237-EE32282F11D6.JPG.jpeg", "img/8-Colorido/WhatsApp Image 2026-05-14 at 01.44.22.jpeg"] },
-      anime: { title: "Anime & Geek", desc: "A cultura pop e os animes elevados à categoria de arte de galeria. Traços fiéis aos mangás originais, técnicas mistas de traço fino, hachuras clássicas e coloração rica para eternizar seus personagens favoritos na pele.", images: ["img/9-anime/Anime.jpeg.jpg", "img/9-anime/IMG_1841.JPG.jpeg"] },
+      anime: { title: "Anime & Geek", desc: "A cultura pop e os animes elevados à categoria de arte de galeria. Traços fiéis aos mangás originais, técnicas mistas de traço fine, hachuras clássicas e coloração rica para eternizar seus personagens favoritos na pele.", images: ["img/9-anime/IMG_1735.JPG.jpeg", "img/9-anime/PHOTOgoku-2026-06-12-14-18-30.jpg", "img/9-anime/IMG_1841.JPG.jpeg"] },
       minimalista: { title: "Minimalista", desc: "A beleza absoluta da simplicidade e da elegância sutil. Projetos pequenos com conceitos profundos, unindo microrealismo, linhas finas e precisão cirúrgica para criar artes discretas com grande significado.", images: ["img/10-minimalista/WhatsApp Image 2026-05-14 at 01.29.41.jpeg", "img/10-minimalista/6FD21235-9411-4EB2-BCF3-9C83982AB3B1.JPG.jpeg", "img/10-minimalista/IMG_1761.JPG.jpeg", "img/10-minimalista/IMG_3928.JPG.jpeg"] }
     };
 
@@ -3333,6 +3341,9 @@
 
     // ===== API DO YOUTUBE PARA DETECTAR FIM DO VÍDEO =====
     let ytPlayer;
+    let currentVideoId = '';
+    let modalDataCurrentSourceName = '';
+
     function onYouTubeIframeAPIReady() {
       ytPlayer = new YT.Player('budgetVideo', {
         videoId: 'dQw4w9WgXcQ',
@@ -3352,6 +3363,45 @@
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.ENDED) {
         const overlay = document.getElementById('videoWppBtnContainer');
+        const titleEl = overlay.querySelector('h3');
+        const btnCta = overlay.querySelector('.btn-cta');
+
+        if (currentVideoId === 'KgZnGrwbC2Q') {
+          // Etapa 1 ended
+          titleEl.textContent = 'PRÓXIMA ETAPA';
+          btnCta.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="margin-right:8px;"><path d="M8 5v14l11-7z"/></svg> Avançar para Etapa 2: Projeto Personalizado`;
+          btnCta.onclick = () => {
+            selectEpisode(2, document.querySelectorAll('.episode-row')[1]);
+            openVideoModal('Projeto Personalizado', 'wR5aR2YB9mY');
+          };
+        } else if (currentVideoId === 'wR5aR2YB9mY') {
+          // Etapa 2 ended
+          titleEl.textContent = 'PRÓXIMA ETAPA';
+          btnCta.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="margin-right:8px;"><path d="M8 5v14l11-7z"/></svg> Avançar para Etapa 3: Acompanhamento & Garantia`;
+          btnCta.onclick = () => {
+            selectEpisode(3, document.querySelectorAll('.episode-row')[2]);
+            openVideoModal('Acompanhamento Pós-Procedimento & Garantia de Serviço', 'xBZ0bVhEpFM');
+          };
+        } else if (currentVideoId === 'xBZ0bVhEpFM') {
+          // Etapa 3 ended
+          titleEl.textContent = 'JORNADA CONCLUÍDA!';
+          btnCta.innerHTML = `<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" style="margin-right:8px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Falar com a Equipe no WhatsApp`;
+          btnCta.onclick = () => {
+            chamarWhatsapp('Olá! Concluí a jornada explicativa das 3 etapas e gostaria de agendar meu orçamento presencial.');
+          };
+        } else {
+          titleEl.textContent = 'PRONTO PARA COMEÇAR?';
+          btnCta.innerHTML = `<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" style="margin-right:8px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Agendar Orçamento Presencial`;
+
+          let msg = 'Olá! Assisti ao vídeo explicativo e gostaria de agendar meu orçamento presencial.';
+          if (modalDataCurrentSourceName === 'Campo Grande' || modalDataCurrentSourceName === 'Dourados') {
+            msg = `Olá! Assisti ao vídeo explicativo e gostaria de agendar meu orçamento presencial para a Unidade ${modalDataCurrentSourceName}.`;
+          } else if (modalDataCurrentSourceName) {
+            msg = `Olá! Assisti ao vídeo sobre "${modalDataCurrentSourceName}" e gostaria de agendar meu orçamento presencial.`;
+          }
+          btnCta.onclick = () => chamarWhatsapp(msg);
+        }
+
         overlay.style.opacity = '1';
         overlay.style.pointerEvents = 'auto';
       }
@@ -3370,10 +3420,12 @@
       document.body.style.overflow = 'hidden';
 
       const targetVideoId = videoId || 'dQw4w9WgXcQ';
+      currentVideoId = targetVideoId;
+      modalDataCurrentSourceName = sourceName;
 
       // Gerenciar a responsividade e proporção (9:16 ou 16:9) dinamicamente
       const container = document.getElementById('videoContainer');
-      const verticalVideos = ['KgZnGrwbC2Q', 'wR5aR2YB9mY', 'zOtjXxVp304'];
+      const verticalVideos = ['KgZnGrwbC2Q', 'wR5aR2YB9mY', 'zOtjXxVp304', 'xBZ0bVhEpFM'];
       if (verticalVideos.includes(targetVideoId)) {
         container.classList.remove('landscape');
         container.classList.add('portrait');
@@ -3401,7 +3453,7 @@
         } else if (sourceName) {
           msg = `Olá! Assisti ao vídeo sobre "${sourceName}" e gostaria de agendar meu orçamento presencial.`;
         }
-        btnCta.setAttribute('onclick', `chamarWhatsapp('${msg}')`);
+        btnCta.onclick = () => chamarWhatsapp(msg);
       }
     }
 
@@ -3494,12 +3546,12 @@
         videoId: "wR5aR2YB9mY"
       },
       3: {
-        title: "Acompanhamento Pós-Procedimento",
+        title: "Acompanhamento Pós-Procedimento & Garantia de Serviço",
         match: "Flexível para o seu momento",
         desc: "Não queremos que o orçamento seja um obstáculo para você ter uma arte incrível. Por isso, facilitamos:<br><br><ul><li><strong>Pix e Dinheiro:</strong> Com descontos especiais e facilidade na transferência.</li><li><strong>Cartão de Crédito:</strong> Parcelamos o seu projeto para que ele caiba no seu bolso de forma tranquila.</li><li><strong>Sessões Fracionadas:</strong> Para fechamentos de braço/perna, cobramos por sessão realizada.</li></ul>",
-        btnText: "Consultar Pagamentos",
+        btnText: "Iniciar Episódio 3",
         wppText: "Poderiam me explicar as formas de parcelamento para um projeto maior?",
-        videoId: ""
+        videoId: "xBZ0bVhEpFM"
       },
       4: {
         title: "Garantia de Serviço",
@@ -3529,7 +3581,7 @@
 
         const btn = document.getElementById('epWppBtn');
         btn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> ${data.btnText}`;
-        
+
         if (data.videoId) {
           btn.onclick = () => openVideoModal(data.title, data.videoId);
         } else {
