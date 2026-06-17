@@ -811,6 +811,14 @@
       will-change: transform;
     }
 
+    .top10-card-inner .card-img {
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: #000;
+      opacity: 0.8;
+    }
+
     @media (hover: hover) {
       .top10-card-inner:hover {
         transform: scale(1.05) translateX(5px);
@@ -1821,7 +1829,8 @@
     .modal-gallery img {
       width: 100%;
       height: 250px;
-      object-fit: cover;
+      object-fit: contain;
+      background: #111;
       border-radius: 8px;
       transition: transform 0.3s;
       cursor: pointer;
@@ -1830,6 +1839,147 @@
     @media (hover: hover) {
       .modal-gallery img:hover {
         transform: scale(1.05);
+      }
+    }
+
+    /* ===== CATÁLOGO DE JOIAS ===== */
+    .catalog-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #b3b3b3;
+      padding: 0 18px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      height: 36px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+    }
+    .tab-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .catalog-card-code {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      flex-grow: 1;
+      padding-bottom: 20px;
+      scrollbar-width: thin;
+    }
+    .catalog-card {
+      background: rgba(20, 20, 20, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    .catalog-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 15px rgba(229, 9, 20, 0.15);
+    }
+    .catalog-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #111;
+      transition: transform 0.3s ease;
+    }
+    .catalog-card:hover img {
+      transform: scale(1.05);
+    }
+    .catalog-card-info {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-grow: 1;
+    }
+    .catalog-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .catalog-card-price {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #46d369;
+    }
+    .catalog-card-btn {
+      background: var(--accent-grad);
+      border: none;
+      color: #fff;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: auto;
+      transition: opacity 0.2s;
+    }
+    .catalog-card-btn:hover {
+      opacity: 0.9;
+    }
+    @media (max-width: 600px) {
+      .tab-btn {
+        height: 44px !important;
+        border-radius: 22px !important;
+        font-size: 0.95rem !important;
+        padding: 0 20px !important;
+      }
+      .catalog-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+        gap: 12px !important;
+      }
+      .catalog-card img {
+        height: 130px !important;
+      }
+      .catalog-card-title {
+        font-size: 0.85rem !important;
+      }
+      .catalog-card-price {
+        font-size: 0.95rem !important;
+      }
+      .catalog-card-btn {
+        font-size: 0.8rem !important;
+        padding: 6px !important;
       }
     }
 
@@ -2139,6 +2289,8 @@
         max-width: 185px;
         flex-shrink: 0;
         height: 150px;
+        display: flex;
+        align-items: center;
         padding-top: 5px;
         padding-bottom: 5px;
       }
@@ -2278,8 +2430,7 @@
         <div class="nav-links">
           <span onclick="scrollToId('inicio')">Início</span>
           <span onclick="scrollToId('top10')">Estilos</span>
-          <span onclick="scrollToId('servicos-tattoo')">Tatuagem</span>
-          <span onclick="scrollToId('servicos-piercing')">Piercing</span>
+          <span onclick="scrollToId('servicos-piercing')">Piercing e Remoção</span>
         </div>
       </div>
     </div>
@@ -2443,6 +2594,8 @@
             if (next) next.style.display = (Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth - 10) ? 'none' : 'flex';
           }
         </script>
+
+        <!-- TOP 10 ESTILOS -->
         <section class="row reveal" id="top10">
           <h3 class="row-title" style="display: flex; justify-content: space-between; align-items: center;">
             <span>Brasil: Top 10 Estilos de Tatuagem</span>
@@ -2555,49 +2708,27 @@
           </div>
         </section>
 
-        <!-- SERVIÇOS DE TATUAGEM E REMOÇÃO -->
-        <section class="row reveal delay-1" id="servicos-tattoo">
-          <h3 class="row-title">Serviços de Tatuagem e Remoção</h3>
+        <!-- SERVIÇOS DE PIERCING E REMOÇÃO -->
+        <section class="row reveal delay-1" id="servicos-piercing">
+          <h3 class="row-title" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Serviços de Piercing e Remoção</span>
+            <span class="mobile-scroll-hint"
+              style="font-size: 0.75rem; font-weight: normal; color: var(--muted); display: none; align-items: center; gap: 4px; text-transform: none; letter-spacing: 0;">Deslize
+              ⟶</span>
+          </h3>
           <div class="row-container">
-            <div class="row-scroller" id="tattoo-scroller">
-              <article class="card" onclick="chamarWhatsapp('Gostaria de fazer um novo projeto de tatuagem.')">
+            <button class="nav-btn nav-prev" aria-label="Rolar para esquerda"
+              onclick="scrollRow('piercing-scroller', -1)">‹</button>
+            <div class="row-scroller" id="piercing-scroller" onscroll="handleScrollCheck(this)">
+              
+              <article class="card" onclick="openCatalogModal()">
                 <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/4123892/pexels-photo-4123892.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  style="background-image:url('https://images.pexels.com/photos/2787341/pexels-photo-2787341.jpeg?auto=compress&cs=tinysrgb&w=800');">
                 </div>
                 <div class="card-gradient"></div>
-                <div class="card-info">Novo Projeto<small>Tatuagens exclusivas</small></div>
+                <div class="card-info">Catálogo de Joias<small>Aço cirúrgico & Titânio</small></div>
               </article>
-              <article class="card" onclick="chamarWhatsapp('Tenho interesse em reformar uma tatuagem antiga.')">
-                <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/1702772/pexels-photo-1702772.jpeg?auto=compress&cs=tinysrgb&w=800');">
-                </div>
-                <div class="card-gradient"></div>
-                <div class="card-info">Reforma<small>De tatuagem antiga</small></div>
-              </article>
-              <article class="card" onclick="chamarWhatsapp('Preciso fazer uma cobertura (cover up) de uma tatuagem.')">
-                <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/2255355/pexels-photo-2255355.jpeg?auto=compress&cs=tinysrgb&w=800');">
-                </div>
-                <div class="card-gradient"></div>
-                <div class="card-info">Cobertura<small>Cover Up</small></div>
-              </article>
-              <article class="card"
-                onclick="chamarWhatsapp('Quero saber mais sobre a remoção a laser de tatuagem, micropigmentação ou manchas.')">
-                <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');">
-                </div>
-                <div class="card-gradient"></div>
-                <div class="card-info">Remoção de Tatuagem<small>Micropigmentação e manchas</small></div>
-              </article>
-            </div>
-          </div>
-        </section>
 
-        <!-- ESTÚDIO DE PIERCING -->
-        <section class="row reveal delay-2" id="servicos-piercing">
-          <h3 class="row-title">Estúdio de Piercing</h3>
-          <div class="row-container">
-            <div class="row-scroller" id="piercing-scroller">
               <article class="card" onclick="chamarWhatsapp('Gostaria de saber sobre perfuração de piercing.')">
                 <div class="card-img"
                   style="background-image:url('https://images.pexels.com/photos/3760852/pexels-photo-3760852.jpeg?auto=compress&cs=tinysrgb&w=800');">
@@ -2605,21 +2736,15 @@
                 <div class="card-gradient"></div>
                 <div class="card-info">Perfuração<small>Valores já incluem joia</small></div>
               </article>
-              <article class="card" onclick="chamarWhatsapp('Gostaria de conhecer o catálogo de joias.')">
-                <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/2787341/pexels-photo-2787341.jpeg?auto=compress&cs=tinysrgb&w=800');">
-                </div>
-                <div class="card-gradient"></div>
-                <div class="card-info">Catálogo de Joias<small>Aço cirúrgico & Titânio</small></div>
-              </article>
-              <article class="card"
-                onclick="chamarWhatsapp('Tenho interesse no visagismo de orelhas (projeto auricular).')">
+
+              <article class="card" onclick="chamarWhatsapp('Tenho interesse no visagismo de orelhas (projeto auricular).')">
                 <div class="card-img"
                   style="background-image:url('https://images.pexels.com/photos/3864109/pexels-photo-3864109.jpeg?auto=compress&cs=tinysrgb&w=800');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="card-info">Visagismo de Orelhas<small>Projeto Auricular</small></div>
               </article>
+
               <article class="card" onclick="chamarWhatsapp('Queria informações sobre a reconstrução de lóbulo.')">
                 <div class="card-img"
                   style="background-image:url('https://images.pexels.com/photos/6311564/pexels-photo-6311564.jpeg?auto=compress&cs=tinysrgb&w=800');">
@@ -2627,7 +2752,18 @@
                 <div class="card-gradient"></div>
                 <div class="card-info">Reconstrução de Lóbulo<small>Procedimento não cirúrgico</small></div>
               </article>
+
+              <article class="card" onclick="chamarWhatsapp('Quero saber mais sobre a remoção a laser de tatuagem, micropigmentação, manchas ou piercings.')">
+                <div class="card-img"
+                  style="background-image:url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                </div>
+                <div class="card-gradient"></div>
+                <div class="card-info">Remoção a Laser<small>Tattoo, micropigmentação e piercing</small></div>
+              </article>
+
             </div>
+            <button class="nav-btn nav-next" aria-label="Rolar para direita"
+              onclick="scrollRow('piercing-scroller', 1)">›</button>
           </div>
         </section>
 
@@ -2653,7 +2789,7 @@
                 </div>
               </article>
 
-              <article class="card" onclick="openVideoModal('Dourados')">
+              <article class="card" onclick="openVideoModal('Dourados', 'videodourados/IMGDourados_5985.mov')">
                 <div class="card-img"
                   style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');">
                 </div>
@@ -3100,10 +3236,10 @@
         <div class="footer-bottom">
           © <span id="year"></span> NAPELEFLIX · NAPELE 67 TATTOO — Todos os direitos reservados. <span
             style="opacity: 0.5; margin: 0 8px;">|</span> Criado por <a
-            href="https://wa.me/5521969942906?text=Ol%C3%A1%2C%20gostei%20do%20site%20e%20gostaria%20de%20um%20or%C3%A7amento%20de%20um%20site."
+            href="https://wa.me/5521920437375?text=Ol%C3%A1%2C%20gostei%20do%20site%20e%20gostaria%20de%20um%20or%C3%A7amento%20de%20um%20site."
             target="_blank"
             style="color: #fff; text-decoration: underline; text-underline-offset: 4px; font-weight: 500; transition: color 0.3s ease;"
-            onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#fff'">Bernardo</a>
+            onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#fff'">BNC</a>
         </div>
       </footer>
   </div> <!-- FIM DO SITE-CONTENT -->
@@ -3217,6 +3353,34 @@
     </div>
   </div>
 
+  <!-- MODAL DE CATÁLOGO DE JOIAS (ESTILO NETFLIX COM ABAS) -->
+  <div id="catalogModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 1000px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 25px;">
+      <button class="modal-close" onclick="closeCatalogModal()" aria-label="Fechar catálogo">×</button>
+      
+      <!-- Cabeçalho do modal -->
+      <div style="margin-bottom: 20px; flex-shrink: 0;">
+        <h2 id="catalogTitle" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: #fff;">Catálogo de Joias</h2>
+        <p style="color: var(--muted); font-size: 0.95rem;">Escolha a joia perfeita e fale com a nossa equipe no WhatsApp para reservar.</p>
+      </div>
+
+      <!-- Abas de Categorias -->
+      <div class="catalog-tabs" style="display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); scrollbar-width: none; flex-shrink: 0;">
+        <button class="tab-btn active" onclick="filterCatalog('todos', this)">Todos</button>
+        <button class="tab-btn" onclick="filterCatalog('orelha', this)">Orelha</button>
+        <button class="tab-btn" onclick="filterCatalog('nariz', this)">Nariz</button>
+        <button class="tab-btn" onclick="filterCatalog('boca', this)">Boca</button>
+        <button class="tab-btn" onclick="filterCatalog('titanio', this)">Titânio Premium</button>
+        <button class="tab-btn" onclick="filterCatalog('ouro', this)">Ouro 18k</button>
+      </div>
+
+      <!-- Grade do Catálogo -->
+      <div id="catalogGrid" class="catalog-grid">
+        <!-- Inserido dinamicamente via JS -->
+      </div>
+    </div>
+  </div>
+
   <script>
     // LOADER DE ENTRADA
     document.body.style.overflow = 'hidden';
@@ -3235,17 +3399,121 @@
 
           setTimeout(() => {
             document.body.classList.add('loaded');
-
-            setTimeout(() => {
-              document.body.style.overflow = 'auto';
-              window.scrollTo(0, 0);
-            }, 1000);
-          }, 300);
-        } else {
-          fill.style.width = `${progress}%`;
+            document.body.style.overflow = '';
+          }, 500);
         }
-      }, 40);
+      }, 50);
     });
+
+    const jewelryData = [
+      // Orelha
+      { id: 1, name: "Helix Clicker Cravejado", price: "R$ 120,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 2, name: "Tragus Labret Rosca Interna", price: "R$ 85,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 3, name: "Conch Argola Cravejada Zircônias", price: "R$ 140,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 4, name: "Flat Piercing Trinity Estrela", price: "R$ 95,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 5, name: "Rook Curved Barbell Titânio", price: "R$ 75,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 6, name: "Daith Heart Clicker Cravejado", price: "R$ 130,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 7, name: "Industrial Megabel Clássico", price: "R$ 90,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 8, name: "Lóbulo Brinco Solitário Garra", price: "R$ 65,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 9, name: "Helix Clicker Ouro 18k Cravejado", price: "R$ 450,00", category: "orelha", material: "ouro", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 10, name: "Tragus Ponto de Luz Ouro 18k", price: "R$ 290,00", category: "orelha", material: "ouro", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 11, name: "Conch Argola Lisa Ouro 18k", price: "R$ 380,00", category: "orelha", material: "ouro", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 12, name: "Daith Clicker Coração Ouro 18k", price: "R$ 480,00", category: "orelha", material: "ouro", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 13, name: "Lóbulo Mini Argola Clicker Ouro", price: "R$ 320,00", category: "orelha", material: "ouro", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 29, name: "Helix Argola Torcida Aço", price: "R$ 45,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 30, name: "Tragus Ferradura Clássica Aço", price: "R$ 40,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 31, name: "Conch Argola Lisa Black PVD Aço", price: "R$ 50,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 35, name: "Industrial Transversal Tradicional Aço", price: "R$ 55,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 36, name: "Umbigo Banana Bell Zircônia Aço", price: "R$ 60,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 37, name: "Umbigo Borboleta Cravejada Titânio", price: "R$ 135,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 38, name: "Mamilo Barbell Par Titânio", price: "R$ 160,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 39, name: "Mamilo Barbell Par Aço Cirúrgico", price: "R$ 80,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 40, name: "Sobrancelha Microbell Curvo Titânio", price: "R$ 70,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 41, name: "Sobrancelha Microbell Cravejado Aço", price: "R$ 50,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 42, name: "Microdermal Topo Disco Titânio", price: "R$ 90,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 43, name: "Microdermal Topo Opala Titânio", price: "R$ 110,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 44, name: "Alargador Aço Preto Par 8mm", price: "R$ 50,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 45, name: "Alargador Madeira Orgânica Par 12mm", price: "R$ 75,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 46, name: "Pressão Orelha Cravejado Prata", price: "R$ 55,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 47, name: "Pressão Orelha Triplo Aço", price: "R$ 45,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 48, name: "Helix Topo Lua Cristal Titânio", price: "R$ 85,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+ 
+      // Nariz
+      { id: 14, name: "Nostril D-Ring Titânio Lisa", price: "R$ 70,00", category: "nariz", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 15, name: "Nostril Ponto de Luz Titânio", price: "R$ 60,00", category: "nariz", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 16, name: "Septo Segmento Clicker Clássico", price: "R$ 80,00", category: "nariz", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 17, name: "Septo Ferradura Titânio Polido", price: "R$ 65,00", category: "nariz", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 18, name: "Septo Indiano Detalhes Titânio", price: "R$ 110,00", category: "nariz", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 19, name: "Nostril Argola Clicker Ouro 18k", price: "R$ 280,00", category: "nariz", material: "ouro", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 20, name: "Nostril Ponto de Luz Ouro 18k", price: "R$ 220,00", category: "nariz", material: "ouro", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 21, name: "Septo Clicker Ouro 18k Minimalista", price: "R$ 390,00", category: "nariz", material: "ouro", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 32, name: "Nostril Argola Tradicional Aço", price: "R$ 35,00", category: "nariz", material: "aco", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 33, name: "Septo Ferradura Black PVD Aço", price: "R$ 45,00", category: "nariz", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+ 
+      // Boca
+      { id: 22, name: "Labret Clássico Rosca Interna", price: "R$ 75,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 23, name: "Labret com Topo Opalita", price: "R$ 95,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 24, name: "Smile Argola Clicker Titânio", price: "R$ 80,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 25, name: "Língua Barbell Titânio Interna", price: "R$ 85,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 26, name: "Vertical Labret Curvo Titânio", price: "R$ 90,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 27, name: "Labret Topo Bola Ouro 18k", price: "R$ 270,00", category: "boca", material: "ouro", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 28, name: "Labret Topo Zircônia Ouro 18k", price: "R$ 310,00", category: "boca", material: "ouro", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 34, name: "Língua Barbell Tradicional Aço", price: "R$ 40,00", category: "boca", material: "aco", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 49, name: "Medusa Labret Titânio Interna", price: "R$ 80,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 50, name: "Vertical Labret Ouro 18k Curvo", price: "R$ 380,00", category: "boca", material: "ouro", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" }
+    ].map((item, idx) => ({
+      ...item,
+      code: `#${213301 + idx}`
+    }));
+ 
+    function openCatalogModal() {
+      const modal = document.getElementById('catalogModal');
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      filterCatalog('todos', document.querySelector('.catalog-tabs .tab-btn'));
+    }
+ 
+    function closeCatalogModal() {
+      const modal = document.getElementById('catalogModal');
+      modal.classList.remove('open');
+      document.body.style.overflow = 'auto';
+    }
+ 
+    function filterCatalog(categoryKey, btn) {
+      document.querySelectorAll('.catalog-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+ 
+      const grid = document.getElementById('catalogGrid');
+      let filtered = [];
+ 
+      if (categoryKey === 'todos') {
+        filtered = jewelryData;
+      } else if (categoryKey === 'titanio' || categoryKey === 'ouro') {
+        filtered = jewelryData.filter(item => item.material === categoryKey);
+      } else {
+        filtered = jewelryData.filter(item => item.category === categoryKey);
+      }
+ 
+      grid.innerHTML = filtered.map(item => {
+        const msg = `Olá! Tenho interesse na joia ${item.name} (${item.code}) no valor de ${item.price}. Gostaria de verificar a disponibilidade para reserva.`;
+        return `
+          <div class="catalog-card">
+            <img src="${item.img}" alt="${item.name}" loading="lazy" decoding="async">
+            <div class="catalog-card-info">
+              <span class="catalog-card-code">${item.code}</span>
+              <span class="catalog-card-title" title="${item.name}">${item.name}</span>
+              <span class="catalog-card-price">${item.price}</span>
+              <button class="catalog-card-btn" onclick="chamarWhatsapp('${msg}')">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                Quero esta
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
 
     const WHATSAPP_NUMERO = "5567992856293";
     let chatStarted = false;
@@ -3377,6 +3645,15 @@
           btnCta.onclick = () => {
             chamarWhatsapp('Olá! Concluí a jornada explicativa das 3 etapas e gostaria de agendar meu orçamento presencial.');
           };
+        } else if (currentVideoId === 'zOtjXxVp304' || currentVideoId === 'IOSg154dMkM') {
+          // Videos de Unidade Campo Grande ou Unidade Dourados ended
+          titleEl.textContent = 'PRÓXIMA ETAPA';
+          btnCta.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="margin-right:8px;"><path d="M8 5v14l11-7z"/></svg> Ir para Temporada 1: Avaliação Presencial`;
+          btnCta.onclick = () => {
+            closeVideoModal();
+            scrollToId('episodios-row');
+            selectEpisode(1, document.querySelector('.episode-row'));
+          };
         } else {
           titleEl.textContent = 'PRONTO PARA COMEÇAR?';
           btnCta.innerHTML = `<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" style="margin-right:8px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Agendar Orçamento Presencial`;
@@ -3413,7 +3690,7 @@
 
       // Gerenciar a responsividade e proporção (9:16 ou 16:9) dinamicamente
       const container = document.getElementById('videoContainer');
-      const verticalVideos = ['KgZnGrwbC2Q', 'wR5aR2YB9mY', 'zOtjXxVp304', 'xBZ0bVhEpFM'];
+      const verticalVideos = ['KgZnGrwbC2Q', 'wR5aR2YB9mY', 'zOtjXxVp304', 'xBZ0bVhEpFM', 'IOSg154dMkM', 'videodourados/IMGDourados_5985.mov'];
       if (verticalVideos.includes(targetVideoId)) {
         container.classList.remove('landscape');
         container.classList.add('portrait');
@@ -3422,10 +3699,68 @@
         container.classList.add('landscape');
       }
 
-      if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-        ytPlayer.loadVideoById(targetVideoId);
-      } else if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
-        ytPlayer.playVideo();
+      const isLocalFile = targetVideoId.includes('.') || targetVideoId.includes('/');
+      const localVideo = document.getElementById('localVideo');
+
+      if (isLocalFile) {
+        // Pausar e esconder YouTube Player se existir
+        if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
+          ytPlayer.pauseVideo();
+        }
+        const ytEl = document.getElementById('budgetVideo');
+        if (ytEl) ytEl.style.display = 'none';
+
+        // Criar ou exibir player de vídeo local
+        let videoEl = localVideo;
+        if (!videoEl) {
+          videoEl = document.createElement('video');
+          videoEl.id = 'localVideo';
+          videoEl.controls = true;
+          videoEl.style.position = 'absolute';
+          videoEl.style.top = '0';
+          videoEl.style.left = '0';
+          videoEl.style.width = '100%';
+          videoEl.style.height = '100%';
+          videoEl.style.objectFit = 'cover';
+          videoEl.style.zIndex = '5';
+          videoEl.style.backgroundColor = '#000';
+          container.appendChild(videoEl);
+        }
+        videoEl.style.display = 'block';
+        videoEl.src = targetVideoId;
+        videoEl.load();
+        videoEl.play().catch(e => console.log("Erro de autoplay do vídeo local:", e));
+
+        videoEl.onended = () => {
+          const overlay = document.getElementById('videoWppBtnContainer');
+          const titleEl = overlay.querySelector('h3');
+          const btnCta = overlay.querySelector('.btn-cta');
+
+          titleEl.textContent = 'PRÓXIMA ETAPA';
+          btnCta.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="margin-right:8px;"><path d="M8 5v14l11-7z"/></svg> Ir para Temporada 1: Avaliação Presencial`;
+          btnCta.onclick = () => {
+            closeVideoModal();
+            scrollToId('episodios-row');
+            selectEpisode(1, document.querySelector('.episode-row'));
+          };
+
+          overlay.style.opacity = '1';
+          overlay.style.pointerEvents = 'auto';
+        };
+      } else {
+        // Pausar e esconder player local se existir
+        if (localVideo) {
+          localVideo.pause();
+          localVideo.style.display = 'none';
+        }
+        const ytEl = document.getElementById('budgetVideo');
+        if (ytEl) ytEl.style.display = 'block';
+
+        if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+          ytPlayer.loadVideoById(targetVideoId);
+        } else if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
+          ytPlayer.playVideo();
+        }
       }
 
       const overlay = document.getElementById('videoWppBtnContainer');
@@ -3451,6 +3786,10 @@
       document.body.style.overflow = 'auto';
       if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
         ytPlayer.pauseVideo();
+      }
+      const localVideo = document.getElementById('localVideo');
+      if (localVideo) {
+        localVideo.pause();
       }
     }
 
