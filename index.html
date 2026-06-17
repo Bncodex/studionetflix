@@ -812,7 +812,7 @@
     }
 
     .top10-card-inner .card-img {
-      background-size: contain;
+      background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
       background-color: #000;
@@ -1884,19 +1884,26 @@
       margin-bottom: 2px;
     }
     .catalog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      display: flex;
       gap: 20px;
-      overflow-y: auto;
+      overflow-x: auto;
+      overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
       flex-grow: 1;
-      flex-shrink: 1;
       min-height: 0;
-      padding-bottom: 20px;
-      scrollbar-width: thin;
+      scrollbar-width: none;
+      padding: 10px 0 20px;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      scroll-behavior: smooth;
+    }
+    .catalog-grid::-webkit-scrollbar {
+      display: none;
     }
 
     .catalog-card {
+      flex: 0 0 220px;
       background: rgba(20, 20, 20, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 8px;
@@ -1904,6 +1911,7 @@
       display: flex;
       flex-direction: column;
       transition: all 0.3s ease;
+      min-height: max-content;
     }
     .catalog-card:hover {
       transform: translateY(-5px);
@@ -1916,6 +1924,7 @@
       object-fit: cover;
       background: #111;
       transition: transform 0.3s ease;
+      flex-shrink: 0;
     }
     .catalog-card:hover img {
       transform: scale(1.05);
@@ -1968,12 +1977,17 @@
         padding: 0 20px !important;
       }
       .catalog-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+        grid-template-columns: none !important;
+        display: flex !important;
         gap: 12px !important;
+      }
+      .catalog-card {
+        flex: 0 0 160px !important;
       }
       .catalog-card img {
         height: auto !important;
         aspect-ratio: 1 / 1 !important;
+        flex-shrink: 0 !important;
       }
       .catalog-card-title {
         font-size: 0.85rem !important;
@@ -3374,12 +3388,17 @@
         <button class="tab-btn" onclick="filterCatalog('orelha', this)">Orelha</button>
         <button class="tab-btn" onclick="filterCatalog('nariz', this)">Nariz</button>
         <button class="tab-btn" onclick="filterCatalog('boca', this)">Boca</button>
-        <button class="tab-btn" onclick="filterCatalog('titanio', this)">Titânio Premium</button>
+        <button class="tab-btn" onclick="filterCatalog('facial', this)">Facial</button>
+        <button class="tab-btn" onclick="filterCatalog('corpo', this)">Corpo</button>
       </div>
 
-      <!-- Grade do Catálogo -->
-      <div id="catalogGrid" class="catalog-grid">
-        <!-- Inserido dinamicamente via JS -->
+      <!-- Grade do Catálogo (Horizontal) -->
+      <div class="row-container" style="flex-grow: 1; min-height: 0; display: flex; align-items: center; position: relative;">
+        <button class="nav-btn nav-prev" id="catalogNavPrev" onclick="scrollCatalogRow(-1)" style="display: none; z-index: 1010;"><</button>
+        <div id="catalogGrid" class="catalog-grid row-scroller" onscroll="handleCatalogScroll(this)">
+          <!-- Inserido dinamicamente via JS -->
+        </div>
+        <button class="nav-btn nav-next" id="catalogNavNext" onclick="scrollCatalogRow(1)" style="z-index: 1010;">></button>
       </div>
     </div>
   </div>
@@ -3427,14 +3446,14 @@
       { id: 30, name: "Tragus Ferradura Clássica Aço", price: "R$ 40,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
       { id: 31, name: "Conch Argola Lisa Black PVD Aço", price: "R$ 50,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
       { id: 35, name: "Industrial Transversal Tradicional Aço", price: "R$ 55,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 36, name: "Umbigo Banana Bell Zircônia Aço", price: "R$ 60,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 37, name: "Umbigo Borboleta Cravejada Titânio", price: "R$ 135,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 38, name: "Mamilo Barbell Par Titânio", price: "R$ 160,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 39, name: "Mamilo Barbell Par Aço Cirúrgico", price: "R$ 80,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 40, name: "Sobrancelha Microbell Curvo Titânio", price: "R$ 70,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 41, name: "Sobrancelha Microbell Cravejado Aço", price: "R$ 50,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 42, name: "Microdermal Topo Disco Titânio", price: "R$ 90,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 43, name: "Microdermal Topo Opala Titânio", price: "R$ 110,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 36, name: "Umbigo Banana Bell Zircônia Aço", price: "R$ 60,00", category: "corpo", material: "aco", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 37, name: "Umbigo Borboleta Cravejada Titânio", price: "R$ 135,00", category: "corpo", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 38, name: "Mamilo Barbell Par Titânio", price: "R$ 160,00", category: "corpo", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 39, name: "Mamilo Barbell Par Aço Cirúrgico", price: "R$ 80,00", category: "corpo", material: "aco", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
+      { id: 40, name: "Sobrancelha Microbell Curvo Titânio", price: "R$ 70,00", category: "facial", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
+      { id: 41, name: "Sobrancelha Microbell Cravejado Aço", price: "R$ 50,00", category: "facial", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
+      { id: 42, name: "Microdermal Topo Disco Titânio", price: "R$ 90,00", category: "corpo", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
+      { id: 43, name: "Microdermal Topo Opala Titânio", price: "R$ 110,00", category: "corpo", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
       { id: 44, name: "Alargador Aço Preto Par 8mm", price: "R$ 50,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
       { id: 45, name: "Alargador Madeira Orgânica Par 12mm", price: "R$ 75,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
       { id: 46, name: "Pressão Orelha Cravejado Prata", price: "R$ 55,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
@@ -3479,9 +3498,25 @@
     function closeCatalogModal() {
       const modal = document.getElementById('catalogModal');
       modal.classList.remove('open');
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = '';
     }
  
+    function scrollCatalogRow(dir) {
+      const el = document.getElementById('catalogGrid');
+      if (el) {
+        el.scrollBy({ left: dir * el.clientWidth * 0.75, behavior: 'smooth' });
+      }
+    }
+
+    function handleCatalogScroll(el) {
+      const container = el.closest('.row-container');
+      if (!container) return;
+      const prev = container.querySelector('.nav-prev');
+      const next = container.querySelector('.nav-next');
+      if (prev) prev.style.display = el.scrollLeft > 10 ? 'flex' : 'none';
+      if (next) next.style.display = (Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth - 10) ? 'none' : 'flex';
+    }
+
     function filterCatalog(categoryKey, btn) {
       document.querySelectorAll('.catalog-tabs .tab-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
@@ -3491,8 +3526,6 @@
  
       if (categoryKey === 'todos') {
         filtered = jewelryData;
-      } else if (categoryKey === 'titanio' || categoryKey === 'ouro') {
-        filtered = jewelryData.filter(item => item.material === categoryKey);
       } else {
         filtered = jewelryData.filter(item => item.category === categoryKey);
       }
@@ -3516,6 +3549,9 @@
           </div>
         `;
       }).join('');
+
+      grid.scrollLeft = 0;
+      setTimeout(() => handleCatalogScroll(grid), 50);
     }
 
     const WHATSAPP_NUMERO = "5567992856293";
@@ -3590,7 +3626,7 @@
     function closeStyleModal() {
       const modal = document.getElementById('styleModal');
       modal.classList.remove('open');
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = '';
     }
 
     document.getElementById('styleModal').addEventListener('click', function (e) {
@@ -3786,7 +3822,7 @@
     function closeVideoModal() {
       const modal = document.getElementById('videoModal');
       modal.classList.remove('open');
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = '';
       if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
         ytPlayer.pauseVideo();
       }
