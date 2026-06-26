@@ -262,12 +262,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
       gap: 32px;
     }
 
@@ -277,6 +271,7 @@
       align-items: center;
       cursor: pointer;
       transition: transform 0.3s;
+      flex-shrink: 0;
     }
 
     .logo-wrapper:hover {
@@ -298,6 +293,38 @@
       color: #e5e5e5;
       font-size: 0.9rem;
       font-weight: 500;
+      margin-right: auto;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .btn-nav-cta {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 4px 15px rgba(229, 9, 20, 0.2);
+    }
+
+    .btn-nav-cta:hover {
+      background: #b80710;
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
+    }
+
+    .btn-nav-cta:active {
+      transform: scale(0.97);
     }
 
     .nav-links span {
@@ -735,7 +762,7 @@
       min-width: 335px;
       max-width: 335px;
       flex-shrink: 0;
-      height: 280px;
+      height: 365px;
       display: flex;
       align-items: center;
       padding-top: 15px;
@@ -797,7 +824,7 @@
       min-width: 230px;
       max-width: 230px;
       flex-shrink: 0;
-      height: 260px;
+      height: 345px;
       border-radius: 8px;
       overflow: hidden;
       position: relative;
@@ -1918,13 +1945,25 @@
       border-color: var(--accent);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 15px rgba(229, 9, 20, 0.15);
     }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
     .catalog-card img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
-      background: #111;
-      transition: transform 0.3s ease;
+      object-position: top;
+      background: linear-gradient(90deg, #111 25%, #222 50%, #111 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite linear;
+      transition: opacity 0.4s ease, transform 0.3s ease;
       flex-shrink: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .catalog-card img.loaded {
+      opacity: 1;
     }
     .catalog-card:hover img {
       transform: scale(1.05);
@@ -1940,14 +1979,19 @@
       font-size: 0.95rem;
       font-weight: 700;
       color: #fff;
-      white-space: nowrap;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: normal;
+      height: 2.6em;
+      line-height: 1.3em;
     }
     .catalog-card-price {
       font-size: 1.1rem;
       font-weight: 800;
       color: #46d369;
+      margin-top: auto;
     }
     .catalog-card-btn {
       background: var(--accent-grad);
@@ -1985,7 +2029,6 @@
         flex: 0 0 160px !important;
       }
       .catalog-card img {
-        height: auto !important;
         aspect-ratio: 1 / 1 !important;
         flex-shrink: 0 !important;
       }
@@ -2050,10 +2093,6 @@
 
     /* ===== RESPONSIVO ===== */
     @media (max-width: 900px) {
-      .nav-links {
-        display: none;
-      }
-
       body::after {
         display: none;
       }
@@ -2100,11 +2139,11 @@
 
       .top10-card {
         flex: 0 0 auto;
-        width: 215px;
-        min-width: 215px;
-        max-width: 215px;
+        width: 190px;
+        min-width: 190px;
+        max-width: 190px;
         flex-shrink: 0;
-        height: 165px;
+        height: 215px;
       }
 
       .top10-number {
@@ -2119,12 +2158,12 @@
       }
 
       .top10-card-inner {
-        flex: 0 0 155px;
-        width: 155px;
-        min-width: 155px;
-        max-width: 155px;
+        flex: 0 0 130px;
+        width: 130px;
+        min-width: 130px;
+        max-width: 130px;
         flex-shrink: 0;
-        height: 155px;
+        height: 195px;
         border-radius: 12px;
       }
 
@@ -2228,6 +2267,48 @@
       }
     }
 
+    @media (max-width: 768px) {
+      .top-nav {
+        background: rgba(5, 5, 5, 0.96) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .top-nav-inner {
+        display: grid;
+        grid-template-areas: 
+          "logo cta"
+          "links links";
+        grid-template-columns: 1fr auto;
+        row-gap: 12px;
+        column-gap: 16px;
+        padding: 12px 16px;
+      }
+      .logo-wrapper {
+        grid-area: logo;
+        justify-content: flex-start;
+      }
+      .nav-right {
+        grid-area: cta;
+        justify-content: flex-end;
+      }
+      .nav-links {
+        grid-area: links;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        gap: 16px;
+        font-size: 0.85rem;
+        margin-right: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 10px;
+      }
+      .btn-nav-cta {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+      }
+    }
+
     @media (max-width: 500px) {
       .logo-napeleflix {
         font-size: 1.4rem;
@@ -2302,11 +2383,11 @@
 
       .top10-card {
         flex: 0 0 auto;
-        width: 185px;
-        min-width: 185px;
-        max-width: 185px;
+        width: 155px;
+        min-width: 155px;
+        max-width: 155px;
         flex-shrink: 0;
-        height: 150px;
+        height: 185px;
         display: flex;
         align-items: center;
         padding-top: 5px;
@@ -2326,12 +2407,12 @@
       }
 
       .top10-card-inner {
-        flex: 0 0 140px;
-        width: 140px;
-        min-width: 140px;
-        max-width: 140px;
+        flex: 0 0 110px;
+        width: 110px;
+        min-width: 110px;
+        max-width: 110px;
         flex-shrink: 0;
-        height: 140px;
+        height: 165px;
         border-radius: 12px;
       }
 
@@ -2422,6 +2503,15 @@
         padding: 10px;
       }
     }
+
+    @keyframes bounceRight {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      50% {
+        transform: translateX(4px);
+      }
+    }
   </style>
 </head>
 
@@ -2441,15 +2531,16 @@
   <!-- TOPO -->
   <div class="top-nav" id="topNav">
     <div class="top-nav-inner">
-      <div class="nav-left">
-        <div class="logo-wrapper" onclick="scrollToId('inicio')">
-          <div class="logo-napeleflix">NAPELE</div>
-        </div>
-        <div class="nav-links">
-          <span onclick="scrollToId('inicio')">Início</span>
-          <span onclick="scrollToId('top10')">Estilos</span>
-          <span onclick="scrollToId('servicos-piercing')">Piercing e Remoção</span>
-        </div>
+      <div class="logo-wrapper" onclick="scrollToId('inicio')">
+        <div class="logo-napeleflix">NAPELE</div>
+      </div>
+      <div class="nav-links">
+        <span onclick="scrollToId('inicio')">Início</span>
+        <span onclick="scrollToId('top10')">Estilos</span>
+        <span onclick="scrollToId('servicos-piercing')">Piercing e Remoção</span>
+      </div>
+      <div class="nav-right">
+        <button class="btn-nav-cta" onclick="chamarWhatsapp('Olá! Gostaria de fazer um orçamento.')">Orçamento</button>
       </div>
     </div>
   </div>
@@ -3382,14 +3473,20 @@
         <p style="color: var(--muted); font-size: 0.95rem;">Escolha a joia perfeita e fale com a nossa equipe no WhatsApp para reservar.</p>
       </div>
 
-      <!-- Abas de Categorias -->
-      <div class="catalog-tabs" style="display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); scrollbar-width: none; flex-shrink: 0;">
-        <button class="tab-btn active" onclick="filterCatalog('todos', this)">Todos</button>
-        <button class="tab-btn" onclick="filterCatalog('orelha', this)">Orelha</button>
-        <button class="tab-btn" onclick="filterCatalog('nariz', this)">Nariz</button>
-        <button class="tab-btn" onclick="filterCatalog('boca', this)">Boca</button>
-        <button class="tab-btn" onclick="filterCatalog('facial', this)">Facial</button>
-        <button class="tab-btn" onclick="filterCatalog('corpo', this)">Corpo</button>
+      <!-- Abas de Categorias com Indicador de Scroll -->
+      <div class="catalog-tabs-container" style="position: relative; margin-bottom: 20px; display: flex; align-items: center; width: 100%;">
+        <div class="catalog-tabs" id="catalogTabs" onscroll="updateTabsScrollIndicator()" style="display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); scrollbar-width: none; flex-shrink: 0;">
+          <button class="tab-btn active" onclick="filterCatalog('todos', this)">Todos</button>
+          <button class="tab-btn" onclick="filterCatalog('orelha', this)">Orelha</button>
+          <button class="tab-btn" onclick="filterCatalog('nariz', this)">Nariz</button>
+          <button class="tab-btn" onclick="filterCatalog('boca', this)">Boca</button>
+          <button class="tab-btn" onclick="filterCatalog('facial', this)">Facial</button>
+          <button class="tab-btn" onclick="filterCatalog('corpo', this)">Corpo</button>
+        </div>
+        <!-- Seta indicadora (fade na direita com chevron) -->
+        <div class="tabs-scroll-indicator" id="tabsScrollIndicator" onclick="scrollTabsRight()" style="position: absolute; right: 0; bottom: 10px; top: 0; width: 60px; background: linear-gradient(to left, #0f0f0f 60%, transparent 100%); display: flex; align-items: center; justify-content: flex-end; padding-right: 5px; color: #fff; cursor: pointer; transition: opacity 0.3s ease; opacity: 0; pointer-events: none; z-index: 10;">
+          <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.25); font-size: 1rem; line-height: 1; font-weight: bold; animation: bounceRight 1.5s infinite;">❯</span>
+        </div>
       </div>
 
       <!-- Grade do Catálogo (Horizontal) -->
@@ -3400,6 +3497,14 @@
         </div>
         <button class="nav-btn nav-next" id="catalogNavNext" onclick="scrollCatalogRow(1)" style="z-index: 1010;">></button>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE ZOOM DA IMAGEM DO CATÁLOGO -->
+  <div id="imageZoomModal" class="modal-overlay" onclick="closeImageZoomModal(event)" style="z-index: 10000;">
+    <div class="modal-content" style="max-width: 90vw; max-height: 90vh; background: transparent; border: none; box-shadow: none; display: flex; align-items: center; justify-content: center; padding: 0; overflow: visible; position: relative;">
+      <button class="modal-close" onclick="closeImageZoomModal(event)" style="position: absolute; top: -50px; right: 0; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.25); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10010;">×</button>
+      <img id="zoomedImage" src="" alt="Imagem ampliada" style="max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.9);">
     </div>
   </div>
 
@@ -3428,64 +3533,194 @@
     });
 
     const jewelryData = [
-      // Orelha
-      { id: 1, name: "Helix Clicker Cravejado", price: "R$ 120,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 2, name: "Tragus Labret Rosca Interna", price: "R$ 85,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 3, name: "Conch Argola Cravejada Zircônias", price: "R$ 140,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 4, name: "Flat Piercing Trinity Estrela", price: "R$ 95,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 5, name: "Rook Curved Barbell Titânio", price: "R$ 75,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 6, name: "Daith Heart Clicker Cravejado", price: "R$ 130,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 7, name: "Industrial Megabel Clássico", price: "R$ 90,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 8, name: "Lóbulo Brinco Solitário Garra", price: "R$ 65,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 9, name: "Helix Clicker Ouro 18k Cravejado", price: "R$ 450,00", category: "orelha", material: "ouro", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 10, name: "Tragus Ponto de Luz Ouro 18k", price: "R$ 290,00", category: "orelha", material: "ouro", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 11, name: "Conch Argola Lisa Ouro 18k", price: "R$ 380,00", category: "orelha", material: "ouro", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 12, name: "Daith Clicker Coração Ouro 18k", price: "R$ 480,00", category: "orelha", material: "ouro", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 13, name: "Lóbulo Mini Argola Clicker Ouro", price: "R$ 320,00", category: "orelha", material: "ouro", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 29, name: "Helix Argola Torcida Aço", price: "R$ 45,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 30, name: "Tragus Ferradura Clássica Aço", price: "R$ 40,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 31, name: "Conch Argola Lisa Black PVD Aço", price: "R$ 50,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 35, name: "Industrial Transversal Tradicional Aço", price: "R$ 55,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 36, name: "Umbigo Banana Bell Zircônia Aço", price: "R$ 60,00", category: "corpo", material: "aco", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 37, name: "Umbigo Borboleta Cravejada Titânio", price: "R$ 135,00", category: "corpo", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 38, name: "Mamilo Barbell Par Titânio", price: "R$ 160,00", category: "corpo", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 39, name: "Mamilo Barbell Par Aço Cirúrgico", price: "R$ 80,00", category: "corpo", material: "aco", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 40, name: "Sobrancelha Microbell Curvo Titânio", price: "R$ 70,00", category: "facial", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 41, name: "Sobrancelha Microbell Cravejado Aço", price: "R$ 50,00", category: "facial", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 42, name: "Microdermal Topo Disco Titânio", price: "R$ 90,00", category: "corpo", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 43, name: "Microdermal Topo Opala Titânio", price: "R$ 110,00", category: "corpo", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 44, name: "Alargador Aço Preto Par 8mm", price: "R$ 50,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 45, name: "Alargador Madeira Orgânica Par 12mm", price: "R$ 75,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 46, name: "Pressão Orelha Cravejado Prata", price: "R$ 55,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 47, name: "Pressão Orelha Triplo Aço", price: "R$ 45,00", category: "orelha", material: "aco", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 48, name: "Helix Topo Lua Cristal Titânio", price: "R$ 85,00", category: "orelha", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
- 
-      // Nariz
-      { id: 14, name: "Nostril D-Ring Titânio Lisa", price: "R$ 70,00", category: "nariz", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 15, name: "Nostril Ponto de Luz Titânio", price: "R$ 60,00", category: "nariz", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 16, name: "Septo Segmento Clicker Clássico", price: "R$ 80,00", category: "nariz", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 17, name: "Septo Ferradura Titânio Polido", price: "R$ 65,00", category: "nariz", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 18, name: "Septo Indiano Detalhes Titânio", price: "R$ 110,00", category: "nariz", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 19, name: "Nostril Argola Clicker Ouro 18k", price: "R$ 280,00", category: "nariz", material: "ouro", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 20, name: "Nostril Ponto de Luz Ouro 18k", price: "R$ 220,00", category: "nariz", material: "ouro", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 21, name: "Septo Clicker Ouro 18k Minimalista", price: "R$ 390,00", category: "nariz", material: "ouro", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 32, name: "Nostril Argola Tradicional Aço", price: "R$ 35,00", category: "nariz", material: "aco", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 33, name: "Septo Ferradura Black PVD Aço", price: "R$ 45,00", category: "nariz", material: "aco", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
- 
-      // Boca
-      { id: 22, name: "Labret Clássico Rosca Interna", price: "R$ 75,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 23, name: "Labret com Topo Opalita", price: "R$ 95,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 24, name: "Smile Argola Clicker Titânio", price: "R$ 80,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 25, name: "Língua Barbell Titânio Interna", price: "R$ 85,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 26, name: "Vertical Labret Curvo Titânio", price: "R$ 90,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" },
-      { id: 27, name: "Labret Topo Bola Ouro 18k", price: "R$ 270,00", category: "boca", material: "ouro", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" },
-      { id: 28, name: "Labret Topo Zircônia Ouro 18k", price: "R$ 310,00", category: "boca", material: "ouro", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 34, name: "Língua Barbell Tradicional Aço", price: "R$ 40,00", category: "boca", material: "aco", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" },
-      { id: 49, name: "Medusa Labret Titânio Interna", price: "R$ 80,00", category: "boca", material: "titanio", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-      { id: 50, name: "Vertical Labret Ouro 18k Curvo", price: "R$ 380,00", category: "boca", material: "ouro", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500" }
+      { id: 2018, name: "Flor pedras de zircônia prata Titânio", price: "R$ 120,00 a R$ 150,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2018-IMG_3945.png", code: "#2018" },
+      { id: 2019, name: "Megabell prata Titânio", price: "R$ 100,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2019-IMG_3830.png", code: "#2019" },
+      { id: 2020, name: "Ferradura Titânio prata", price: "R$ 60,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2020-IMG_3807.png", code: "#2020" },
+      { id: 2027, name: "Argola Titânio prata", price: "R$ 100,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2027-IMG_3753.png", code: "#2027" },
+      { id: 2034, name: "Flor pedras de zircônia dourado Titânio", price: "R$ 130,00 a R$ 160,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2034-IMG_3932.png", code: "#2034" },
+      { id: 2037, name: "Argola em gota Titânio dourado", price: "R$ 110,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2037-IMG_3734.png", code: "#2037" },
+      { id: 2039, name: "Argola em gota Titânio prata", price: "R$ 110,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2039-IMG_3733.png", code: "#2039" },
+      { id: 2044, name: "Bananinha prata Titânio", price: "R$ 60,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2044-IMG_3846.png", code: "#2044" },
+      { id: 2055, name: "Ferradura Titânio dourada", price: "R$ 60,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2055-IMG_3954.png", code: "#2055" },
+      { id: 2061, name: "Dring Titânio com zircônia dourada", price: "R$ 170,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2061-IMG_3724.png", code: "#2061" },
+      { id: 2062, name: "Bananinha Titânio dourado", price: "R$ 70,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2062-IMG_3847.png", code: "#2062" },
+      { id: 2068, name: "Dring Titânio com zircônia prata", price: "R$ 160,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2068-IMG_3725.png", code: "#2068" },
+      { id: 2071, name: "Ponto de luz dourado Titânio", price: "R$ 110,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2071-IMG_3933.png", code: "#2071" },
+      { id: 2089, name: "Ponto de luz prata Titânio", price: "R$ 100,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2089-IMG_3946.png", code: "#2089" },
+      { id: 2102, name: "Trio pedras de zircônia prata Titânio", price: "R$ 110,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2102-IMG_3949.png", code: "#2102" },
+      { id: 2106, name: "Borboleta pedras de zircônia prata Titânio", price: "R$ 140,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2106-IMG_3936.png", code: "#2106" },
+      { id: 2107, name: "Borboleta pedras de zircônia dourado Titânio", price: "R$ 150,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2107-IMG_3934.png", code: "#2107" },
+      { id: 2111, name: "Raio prata Titânio", price: "R$ 80,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2111-IMG_3947.png", code: "#2111" },
+      { id: 2112, name: "Argola Titânio com zircônia prata", price: "R$ 170,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2112-IMG_3736.png", code: "#2112" },
+      { id: 2113, name: "Argola Titânio com zircônia dourada", price: "R$ 180,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2113-IMG_3735.png", code: "#2113" },
+      { id: 2117, name: "Trinety pedras de zircônia prata Titânio", price: "R$ 140,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2117-IMG_3944.png", code: "#2117" },
+      { id: 2118, name: "Bananinha dourado Titânio com zirconia branca", price: "R$ 120,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2118-IMG_3848.png", code: "#2118" },
+      { id: 2119, name: "Ferradura Titânio com zircônia dourada", price: "R$ 110,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2119-IMG_3852.png", code: "#2119" },
+      { id: 2120, name: "Oval pêndulo pedras de zircônia prata Titânio", price: "R$ 170,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2120-IMG_3940.png", code: "#2120" },
+      { id: 2127, name: "Argola Titânio dourada", price: "R$ 110,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2127-IMG_3750.png", code: "#2127" },
+      { id: 2131, name: "Oval pêndulo pedras de zircônia dourado Titânio", price: "R$ 180,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2131-IMG_3927.png", code: "#2131" },
+      { id: 2132, name: "Argola em gota Titânio com zircônia prata", price: "R$ 150,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2132-IMG_3737.png", code: "#2132" },
+      { id: 2158, name: "Argola em gota Titânio com zircônia dourado", price: "R$ 160,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2158-IMG_3738.png", code: "#2158" },
+      { id: 2180, name: "Coração pedras de zircônia prata Titânio", price: "R$ 110,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2180-IMG_3948.png", code: "#2180" },
+      { id: 2182, name: "Trinety pedras de zircônia dourado Titânio", price: "R$ 150,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2182-IMG_3935.png", code: "#2182" },
+      { id: 2205, name: "Argola Titânio com zircônia dourada", price: "R$ 180,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2205-IMG_3742.png", code: "#2205" },
+      { id: 2208, name: "Argola Titânio com zircônia prata", price: "R$ 170,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2208-IMG_3741.png", code: "#2208" },
+      { id: 2215, name: "Ponto de luz com duplo pingente oval pedras de zircônia prata Titânio", price: "R$ 160,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2215-IMG_3941.png", code: "#2215" },
+      { id: 2216, name: "Ponto de luz com duplo pingente oval pedras de zircônia dourado Titânio", price: "R$ 170,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2216-IMG_3929.png", code: "#2216" },
+      { id: 2218, name: "Bananinha prata Titânio com zirconia branca", price: "R$ 110,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2218-IMG_3849.png", code: "#2218" },
+      { id: 2219, name: "Ponto de luz com pingente oval pedras de zircônia prata Titânio", price: "R$ 160,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2219-IMG_3942.png", code: "#2219" },
+      { id: 2220, name: "Ponto de luz com pingente oval pedras de zircônia dourado Titânio", price: "R$ 170,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2220-IMG_3928.png", code: "#2220" },
+      { id: 2221, name: "Oval pedras de zircônia prata Titânio", price: "R$ 140,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2221-IMG_3943.png", code: "#2221" },
+      { id: 2222, name: "Oval pedras de zircônia dourado Titânio", price: "R$ 150,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2222-IMG_3930.png", code: "#2222" },
+      { id: 2225, name: "Ferradura Titânio com zircônia prata", price: "R$ 110,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2225-IMG_3754.png", code: "#2225" },
+      { id: 2231, name: "Argola Titânio com zircônia prata", price: "R$ 220,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2231-IMG_3873.png", code: "#2231" },
+      { id: 2232, name: "Argola Titânio com zircônia dourada", price: "R$ 230,00", category: "boca", material: "titanio", img: "fotosjoias/Boca/2232-IMG_3855.png", code: "#2232" },
+      { id: 2002, name: "Microdermal prata Titânio com zirconia branca", price: "R$ 100,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2002-IMG_3874.png", code: "#2002" },
+      { id: 2015, name: "Íntimo feminino Titânio com zircônia prata", price: "R$ 150,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2015-IMG_3891.png", code: "#2015" },
+      { id: 2043, name: "Microbell roxo Titânio", price: "R$ 100,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2043-IMG_3832.png", code: "#2043" },
+      { id: 2044, name: "Bananinha prata Titânio", price: "R$ 60,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2044-IMG_3846.png", code: "#2044" },
+      { id: 2045, name: "Microbell rosa Titânio", price: "R$ 100,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2045-IMG_3833.png", code: "#2045" },
+      { id: 2046, name: "Microbell azul Titânio", price: "R$ 100,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2046-IMG_3831.png", code: "#2046" },
+      { id: 2048, name: "Barbell prata Titânio", price: "R$ 70,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2048-IMG_3834.png", code: "#2048" },
+      { id: 2050, name: "Barbell dourado Titânio com zirconias brancas", price: "R$ 170,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2050-IMG_3842.png", code: "#2050" },
+      { id: 2062, name: "Bananinha Titânio dourado", price: "R$ 70,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2062-IMG_3847.png", code: "#2062" },
+      { id: 2069, name: "Microdermal prata Titânio com zirconia azul", price: "R$ 120,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2069-IMG_3876.png", code: "#2069" },
+      { id: 2075, name: "Umbigo dourado Titânio com zirconias brancas", price: "R$ 160,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2075-IMG_3880.png", code: "#2075" },
+      { id: 2084, name: "Íntimo feminino Titânio com zircônia dourado", price: "R$ 180,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2084-IMG_3890.png", code: "#2084" },
+      { id: 2088, name: "Íntimo feminino flor Titânio com zircônia dourado", price: "R$ 200,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2088-IMG_3889.png", code: "#2088" },
+      { id: 2092, name: "Íntimo feminino flor Titânio com zircônia prata", price: "R$ 190,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2092-IMG_3892.png", code: "#2092" },
+      { id: 2093, name: "Microdermal flor prata Titânio com zirconia branca", price: "R$ 140,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2093-IMG_3877.png", code: "#2093" },
+      { id: 2118, name: "Bananinha dourado Titânio com zirconia branca", price: "R$ 120,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2118-IMG_3848.png", code: "#2118" },
+      { id: 2123, name: "Microdermal preto Titânio com zirconia branca", price: "R$ 140,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2123-IMG_3879.png", code: "#2123" },
+      { id: 2133, name: "Umbigo prata Titânio com zirconias brancas", price: "R$ 150,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2133-IMG_3882.png", code: "#2133" },
+      { id: 2149, name: "Umbigo prata flor em Titânio com zirconias brancas", price: "R$ 180,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2149-IMG_3885.png", code: "#2149" },
+      { id: 2150, name: "Umbigo prata Titânio com 4 zirconias brancas", price: "R$ 120,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2150-IMG_3884.png", code: "#2150" },
+      { id: 2151, name: "Umbigo dourado flor em Titânio com zirconias brancas", price: "R$ 190,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2151-IMG_3888.png", code: "#2151" },
+      { id: 2152, name: "Microdermal dourado Titânio com zirconia branca", price: "R$ 140,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2152-IMG_3878.png", code: "#2152" },
+      { id: 2156, name: "Umbigo prata Titânio com zirconias brancas", price: "R$ 100,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2156-IMG_3883.png", code: "#2156" },
+      { id: 2192, name: "Barbell prata Titânio com corações em zirconias brancas", price: "R$ 170,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2192-IMG_3840.png", code: "#2192" },
+      { id: 2193, name: "Barbell dourado Titânio com corações em zirconias brancas", price: "R$ 180,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2193-IMG_3843.png", code: "#2193" },
+      { id: 2194, name: "Barbell prata Titânio com borboletas em zirconias brancas", price: "R$ 170,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2194-IMG_3839.png", code: "#2194" },
+      { id: 2195, name: "Barbell dourado Titânio com borboletas em zirconias brancas", price: "R$ 170,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2195-IMG_3844.png", code: "#2195" },
+      { id: 2218, name: "Bananinha prata Titânio com zirconia branca", price: "R$ 110,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2218-IMG_3849.png", code: "#2218" },
+      { id: 2512, name: "Barbell prata Titânio com zirconias brancas", price: "R$ 160,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2512-IMG_3841.png", code: "#2512" },
+      { id: 2667, name: "Microdermal prata Titânio com zirconia rosa", price: "R$ 120,00", category: "corpo", material: "titanio", img: "fotosjoias/corpo/2667-IMG_3875.png", code: "#2667" },
+      { id: 2002, name: "Microdermal prata Titânio com zirconia branca", price: "R$ 100,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2002-IMG_3874.png", code: "#2002" },
+      { id: 2019, name: "Megabell prata Titânio", price: "R$ 100,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2019-IMG_3830.png", code: "#2019" },
+      { id: 2020, name: "Ferradura Titânio prata", price: "R$ 60,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2020-IMG_3807.png", code: "#2020" },
+      { id: 2027, name: "Argola Titânio prata", price: "R$ 100,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2027-IMG_3753.png", code: "#2027" },
+      { id: 2044, name: "Bananinha prata Titânio", price: "R$ 60,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2044-IMG_3846.png", code: "#2044" },
+      { id: 2055, name: "Ferradura Titânio dourada", price: "R$ 60,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2055-IMG_3954.png", code: "#2055" },
+      { id: 2062, name: "Bananinha Titânio dourado", price: "R$ 70,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2062-IMG_3847.png", code: "#2062" },
+      { id: 2069, name: "Microdermal prata Titânio com zirconia azul", price: "R$ 120,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2069-IMG_3876.png", code: "#2069" },
+      { id: 2071, name: "Ponto de luz dourado Titânio", price: "R$ 110,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2071-IMG_3933.png", code: "#2071" },
+      { id: 2089, name: "Ponto de luz prata Titânio", price: "R$ 100,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2089-IMG_3946.png", code: "#2089" },
+      { id: 2093, name: "Microdermal flor prata Titânio com zirconia branca", price: "R$ 140,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2093-IMG_3877.png", code: "#2093" },
+      { id: 2118, name: "Bananinha dourado Titânio com zirconia branca", price: "R$ 120,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2118-IMG_3848.png", code: "#2118" },
+      { id: 2119, name: "Ferradura Titânio com zircônia dourada", price: "R$ 110,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2119-IMG_3852.png", code: "#2119" },
+      { id: 2123, name: "Microdermal preto Titânio com zirconia branca", price: "R$ 140,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2123-IMG_3879.png", code: "#2123" },
+      { id: 2127, name: "Argola Titânio dourada", price: "R$ 110,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2127-IMG_3750.png", code: "#2127" },
+      { id: 2152, name: "Microdermal dourado Titânio com zirconia branca", price: "R$ 140,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2152-IMG_3878.png", code: "#2152" },
+      { id: 2218, name: "Bananinha prata Titânio com zirconia branca", price: "R$ 110,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2218-IMG_3849.png", code: "#2218" },
+      { id: 2225, name: "Ferradura Titânio com zircônia prata", price: "R$ 110,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2225-IMG_3754.png", code: "#2225" },
+      { id: 2667, name: "Microdermal prata Titânio com zirconia rosa", price: "R$ 120,00", category: "facial", material: "titanio", img: "fotosjoias/facial/2667-IMG_3875.png", code: "#2667" },
+      { id: 2018, name: "Flor pedras de zircônia prata Titânio", price: "R$ 120,00 a R$ 150,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2018-IMG_3945.png", code: "#2018" },
+      { id: 2020, name: "Ferradura Titânio prata", price: "R$ 60,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2020-IMG_3807.png", code: "#2020" },
+      { id: 2027, name: "Argola Titânio prata", price: "R$ 100,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2027-IMG_3753.png", code: "#2027" },
+      { id: 2037, name: "Argola em gota Titânio dourado", price: "R$ 110,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2037-IMG_3734.png", code: "#2037" },
+      { id: 2039, name: "Argola em gota Titânio prata", price: "R$ 110,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2039-IMG_3733.png", code: "#2039" },
+      { id: 2055, name: "Ferradura Titânio dourada", price: "R$ 60,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2055-IMG_3954.png", code: "#2055" },
+      { id: 2059, name: "Dring Titânio preta", price: "R$ 70,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2059-IMG_3818.png", code: "#2059" },
+      { id: 2060, name: "Dring Titânio prata", price: "R$ 60,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2060-IMG_3827.png", code: "#2060" },
+      { id: 2061, name: "Dring Titânio com zircônia dourada", price: "R$ 170,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2061-IMG_3724.png", code: "#2061" },
+      { id: 2066, name: "Dring Titânio dourada", price: "R$ 70,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2066-IMG_3817.png", code: "#2066" },
+      { id: 2068, name: "Dring Titânio com zircônia prata", price: "R$ 160,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2068-IMG_3725.png", code: "#2068" },
+      { id: 2071, name: "Ponto de luz dourado Titânio", price: "R$ 110,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2071-IMG_3933.png", code: "#2071" },
+      { id: 2089, name: "Ponto de luz prata Titânio", price: "R$ 100,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2089-IMG_3946.png", code: "#2089" },
+      { id: 2104, name: "Dring lisa Titânio dourado", price: "R$ 120,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2104-IMG_3813.png", code: "#2104" },
+      { id: 2112, name: "Argola Titânio com zircônia prata", price: "R$ 170,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2112-IMG_3736.png", code: "#2112" },
+      { id: 2113, name: "Argola Titânio com zircônia dourada", price: "R$ 180,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2113-IMG_3735.png", code: "#2113" },
+      { id: 2117, name: "Trinety pedras de zircônia prata Titânio", price: "R$ 140,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2117-IMG_3944.png", code: "#2117" },
+      { id: 2119, name: "Ferradura Titânio com zircônia dourada", price: "R$ 110,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2119-IMG_3852.png", code: "#2119" },
+      { id: 2127, name: "Argola Titânio dourada", price: "R$ 110,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2127-IMG_3750.png", code: "#2127" },
+      { id: 2132, name: "Argola em gota Titânio com zircônia prata", price: "R$ 150,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2132-IMG_3737.png", code: "#2132" },
+      { id: 2145, name: "Nostril Titânio dourado com zircônia", price: "R$ 70,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2145-IMG_3816.png", code: "#2145" },
+      { id: 2158, name: "Argola em gota Titânio com zircônia dourado", price: "R$ 160,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2158-IMG_3738.png", code: "#2158" },
+      { id: 2164, name: "Nostril Titânio âncora dourada", price: "R$ 50,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2164-IMG_3828.png", code: "#2164" },
+      { id: 2182, name: "Trinety pedras de zircônia dourado Titânio", price: "R$ 150,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2182-IMG_3935.png", code: "#2182" },
+      { id: 2205, name: "Argola Titânio com zircônia dourada", price: "R$ 180,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2205-IMG_3742.png", code: "#2205" },
+      { id: 2208, name: "Argola Titânio com zircônia prata", price: "R$ 170,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2208-IMG_3741.png", code: "#2208" },
+      { id: 2225, name: "Ferradura Titânio com zircônia prata", price: "R$ 110,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2225-IMG_3754.png", code: "#2225" },
+      { id: 2228, name: "Nostril Titânio Estrela de zircônia prata", price: "R$ 70,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2228-IMG_3952.png", code: "#2228" },
+      { id: 2229, name: "Nostril Titânio Estrela de zircônia dourada", price: "R$ 80,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2229-IMG_3953.png", code: "#2229" },
+      { id: 2231, name: "Argola Titânio com zircônia prata", price: "R$ 220,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2231-IMG_3873.png", code: "#2231" },
+      { id: 2232, name: "Argola Titânio com zircônia dourada", price: "R$ 230,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2232-IMG_3855.png", code: "#2232" },
+      { id: 2505, name: "Dring lisa Titânio prata", price: "R$ 110,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2505-IMG_3811.png", code: "#2505" },
+      { id: 2673, name: "Nostril Titânio prata com zircônia", price: "R$ 60,00", category: "nariz", material: "titanio", img: "fotosjoias/Nariz/2673-IMG_3815.png", code: "#2673" },
+      { id: 2003, name: "Cluster corrente dourado com pedra de zircônia Titânio", price: "R$ 220,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2003-IMG_3728.png", code: "#2003" },
+      { id: 2018, name: "Flor pedras de zircônia prata Titânio", price: "R$ 120,00 a R$ 150,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2018-IMG_3945.png", code: "#2018" },
+      { id: 2020, name: "Ferradura Titânio prata", price: "R$ 60,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2020-IMG_3807.png", code: "#2020" },
+      { id: 2027, name: "Argola Titânio prata", price: "R$ 100,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2027-IMG_3753.png", code: "#2027" },
+      { id: 2034, name: "Flor pedras de zircônia dourado Titânio", price: "R$ 130,00 a R$ 160,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2034-IMG_3932.png", code: "#2034" },
+      { id: 2037, name: "Argola em gota Titânio dourado", price: "R$ 110,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2037-IMG_3734.png", code: "#2037" },
+      { id: 2039, name: "Argola em gota Titânio prata", price: "R$ 110,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2039-IMG_3733.png", code: "#2039" },
+      { id: 2040, name: "Argola pingente oval dourado Titânio", price: "R$ 220,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2040-IMG_3743.png", code: "#2040" },
+      { id: 2042, name: "Transversal Titânio prata", price: "R$ 80,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2042-IMG_3829.png", code: "#2042" },
+      { id: 2055, name: "Ferradura Titânio dourada", price: "R$ 60,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2055-IMG_3954.png", code: "#2055" },
+      { id: 2061, name: "Dring Titânio com zircônia dourada", price: "R$ 170,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2061-IMG_3724.png", code: "#2061" },
+      { id: 2068, name: "Dring Titânio com zircônia prata", price: "R$ 160,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2068-IMG_3725.png", code: "#2068" },
+      { id: 2071, name: "Ponto de luz dourado Titânio", price: "R$ 110,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2071-IMG_3933.png", code: "#2071" },
+      { id: 2089, name: "Ponto de luz prata Titânio", price: "R$ 100,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2089-IMG_3946.png", code: "#2089" },
+      { id: 2098, name: "Dring dupla aberta com zirconias Titânio prata", price: "R$ 200,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2098-IMG_3722.png", code: "#2098" },
+      { id: 2099, name: "Dring dupla aberta com zirconias Titânio dourado", price: "R$ 210,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2099-IMG_3723.png", code: "#2099" },
+      { id: 2100, name: "Dring dupla com zirconias Titânio prata", price: "R$ 200,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2100-IMG_3721.png", code: "#2100" },
+      { id: 2101, name: "Dring dupla com zirconias Titânio  dourada", price: "R$ 210,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2101-IMG_3720.png", code: "#2101" },
+      { id: 2102, name: "Trio pedras de zircônia prata Titânio", price: "R$ 110,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2102-IMG_3949.png", code: "#2102" },
+      { id: 2104, name: "Dring lisa Titânio dourado", price: "R$ 120,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2104-IMG_3813.png", code: "#2104" },
+      { id: 2106, name: "Borboleta pedras de zircônia prata Titânio", price: "R$ 140,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2106-IMG_3936.png", code: "#2106" },
+      { id: 2107, name: "Borboleta pedras de zircônia dourado Titânio", price: "R$ 150,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2107-IMG_3934.png", code: "#2107" },
+      { id: 2111, name: "Raio prata Titânio", price: "R$ 80,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2111-IMG_3947.png", code: "#2111" },
+      { id: 2112, name: "Argola Titânio com zircônia prata", price: "R$ 170,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2112-IMG_3736.png", code: "#2112" },
+      { id: 2113, name: "Argola Titânio com zircônia dourada", price: "R$ 180,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2113-IMG_3735.png", code: "#2113" },
+      { id: 2116, name: "Cluster pedras de zircônia dourado Titânio", price: "R$ 200,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2116-IMG_3924.png", code: "#2116" },
+      { id: 2117, name: "Trinety pedras de zircônia prata Titânio", price: "R$ 140,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2117-IMG_3944.png", code: "#2117" },
+      { id: 2119, name: "Ferradura Titânio com zircônia dourada", price: "R$ 110,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2119-IMG_3852.png", code: "#2119" },
+      { id: 2120, name: "Oval pêndulo pedras de zircônia prata Titânio", price: "R$ 170,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2120-IMG_3940.png", code: "#2120" },
+      { id: 2127, name: "Argola Titânio dourada", price: "R$ 110,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2127-IMG_3750.png", code: "#2127" },
+      { id: 2131, name: "Oval pêndulo pedras de zircônia dourado Titânio", price: "R$ 180,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2131-IMG_3927.png", code: "#2131" },
+      { id: 2132, name: "Argola em gota Titânio com zircônia prata", price: "R$ 150,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2132-IMG_3737.png", code: "#2132" },
+      { id: 2134, name: "Cluster curvo oval pedras de zircônia prata Titânio", price: "R$ 190,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2134-IMG_3939.png", code: "#2134" },
+      { id: 2147, name: "Cluster pedras de zircônia prata Titânio", price: "R$ 190,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2147-IMG_3937.png", code: "#2147" },
+      { id: 2158, name: "Argola em gota Titânio com zircônia dourado", price: "R$ 160,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2158-IMG_3738.png", code: "#2158" },
+      { id: 2161, name: "Cluster curvo oval pedras de zircônia dourado Titânio", price: "R$ 200,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2161-IMG_3926.png", code: "#2161" },
+      { id: 2180, name: "Coração pedras de zircônia prata Titânio", price: "R$ 110,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2180-IMG_3948.png", code: "#2180" },
+      { id: 2182, name: "Trinety pedras de zircônia dourado Titânio", price: "R$ 150,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2182-IMG_3935.png", code: "#2182" },
+      { id: 2200, name: "Argola coração com zircônia Titânio prata", price: "R$ 150,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2200-IMG_3726.png", code: "#2200" },
+      { id: 2201, name: "Argola coração com zircônia Titânio dourado", price: "R$ 160,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2201-IMG_3727.png", code: "#2201" },
+      { id: 2205, name: "Argola Titânio com zircônia dourada", price: "R$ 180,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2205-IMG_3742.png", code: "#2205" },
+      { id: 2206, name: "Dring dupla Titânio  dourada", price: "R$ 190,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2206-IMG_3719.png", code: "#2206" },
+      { id: 2207, name: "Dring dupla Titânio  prata", price: "R$ 200,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2207-IMG_3814.png", code: "#2207" },
+      { id: 2208, name: "Argola Titânio com zircônia prata", price: "R$ 170,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2208-IMG_3741.png", code: "#2208" },
+      { id: 2210, name: "Argola dupla com zircônia Titânio prata", price: "R$ 210,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2210-IMG_3740.png", code: "#2210" },
+      { id: 2213, name: "Cluster curvo pedras de zircônia prata Titânio", price: "R$ 190,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2213-IMG_3938.png", code: "#2213" },
+      { id: 2214, name: "Cluster curvo pedras de zircônia dourado Titânio", price: "R$ 200,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2214-IMG_3925.png", code: "#2214" },
+      { id: 2215, name: "Ponto de luz com duplo pingente oval pedras de zircônia prata Titânio", price: "R$ 160,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2215-IMG_3941.png", code: "#2215" },
+      { id: 2216, name: "Ponto de luz com duplo pingente oval pedras de zircônia dourado Titânio", price: "R$ 170,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2216-IMG_3929.png", code: "#2216" },
+      { id: 2219, name: "Ponto de luz com pingente oval pedras de zircônia prata Titânio", price: "R$ 160,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2219-IMG_3942.png", code: "#2219" },
+      { id: 2220, name: "Ponto de luz com pingente oval pedras de zircônia dourado Titânio", price: "R$ 170,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2220-IMG_3928.png", code: "#2220" },
+      { id: 2221, name: "Oval pedras de zircônia prata Titânio", price: "R$ 140,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2221-IMG_3943.png", code: "#2221" },
+      { id: 2222, name: "Oval pedras de zircônia dourado Titânio", price: "R$ 150,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2222-IMG_3930.png", code: "#2222" },
+      { id: 2225, name: "Ferradura Titânio com zircônia prata", price: "R$ 110,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2225-IMG_3754.png", code: "#2225" },
+      { id: 2231, name: "Argola Titânio com zircônia prata", price: "R$ 220,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2231-IMG_3873.png", code: "#2231" },
+      { id: 2232, name: "Argola Titânio com zircônia dourada", price: "R$ 230,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2232-IMG_3855.png", code: "#2232" },
+      { id: 2505, name: "Dring lisa Titânio prata", price: "R$ 110,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2505-IMG_3811.png", code: "#2505" },
+      { id: 2621, name: "Argola dupla com zircônia Titânio dourado", price: "R$ 220,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2621-IMG_3739.png", code: "#2621" },
+      { id: 2701, name: "Upper cluster pedras de zircônia prata Titânio", price: "R$ 190,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2701-IMG_3732.png", code: "#2701" },
+      { id: 2708, name: "Argola pingente oval  prata Titânio", price: "R$ 210,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2708-IMG_3850.png", code: "#2708" },
+      { id: 2711, name: "Cluster corrente prata com pedra de zircônia Titânio", price: "R$ 210,00", category: "orelha", material: "titanio", img: "fotosjoias/Orelha/2711-IMG_3731.png", code: "#2711" }
     ].map((item, idx) => ({
       ...item,
-      code: `#${213301 + idx}`
+      code: item.code || `#${213301 + idx}`
     }));
  
     function openCatalogModal() {
@@ -3493,12 +3728,27 @@
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
       filterCatalog('todos', document.querySelector('.catalog-tabs .tab-btn'));
+      setTimeout(updateTabsScrollIndicator, 150);
     }
  
     function closeCatalogModal() {
       const modal = document.getElementById('catalogModal');
       modal.classList.remove('open');
       document.body.style.overflow = '';
+    }
+
+    function openImageZoom(imgSrc) {
+      const modal = document.getElementById('imageZoomModal');
+      const zoomedImg = document.getElementById('zoomedImage');
+      zoomedImg.src = imgSrc;
+      modal.classList.add('open');
+    }
+
+    function closeImageZoomModal(event) {
+      if (event.target.id === 'imageZoomModal' || event.target.classList.contains('modal-close')) {
+        const modal = document.getElementById('imageZoomModal');
+        modal.classList.remove('open');
+      }
     }
  
     function scrollCatalogRow(dir) {
@@ -3534,7 +3784,7 @@
         const msg = `Olá! Tenho interesse na joia ${item.name} (${item.code}) no valor de ${item.price}. Gostaria de verificar a disponibilidade para reserva.`;
         return `
           <div class="catalog-card">
-            <img src="${item.img}" alt="${item.name}" loading="lazy" decoding="async">
+            <img src="${item.img}" alt="${item.name}" decoding="async" onload="this.classList.add('loaded')" onclick="openImageZoom('${item.img}')">
             <div class="catalog-card-info">
               <span class="catalog-card-code">${item.code}</span>
               <span class="catalog-card-title" title="${item.name}">${item.name}</span>
@@ -3585,28 +3835,45 @@
     }
 
     const scrollers = document.querySelectorAll('.row-scroller');
-    let isDown = false, startX, scrollLeft, isDragging = false;
-
     scrollers.forEach(scroller => {
-      scroller.addEventListener('mousedown', (e) => {
-        isDown = true; isDragging = false; scroller.classList.add('active-drag');
-        startX = e.pageX - scroller.offsetLeft; scrollLeft = scroller.scrollLeft;
-      });
-      scroller.addEventListener('mouseleave', () => { isDown = false; scroller.classList.remove('active-drag'); });
-      scroller.addEventListener('mouseup', () => {
-        isDown = false; scroller.classList.remove('active-drag');
-        setTimeout(() => { isDragging = false; }, 50);
-      });
-      scroller.addEventListener('mousemove', (e) => {
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+      let isDragging = false;
+
+      const handleMouseUp = () => {
         if (!isDown) return;
-        e.preventDefault();
+        isDown = false;
+        scroller.classList.remove('active-drag');
+        setTimeout(() => { isDragging = false; }, 50);
+        window.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener('mousemove', handleMouseMove);
+      };
+
+      const handleMouseMove = (e) => {
+        if (!isDown) return;
         const x = e.pageX - scroller.offsetLeft;
         const walk = (x - startX) * 2;
         if (Math.abs(walk) > 5) { isDragging = true; }
         scroller.scrollLeft = scrollLeft - walk;
+      };
+
+      scroller.addEventListener('mousedown', (e) => {
+        isDown = true;
+        isDragging = false;
+        scroller.classList.add('active-drag');
+        startX = e.pageX - scroller.offsetLeft;
+        scrollLeft = scroller.scrollLeft;
+
+        window.addEventListener('mouseup', handleMouseUp);
+        window.addEventListener('mousemove', handleMouseMove);
       });
+
       scroller.addEventListener('click', (e) => {
-        if (isDragging) { e.preventDefault(); e.stopPropagation(); }
+        if (isDragging) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
       }, true);
     });
 
@@ -3878,6 +4145,34 @@
     }
     window.addEventListener("scroll", atualizarTopo, { passive: true });
     atualizarTopo();
+
+    window.addEventListener("resize", () => {
+      updateTabsScrollIndicator();
+    });
+
+    function updateTabsScrollIndicator() {
+      const tabs = document.getElementById('catalogTabs');
+      const indicator = document.getElementById('tabsScrollIndicator');
+      if (!tabs || !indicator) return;
+      
+      const isScrollable = tabs.scrollWidth > tabs.clientWidth;
+      const isAtEnd = tabs.scrollLeft + tabs.clientWidth >= tabs.scrollWidth - 8;
+      
+      if (isScrollable && !isAtEnd) {
+        indicator.style.opacity = '1';
+        indicator.style.pointerEvents = 'auto';
+      } else {
+        indicator.style.opacity = '0';
+        indicator.style.pointerEvents = 'none';
+      }
+    }
+
+    function scrollTabsRight() {
+      const tabs = document.getElementById('catalogTabs');
+      if (tabs) {
+        tabs.scrollBy({ left: 120, behavior: 'smooth' });
+      }
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("year").textContent = new Date().getFullYear();
