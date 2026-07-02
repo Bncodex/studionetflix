@@ -6,7 +6,8 @@
   <title>NAPELE67 – Studio Tattoo Campo Grande</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Otimização de Performance: Preconnect para carregar as fontes mais rápido -->
+  <!-- Otimização de Performance: Preload da imagem do Hero (LCP) e preconnect para carregar as fontes mais rápido -->
+  <link rel="preload" href="./img/tatuador.jpg" as="image" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- Fontes: Anton (Impacto), Manrope (Moderna/Legível), Playfair Display (Luxo/Premium) -->
@@ -398,7 +399,7 @@
       height: 100%;
       width: auto;
       max-width: 100%;
-      object-fit: contain;
+      object-fit: cover;
       object-position: right center;
       -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 1) 25%);
       mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 1) 25%);
@@ -653,6 +654,22 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
       z-index: 5;
       transition-delay: 0.15s;
+    }
+
+    @keyframes cardHighlight {
+      0%, 100% {
+        box-shadow: 0 0 0 rgba(229, 9, 20, 0);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 25px rgba(229, 9, 20, 0.8);
+        transform: scale(1.06);
+      }
+    }
+
+    .card-highlight {
+      animation: cardHighlight 1.5s ease-in-out 2;
+      z-index: 5;
     }
 
     .card-img {
@@ -1856,7 +1873,7 @@
     .modal-gallery img {
       width: 100%;
       height: 250px;
-      object-fit: contain;
+      object-fit: cover;
       background: #111;
       border-radius: 8px;
       transition: transform 0.3s;
@@ -2535,9 +2552,10 @@
         <div class="logo-napeleflix">NAPELE</div>
       </div>
       <div class="nav-links">
-        <span onclick="scrollToId('inicio')">Início</span>
-        <span onclick="scrollToId('top10')">Estilos</span>
-        <span onclick="scrollToId('servicos-piercing')">Piercing e Remoção</span>
+        <span onclick="scrollToId('inicio')">INÍCIO</span>
+        <span onclick="scrollToId('top10')">TATUAGEM</span>
+        <span onclick="scrollToPiercing()">PIERCING</span>
+        <span onclick="scrollToRemocao()">REMOÇÃO</span>
       </div>
       <div class="nav-right">
         <button class="btn-nav-cta" onclick="chamarWhatsapp('Olá! Gostaria de fazer um orçamento.')">Orçamento</button>
@@ -2549,7 +2567,7 @@
     <!-- CAPA -->
     <section class="hero reveal" id="inicio">
       <div class="hero-image-wrapper">
-        <img src="./img/tatuador.jpg" alt="" />
+        <img src="./img/tatuador.jpg" alt="Tatuador no estúdio Napele 67" decoding="async" fetchpriority="high" />
       </div>
 
       <div class="hero-inner">
@@ -2830,44 +2848,44 @@
               onclick="scrollRow('piercing-scroller', -1)">‹</button>
             <div class="row-scroller" id="piercing-scroller" onscroll="handleScrollCheck(this)">
               
-              <article class="card" onclick="openCatalogModal()">
+              <article id="card-piercing" class="card" onclick="openCatalogModal()">
                 <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/2787341/pexels-photo-2787341.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  style="background-image:url('img/capa_catalogo.jpg');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="card-info">Catálogo de Joias<small>Aço cirúrgico & Titânio</small></div>
               </article>
 
-              <article class="card" onclick="chamarWhatsapp('Gostaria de saber sobre perfuração de piercing.')">
+              <article class="card" onclick="chamarWhatsappPiercing('Gostaria de saber sobre perfuração de piercing.')">
                 <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/3760852/pexels-photo-3760852.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  style="background-image:url('img/capa_perfuracao.jpg');">
                 </div>
                 <div class="card-gradient"></div>
-                <div class="card-info">Perfuração<small>Valores já incluem joia</small></div>
+                <div class="card-info">Perfuração<small>Tabela de Valores</small></div>
               </article>
 
-              <article class="card" onclick="chamarWhatsapp('Tenho interesse no visagismo de orelhas (projeto auricular).')">
+              <article class="card" onclick="chamarWhatsappPiercing('Tenho interesse no visagismo de orelhas (projeto auricular).')">
                 <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/3864109/pexels-photo-3864109.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  style="background-image:url('img/capa_visagismo.jpg');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="card-info">Visagismo de Orelhas<small>Projeto Auricular</small></div>
               </article>
 
-              <article class="card" onclick="chamarWhatsapp('Queria informações sobre a reconstrução de lóbulo.')">
+              <article class="card" onclick="chamarWhatsappPiercing('Queria informações sobre a reconstrução de lóbulo.')">
                 <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/6311564/pexels-photo-6311564.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  style="background-image:url('img/capa_reconstrucao.jpg');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="card-info">Reconstrução de Lóbulo<small>Procedimento não cirúrgico</small></div>
               </article>
 
-              <article class="card" onclick="chamarWhatsapp('Quero saber mais sobre a remoção a laser de tatuagem, micropigmentação, manchas ou piercings.')">
+              <article id="card-remocao" class="card" onclick="chamarWhatsapp('Quero saber mais sobre a remoção a laser de tatuagem, micropigmentação, manchas ou piercings.')">
                 <div class="card-img"
                   style="background-image:url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');">
                 </div>
                 <div class="card-gradient"></div>
-                <div class="card-info">Remoção a Laser<small>Tattoo, micropigmentação e piercing</small></div>
+                <div class="card-info">Remoção a Laser<small>Tattoo, Micropigmentação e Manchas Solares</small></div>
               </article>
 
             </div>
@@ -2884,7 +2902,7 @@
 
               <article class="card" onclick="openVideoModal('Campo Grande', 'zOtjXxVp304')">
                 <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/3738089/pexels-photo-3738089.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  style="background-image:url('img/StudioGC.jpeg');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="play-button-netflix">
@@ -2900,7 +2918,7 @@
 
               <article class="card" onclick="openVideoModal('Dourados', 'videodourados/IMGDourados_5985.mov')">
                 <div class="card-img"
-                  style="background-image:url('https://images.pexels.com/photos/4123895/pexels-photo-4123895.jpeg?auto=compress&cs=tinysrgb&w=800');">
+                  style="background-image:url('img/StudioDourados.jpeg');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="play-button-netflix">
@@ -3134,7 +3152,7 @@
               <div class="episode-row active" onclick="selectEpisode(1, this)">
                 <div class="episode-number">1</div>
                 <div class="episode-thumb"
-                  style="background-image: url('https://images.pexels.com/photos/4123896/pexels-photo-4123896.jpeg?auto=compress&cs=tinysrgb&w=800');"
+                  style="background-image: url('img/capavideo1.jpeg');"
                   onclick="event.stopPropagation(); openVideoModal('Avaliação Presencial', 'KgZnGrwbC2Q');">
                   <div class="episode-play-icon"><svg viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
@@ -3152,7 +3170,7 @@
               <div class="episode-row" onclick="selectEpisode(2, this)">
                 <div class="episode-number">2</div>
                 <div class="episode-thumb"
-                  style="background-image: url('https://images.pexels.com/photos/3864109/pexels-photo-3864109.jpeg?auto=compress&cs=tinysrgb&w=800');"
+                  style="background-image: url('img/capavideo2.jpeg');"
                   onclick="event.stopPropagation(); openVideoModal('Projeto Personalizado', 'wR5aR2YB9mY');">
                   <div class="episode-play-icon"><svg viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
@@ -3170,7 +3188,7 @@
               <div class="episode-row" onclick="selectEpisode(3, this)">
                 <div class="episode-number">3</div>
                 <div class="episode-thumb"
-                  style="background-image: url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');"
+                  style="background-image: url('img/capavideo3.jpeg');"
                   onclick="event.stopPropagation(); openVideoModal('Acompanhamento Pós-Procedimento & Garantia de Serviço', 'xBZ0bVhEpFM');">
                   <div class="episode-play-icon"><svg viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
@@ -3504,7 +3522,7 @@
   <div id="imageZoomModal" class="modal-overlay" onclick="closeImageZoomModal(event)" style="z-index: 10000;">
     <div class="modal-content" style="max-width: 90vw; max-height: 90vh; background: transparent; border: none; box-shadow: none; display: flex; align-items: center; justify-content: center; padding: 0; overflow: visible; position: relative;">
       <button class="modal-close" onclick="closeImageZoomModal(event)" style="position: absolute; top: -50px; right: 0; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.25); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10010;">×</button>
-      <img id="zoomedImage" src="" alt="Imagem ampliada" style="max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.9);">
+      <img id="zoomedImage" src="" alt="Imagem ampliada" style="max-width: 100%; max-height: 80vh; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.9);">
     </div>
   </div>
 
@@ -3784,12 +3802,12 @@
         const msg = `Olá! Tenho interesse na joia ${item.name} (${item.code}) no valor de ${item.price}. Gostaria de verificar a disponibilidade para reserva.`;
         return `
           <div class="catalog-card">
-            <img src="${item.img}" alt="${item.name}" decoding="async" onload="this.classList.add('loaded')" onclick="openImageZoom('${item.img}')">
+            <img src="${item.img}" alt="${item.name}" decoding="async" loading="lazy" onload="this.classList.add('loaded')" onclick="openImageZoom('${item.img}')">
             <div class="catalog-card-info">
               <span class="catalog-card-code">${item.code}</span>
               <span class="catalog-card-title" title="${item.name}">${item.name}</span>
               <span class="catalog-card-price">${item.price}</span>
-              <button class="catalog-card-btn" onclick="chamarWhatsapp('${msg}')">
+              <button class="catalog-card-btn" onclick="chamarWhatsappPiercing('${msg}')">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                 </svg>
@@ -3805,19 +3823,20 @@
     }
 
     const WHATSAPP_NUMERO = "5567992856293";
+    const WHATSAPP_PIERCING_NUMERO = "5511982265333";
     let chatStarted = false;
 
     const modalData = {
-      realismo: { title: "Realismo (Preto e cinza)", desc: "Artes tridimensionais ultra-realistas com foco obsessivo em texturas de pele, microdetalhes, contrastes dramáticos de sombras e profundidade. Cada projeto é planejado para alcançar a máxima fidelidade fotográfica na pele.", images: ["img/1-realismo/30C0C9C1-87C1-467E-9ABD-A9DB8269D004.JPG.jpeg", "img/1-realismo/42BBAF0E-91B5-4343-9F3F-9DE09B4018F6.JPG.jpeg", "img/1-realismo/IMG_3946.JPG.jpeg", "img/1-realismo/BB75F0C6-6A17-4A69-96D9-8479AE6469E1.JPG.jpeg", "img/1-realismo/E44780C8-01AB-431C-B5E7-F739E3210AE3.JPG.jpeg", "img/1-realismo/WhatsApp Image 2026-05-14 at 01.30.18.jpeg", "img/1-realismo/PHOTOJesus-2026-06-12-14-37-03 (1).jpg", "img/1-realismo/PHOTO-2026-06-12-14-37-03.jpg"] },
-      finotraco: { title: "Fino Traço", desc: "A sofisticação do traço ultra-fino, preciso e minimalista. Perfeito para projetos delicados, florais detalhados, geometria sagrada e desenhos fluidos que se harmonizam com as linhas naturais do corpo.", images: ["img/2-fine line/IMG_1733.JPG.jpeg", "img/2-fine line/IMG_1757.JPG.jpeg", "img/2-fine line/4784013E-BBE3-4BC7-AEF8-39010D70EEC2.JPG.jpeg"] },
-      lettering: { title: "Lettering", desc: "A caligrafia artística elevada ao nível de obra de arte. Letras exclusivas desenhadas à mão (custom lettering), inspiradas na cultura chicana e no graffiti, com contrastes marcantes e fluidez anatômica.", images: ["img/3-Lettering/067E87D5-F3F9-4DAC-A751-27543A9C2F5D.JPG.jpeg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.22.45.jpeg", "img/3-Lettering/IMG_1875.JPG.jpeg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.27.10.jpeg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.22.15.jpeg"] },
-      oldschool: { title: "Old School", desc: "A essência da tatuagem tradicional ocidental. Linhas pretas bold e sólidas, paleta de cores primárias marcante e designs icônicos carregados de história e simbolismo clássico com durabilidade vitalícia garantida.", images: ["img/4-Oldschool/old.jpeg.jpg"] },
-      blackwork: { title: "Black Work", desc: "A potência do preto puro em composições ricas de alto contraste. Fusões artísticas que combinam texturas densas, geometrias complexas, pontilhismo fino e a fluidez orgânica inspirada no Suminagashi japonês.", images: ["img/5-Blackwork/1C4BE1ED-128B-4D01-AA2C-5925E8F63200.JPG.jpeg", "img/5-Blackwork/IMG_1850.JPG.jpeg", "img/5-Blackwork/IMG_3033.JPG.jpeg", "img/5-Blackwork/WhatsApp Image 2026-05-14 at 01.22.55.jpeg", "img/5-Blackwork/WhatsApp Image 2026-05-14 at 01.20.51.jpeg"] },
-      suminagashi: { title: "Suminagashi, Cyber & Geométrico", desc: "A fusão perfeita entre a fluidez da técnica tradicional de pintura Suminagashi, a estética cibernética/cyberpunk futurista (Cyber) e a precisão cirúrgica de formas e padrões geométricos tridimensionais.", images: ["img/6-Suminagashi/D6EF3F82-5EF3-4C63-8B29-81CC66CA698A.jpg", "img/6-Suminagashi/IMG_5718.png", "img/6-Suminagashi/IMG_5721.jpg", "img/6-Suminagashi/IMG_7658.jpg"] },
-      maori: { title: "Maori & Tribal", desc: "Simbolismo sagrado ancestral eternizado na pele. Padrões geométricos tribais complexos com linhas pretas sólidas e cortes precisos, onde cada curva e detalhe contam a história de força, proteção e conquistas do cliente.", images: ["img/7-Maori/D94F4030-40E3-494C-8C3D-7A2EC4282EC1.JPG.jpeg", "img/7-Maori/IMG_1766.JPG.jpeg"] },
-      colorido: { title: "Colorido", desc: "Explosão de cores vibrantes com técnicas de saturação avançadas e transições de degradê perfeitas (color fusion). Projetos únicos com contraste marcante para garantir que as cores permaneçam radiantes ao longo dos anos.", images: ["img/4-Oldschool/WhatsApp Image 2026-05-14 at 01.20.21.jpeg", "img/8-Colorido/IMG_3578.JPG.jpeg", "img/8-Colorido/IMG_7981.JPG.jpeg", "img/8-Colorido/1D5A553C-3B11-4EAE-8237-EE32282F11D6.JPG.jpeg", "img/8-Colorido/WhatsApp Image 2026-05-14 at 01.44.22.jpeg"] },
-      anime: { title: "Anime & Geek", desc: "A cultura pop e os animes elevados à categoria de arte de galeria. Traços fiéis aos mangás originais, técnicas mistas de traço fine, hachuras clássicas e coloração rica para eternizar seus personagens favoritos na pele.", images: ["img/9-anime/IMG_1735.JPG.jpeg", "img/9-anime/PHOTOgoku-2026-06-12-14-18-30.jpg", "img/9-anime/IMG_1841.JPG.jpeg"] },
-      minimalista: { title: "Minimalista", desc: "A beleza absoluta da simplicidade e da elegância sutil. Projetos pequenos com conceitos profundos, unindo microrealismo, linhas finas e precisão cirúrgica para criar artes discretas com grande significado.", images: ["img/10-minimalista/WhatsApp Image 2026-05-14 at 01.29.41.jpeg", "img/10-minimalista/6FD21235-9411-4EB2-BCF3-9C83982AB3B1.JPG.jpeg", "img/10-minimalista/IMG_1761.JPG.jpeg", "img/10-minimalista/IMG_3928.JPG.jpeg"] }
+      realismo: { title: "Realismo (Preto e cinza)", desc: "Artes tridimensionais ultra-realistas com foco obsessivo em texturas de pele, microdetalhes, contrastes dramáticos de sombras e profundidade. Cada projeto é planejado para alcançar a máxima fidelidade fotográfica na pele.", images: ["img/1-realismo/30C0C9C1-87C1-467E-9ABD-A9DB8269D004.JPG_processed.jpg", "img/1-realismo/42BBAF0E-91B5-4343-9F3F-9DE09B4018F6.JPG_processed.jpg", "img/1-realismo/IMG_3946.JPG_processed.jpg", "img/1-realismo/BB75F0C6-6A17-4A69-96D9-8479AE6469E1.JPG_processed.jpg", "img/1-realismo/E44780C8-01AB-431C-B5E7-F739E3210AE3.JPG_processed.jpg", "img/1-realismo/WhatsApp Image 2026-05-14 at 01.30.18_processed.jpg", "img/1-realismo/PHOTOJesus-2026-06-12-14-37-03 (1)_processed.jpg", "img/1-realismo/PHOTO-2026-06-12-14-37-03_processed.jpg"] },
+      finotraco: { title: "Fino Traço", desc: "A sofisticação do traço ultra-fino, preciso e minimalista. Perfeito para projetos delicados, florais detalhados, geometria sagrada e desenhos fluidos que se harmonizam com as linhas naturais do corpo.", images: ["img/2-fine line/IMG_1733.JPG_processed.jpg", "img/2-fine line/IMG_1757.JPG_processed.jpg", "img/2-fine line/4784013E-BBE3-4BC7-AEF8-39010D70EEC2.JPG_processed.jpg"] },
+      lettering: { title: "Lettering", desc: "A caligrafia artística elevada ao nível de obra de arte. Letras exclusivas desenhadas à mão (custom lettering), inspiradas na cultura chicana e no graffiti, com contrastes marcantes e fluidez anatômica.", images: ["img/3-Lettering/067E87D5-F3F9-4DAC-A751-27543A9C2F5D.JPG_processed.jpg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.22.45_processed.jpg", "img/3-Lettering/IMG_1875.JPG_processed.jpg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.27.10_processed.jpg", "img/3-Lettering/WhatsApp Image 2026-05-14 at 01.22.15_processed.jpg"] },
+      oldschool: { title: "Old School", desc: "A essência da tatuagem tradicional ocidental. Linhas pretas bold e sólidas, paleta de cores primárias marcante e designs icônicos carregados de história e simbolismo clássico com durabilidade vitalícia garantida.", images: ["img/4-Oldschool/old.jpeg_processed.jpg"] },
+      blackwork: { title: "Black Work", desc: "A potência do preto puro em composições ricas de alto contraste. Fusões artísticas que combinam texturas densas, geometrias complexas, pontilhismo fino e a fluidez orgânica inspirada no Suminagashi japonês.", images: ["img/5-Blackwork/1C4BE1ED-128B-4D01-AA2C-5925E8F63200.JPG_processed.jpg", "img/5-Blackwork/IMG_1850.JPG_processed.jpg", "img/5-Blackwork/IMG_3033.JPG_processed.jpg", "img/5-Blackwork/WhatsApp Image 2026-05-14 at 01.22.55_processed.jpg", "img/5-Blackwork/WhatsApp Image 2026-05-14 at 01.20.51_processed.jpg"] },
+      suminagashi: { title: "Suminagashi, Cyber & Geométrico", desc: "A fusão perfeita entre a fluidez da técnica tradicional de pintura Suminagashi, a estética cibernética/cyberpunk futurista (Cyber) e a precisão cirúrgica de formas e padrões geométricos tridimensionais.", images: ["img/6-Suminagashi/D6EF3F82-5EF3-4C63-8B29-81CC66CA698A_processed.jpg", "img/6-Suminagashi/IMG_5718_processed.jpg", "img/6-Suminagashi/IMG_5721_processed.jpg", "img/6-Suminagashi/IMG_7658_processed.jpg"] },
+      maori: { title: "Maori & Tribal", desc: "Simbolismo sagrado ancestral eternizado na pele. Padrões geométricos tribais complexos com linhas pretas sólidas e cortes precisos, onde cada curva e detalhe contam a história de força, proteção e conquistas do cliente.", images: ["img/7-Maori/D94F4030-40E3-494C-8C3D-7A2EC4282EC1.JPG_processed.jpg", "img/7-Maori/IMG_1766.JPG_processed.jpg"] },
+      colorido: { title: "Colorido", desc: "Explosão de cores vibrantes com técnicas de saturação avançadas e transições de degradê perfeitas (color fusion). Projetos únicos com contraste marcante para garantir que as cores permaneçam radiantes ao longo dos anos.", images: ["img/4-Oldschool/WhatsApp Image 2026-05-14 at 01.20.21_processed.jpg", "img/8-Colorido/IMG_3578.JPG_processed.jpg", "img/8-Colorido/IMG_7981.JPG_processed.jpg", "img/8-Colorido/1D5A553C-3B11-4EAE-8237-EE32282F11D6.JPG_processed.jpg", "img/8-Colorido/WhatsApp Image 2026-05-14 at 01.44.22_processed.jpg"] },
+      anime: { title: "Anime & Geek", desc: "A cultura pop e os animes elevados à categoria de arte de galeria. Traços fiéis aos mangás originais, técnicas mistas de traço fine, hachuras clássicas e coloração rica para eternizar seus personagens favoritos na pele.", images: ["img/9-anime/IMG_1735.JPG_processed.jpg", "img/9-anime/PHOTOgoku-2026-06-12-14-18-30_processed.jpg", "img/9-anime/IMG_1841.JPG_processed.jpg"] },
+      minimalista: { title: "Minimalista", desc: "A beleza absoluta da simplicidade e da elegância sutil. Projetos pequenos com conceitos profundos, unindo microrealismo, linhas finas e precisão cirúrgica para criar artes discretas com grande significado.", images: ["img/10-minimalista/WhatsApp Image 2026-05-14 at 01.29.41_processed.jpg", "img/10-minimalista/6FD21235-9411-4EB2-BCF3-9C83982AB3B1.JPG_processed.jpg", "img/10-minimalista/IMG_1761.JPG_processed.jpg", "img/10-minimalista/IMG_3928.JPG_processed.jpg"] }
     };
 
     const testImages = [
@@ -3834,12 +3853,48 @@
       if (el) { el.scrollIntoView({ behavior: "smooth" }); }
     }
 
+    function scrollToPiercing() {
+      scrollToId('servicos-piercing');
+      const scroller = document.getElementById('piercing-scroller');
+      const card = document.getElementById('card-piercing');
+      if (scroller && card) {
+        setTimeout(() => {
+          scroller.scrollTo({ left: 0, behavior: 'smooth' });
+          card.classList.add('card-highlight');
+          setTimeout(() => {
+            card.classList.remove('card-highlight');
+          }, 3000);
+        }, 300);
+      }
+    }
+
+    function scrollToRemocao() {
+      scrollToId('servicos-piercing');
+      const scroller = document.getElementById('piercing-scroller');
+      const card = document.getElementById('card-remocao');
+      if (scroller && card) {
+        setTimeout(() => {
+          const scrollTarget = card.offsetLeft - scroller.offsetLeft - 16;
+          scroller.scrollTo({ left: scrollTarget, behavior: 'smooth' });
+          card.classList.add('card-highlight');
+          setTimeout(() => {
+            card.classList.remove('card-highlight');
+          }, 3000);
+        }, 300);
+      }
+    }
+
     const scrollers = document.querySelectorAll('.row-scroller');
     scrollers.forEach(scroller => {
       let isDown = false;
       let startX;
       let scrollLeft;
       let isDragging = false;
+
+      // Prevent browser drag behavior (e.g. ghost images) from breaking custom drag-scroll
+      scroller.addEventListener('dragstart', (e) => {
+        e.preventDefault();
+      });
 
       const handleMouseUp = () => {
         if (!isDown) return;
@@ -4106,6 +4161,11 @@
     function chamarWhatsapp(mensagemPronta) {
       const mensagem = encodeURIComponent(mensagemPronta);
       window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${mensagem}`, "_blank");
+    }
+
+    function chamarWhatsappPiercing(mensagemPronta) {
+      const mensagem = encodeURIComponent(mensagemPronta);
+      window.open(`https://wa.me/${WHATSAPP_PIERCING_NUMERO}?text=${mensagem}`, "_blank");
     }
 
     function sendCustomWpp() {
