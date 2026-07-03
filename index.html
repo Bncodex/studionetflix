@@ -3871,10 +3871,13 @@
     }
 
     function filterCatalog(categoryKey, btn) {
+      console.log('filterCatalog called with key:', categoryKey);
       document.querySelectorAll('.catalog-tabs .tab-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
 
       const grid = document.getElementById('catalogGrid');
+      console.log('catalogGrid element:', grid);
+      console.log('jewelryData size:', typeof jewelryData !== 'undefined' ? jewelryData.length : 'undefined');
       let filtered = [];
 
       if (categoryKey === 'todos') {
@@ -3882,6 +3885,7 @@
       } else {
         filtered = jewelryData.filter(item => item.category === categoryKey);
       }
+      console.log('filtered items size:', filtered.length);
 
       grid.innerHTML = filtered.map(item => {
         const msg = `Olá! Tenho interesse na joia ${item.name} (${item.code}) no valor de ${item.price}. Gostaria de verificar a disponibilidade para reserva.`;
