@@ -657,10 +657,13 @@
     }
 
     @keyframes cardHighlight {
-      0%, 100% {
+
+      0%,
+      100% {
         box-shadow: 0 0 0 rgba(229, 9, 20, 0);
         transform: scale(1);
       }
+
       50% {
         box-shadow: 0 0 30px rgba(229, 9, 20, 1);
         transform: scale(1.06);
@@ -1892,6 +1895,7 @@
     .catalog-tabs::-webkit-scrollbar {
       display: none;
     }
+
     .tab-btn {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1911,17 +1915,20 @@
       box-sizing: border-box;
       font-family: inherit;
     }
+
     .tab-btn.active {
       background: var(--accent);
       border-color: var(--accent);
       color: #fff;
       box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
     }
+
     .tab-btn:hover:not(.active) {
       background: rgba(255, 255, 255, 0.12);
       color: #fff;
       border-color: rgba(255, 255, 255, 0.25);
     }
+
     .catalog-card-code {
       font-size: 0.75rem;
       font-weight: 700;
@@ -1929,6 +1936,7 @@
       letter-spacing: 0.5px;
       margin-bottom: 2px;
     }
+
     .catalog-grid {
       display: flex;
       gap: 20px;
@@ -1944,6 +1952,7 @@
       -webkit-user-select: none;
       scroll-behavior: smooth;
     }
+
     .catalog-grid::-webkit-scrollbar {
       display: none;
     }
@@ -1959,15 +1968,23 @@
       transition: all 0.3s ease;
       min-height: max-content;
     }
+
     .catalog-card:hover {
       transform: translateY(-5px);
       border-color: var(--accent);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 15px rgba(229, 9, 20, 0.15);
     }
+
     @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
     }
+
     .catalog-card img {
       width: 100%;
       aspect-ratio: 1 / 1;
@@ -1981,12 +1998,15 @@
       opacity: 0;
       cursor: pointer;
     }
+
     .catalog-card img.loaded {
       opacity: 1;
     }
+
     .catalog-card:hover img {
       transform: scale(1.05);
     }
+
     .catalog-card-info {
       padding: 12px;
       display: flex;
@@ -1994,6 +2014,7 @@
       gap: 6px;
       flex-grow: 1;
     }
+
     .catalog-card-title {
       font-size: 0.95rem;
       font-weight: 700;
@@ -2006,12 +2027,14 @@
       height: 2.6em;
       line-height: 1.3em;
     }
+
     .catalog-card-price {
       font-size: 1.1rem;
       font-weight: 800;
       color: #46d369;
       margin-top: auto;
     }
+
     .catalog-card-btn {
       background: var(--accent-grad);
       border: none;
@@ -2029,9 +2052,11 @@
       margin-top: auto;
       transition: opacity 0.2s;
     }
+
     .catalog-card-btn:hover {
       opacity: 0.9;
     }
+
     @media (max-width: 600px) {
       .tab-btn {
         height: 44px !important;
@@ -2039,24 +2064,30 @@
         font-size: 0.95rem !important;
         padding: 0 20px !important;
       }
+
       .catalog-grid {
         grid-template-columns: none !important;
         display: flex !important;
         gap: 12px !important;
       }
+
       .catalog-card {
         flex: 0 0 160px !important;
       }
+
       .catalog-card img {
         aspect-ratio: 1 / 1 !important;
         flex-shrink: 0 !important;
       }
+
       .catalog-card-title {
         font-size: 0.85rem !important;
       }
+
       .catalog-card-price {
         font-size: 0.95rem !important;
       }
+
       .catalog-card-btn {
         font-size: 0.8rem !important;
         padding: 6px !important;
@@ -2293,9 +2324,10 @@
         -webkit-backdrop-filter: blur(20px);
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       }
+
       .top-nav-inner {
         display: grid;
-        grid-template-areas: 
+        grid-template-areas:
           "logo cta"
           "links links";
         grid-template-columns: 1fr auto;
@@ -2303,14 +2335,17 @@
         column-gap: 16px;
         padding: 12px 16px;
       }
+
       .logo-wrapper {
         grid-area: logo;
         justify-content: flex-start;
       }
+
       .nav-right {
         grid-area: cta;
         justify-content: flex-end;
       }
+
       .nav-links {
         grid-area: links;
         display: flex;
@@ -2322,6 +2357,7 @@
         border-top: 1px solid rgba(255, 255, 255, 0.05);
         padding-top: 10px;
       }
+
       .btn-nav-cta {
         padding: 6px 14px;
         font-size: 0.8rem;
@@ -2524,9 +2560,12 @@
     }
 
     @keyframes bounceRight {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: translateX(0);
       }
+
       50% {
         transform: translateX(4px);
       }
@@ -2847,40 +2886,39 @@
           </h3>
           <div class="row-container">
             <div class="row-scroller" id="piercing-scroller" onscroll="handleScrollCheck(this)">
-              
+
               <article id="card-piercing" class="card" onclick="openCatalogModal()">
-                <div class="card-img"
-                  style="background-image:url('img/capa_catalogo.jpg');">
+                <div class="card-img" style="background-image:url('img/capa_catalogo.jpg');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="card-info">Catálogo de Joias<small>Aço cirúrgico & Titânio</small></div>
               </article>
 
               <article id="card-perfuracao" class="card" onclick="openPerfuracaoModal()">
-                <div class="card-img"
-                  style="background-image:url('img/capa_perfuracao.jpg');">
+                <div class="card-img" style="background-image:url('img/capa_perfuracao.jpg');">
                 </div>
                 <div class="card-gradient"></div>
-                <div class="card-info">Perfuração<small>Tabela de Valores</small></div>
+                <div class="card-info">Tabela de Valores<small>Perfuração</small></div>
               </article>
 
-              <article class="card" onclick="chamarWhatsappPiercing('Tenho interesse no visagismo de orelhas (projeto auricular).')">
-                <div class="card-img"
-                  style="background-image:url('img/capa_visagismo.jpg');">
+              <article class="card"
+                onclick="chamarWhatsappPiercing('Tenho interesse no visagismo de orelhas (projeto auricular).')">
+                <div class="card-img" style="background-image:url('img/capa_visagismo.jpg');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="card-info">Visagismo de Orelhas<small>Projeto Auricular</small></div>
               </article>
 
-              <article class="card" onclick="chamarWhatsappPiercing('Queria informações sobre a reconstrução de lóbulo.')">
-                <div class="card-img"
-                  style="background-image:url('img/capa_reconstrucao.jpg');">
+              <article class="card"
+                onclick="chamarWhatsappPiercing('Queria informações sobre a reconstrução de lóbulo.')">
+                <div class="card-img" style="background-image:url('img/capa_reconstrucao.jpg');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="card-info">Reconstrução de Lóbulo<small>Procedimento não cirúrgico</small></div>
               </article>
 
-              <article id="card-remocao" class="card" onclick="chamarWhatsappPiercing('Quero saber mais sobre a remoção a laser de tatuagem, micropigmentação, manchas ou piercings.')">
+              <article id="card-remocao" class="card"
+                onclick="chamarWhatsappPiercing('Quero saber mais sobre a remoção a laser de tatuagem, micropigmentação, manchas ou piercings.')">
                 <div class="card-img"
                   style="background-image:url('https://images.pexels.com/photos/4123894/pexels-photo-4123894.jpeg?auto=compress&cs=tinysrgb&w=800');">
                 </div>
@@ -2899,8 +2937,7 @@
             <div class="row-scroller">
 
               <article class="card" onclick="openVideoModal('Campo Grande', 'zOtjXxVp304')">
-                <div class="card-img"
-                  style="background-image:url('img/StudioGC.jpeg');">
+                <div class="card-img" style="background-image:url('img/StudioGC.jpeg');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="play-button-netflix">
@@ -2915,8 +2952,7 @@
               </article>
 
               <article class="card" onclick="openVideoModal('Dourados', 'videodourados/IMGDourados_5985.mov')">
-                <div class="card-img"
-                  style="background-image:url('img/StudioDourados.jpeg');">
+                <div class="card-img" style="background-image:url('img/StudioDourados.jpeg');">
                 </div>
                 <div class="card-gradient"></div>
                 <div class="play-button-netflix">
@@ -3149,8 +3185,7 @@
 
               <div class="episode-row active" onclick="selectEpisode(1, this)">
                 <div class="episode-number">1</div>
-                <div class="episode-thumb"
-                  style="background-image: url('img/capavideo1.jpeg');"
+                <div class="episode-thumb" style="background-image: url('img/capavideo1.jpeg');"
                   onclick="event.stopPropagation(); openVideoModal('Avaliação Presencial', 'KgZnGrwbC2Q');">
                   <div class="episode-play-icon"><svg viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
@@ -3167,8 +3202,7 @@
 
               <div class="episode-row" onclick="selectEpisode(2, this)">
                 <div class="episode-number">2</div>
-                <div class="episode-thumb"
-                  style="background-image: url('img/capavideo2.jpeg');"
+                <div class="episode-thumb" style="background-image: url('img/capavideo2.jpeg');"
                   onclick="event.stopPropagation(); openVideoModal('Projeto Personalizado', 'wR5aR2YB9mY');">
                   <div class="episode-play-icon"><svg viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
@@ -3185,8 +3219,7 @@
 
               <div class="episode-row" onclick="selectEpisode(3, this)">
                 <div class="episode-number">3</div>
-                <div class="episode-thumb"
-                  style="background-image: url('img/capavideo3.jpeg');"
+                <div class="episode-thumb" style="background-image: url('img/capavideo3.jpeg');"
                   onclick="event.stopPropagation(); openVideoModal('Acompanhamento Pós-Procedimento & Garantia de Serviço', 'xBZ0bVhEpFM');">
                   <div class="episode-play-icon"><svg viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
@@ -3480,18 +3513,24 @@
 
   <!-- MODAL DE CATÁLOGO DE JOIAS (ESTILO NETFLIX COM ABAS) -->
   <div id="catalogModal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 1000px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 25px;">
+    <div class="modal-content"
+      style="max-width: 1000px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 25px;">
       <button class="modal-close" onclick="closeCatalogModal()" aria-label="Fechar catálogo">×</button>
-      
+
       <!-- Cabeçalho do modal -->
       <div style="margin-bottom: 20px; flex-shrink: 0;">
-        <h2 id="catalogTitle" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: #fff;">Catálogo de Joias</h2>
-        <p style="color: var(--muted); font-size: 0.95rem;">Escolha a joia perfeita e fale com a nossa equipe no WhatsApp para reservar.</p>
+        <h2 id="catalogTitle"
+          style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: #fff;">
+          Catálogo de Joias</h2>
+        <p style="color: var(--muted); font-size: 0.95rem;">Escolha a joia perfeita e fale com a nossa equipe no
+          WhatsApp para reservar.</p>
       </div>
 
       <!-- Abas de Categorias com Indicador de Scroll -->
-      <div class="catalog-tabs-container" style="position: relative; margin-bottom: 20px; display: flex; align-items: center; width: 100%;">
-        <div class="catalog-tabs" id="catalogTabs" onscroll="updateTabsScrollIndicator()" style="display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); scrollbar-width: none; flex-shrink: 0;">
+      <div class="catalog-tabs-container"
+        style="position: relative; margin-bottom: 20px; display: flex; align-items: center; width: 100%;">
+        <div class="catalog-tabs" id="catalogTabs" onscroll="updateTabsScrollIndicator()"
+          style="display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); scrollbar-width: none; flex-shrink: 0;">
           <button class="tab-btn active" onclick="filterCatalog('todos', this)">Todos</button>
           <button class="tab-btn" onclick="filterCatalog('orelha', this)">Orelha</button>
           <button class="tab-btn" onclick="filterCatalog('nariz', this)">Nariz</button>
@@ -3500,54 +3539,73 @@
           <button class="tab-btn" onclick="filterCatalog('corpo', this)">Corpo</button>
         </div>
         <!-- Seta indicadora (fade na direita com chevron) -->
-        <div class="tabs-scroll-indicator" id="tabsScrollIndicator" onclick="scrollTabsRight()" style="position: absolute; right: 0; bottom: 10px; top: 0; width: 60px; background: linear-gradient(to left, #0f0f0f 60%, transparent 100%); display: flex; align-items: center; justify-content: flex-end; padding-right: 5px; color: #fff; cursor: pointer; transition: opacity 0.3s ease; opacity: 0; pointer-events: none; z-index: 10;">
-          <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.25); font-size: 1rem; line-height: 1; font-weight: bold; animation: bounceRight 1.5s infinite;">❯</span>
+        <div class="tabs-scroll-indicator" id="tabsScrollIndicator" onclick="scrollTabsRight()"
+          style="position: absolute; right: 0; bottom: 10px; top: 0; width: 60px; background: linear-gradient(to left, #0f0f0f 60%, transparent 100%); display: flex; align-items: center; justify-content: flex-end; padding-right: 5px; color: #fff; cursor: pointer; transition: opacity 0.3s ease; opacity: 0; pointer-events: none; z-index: 10;">
+          <span
+            style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.25); font-size: 1rem; line-height: 1; font-weight: bold; animation: bounceRight 1.5s infinite;">❯</span>
         </div>
       </div>
 
       <!-- Grade do Catálogo (Horizontal) -->
-      <div class="row-container" style="flex-grow: 1; min-height: 0; display: flex; align-items: center; position: relative;">
-        <button class="nav-btn nav-prev" id="catalogNavPrev" onclick="scrollCatalogRow(-1)" style="display: none; z-index: 1010;"><</button>
-        <div id="catalogGrid" class="catalog-grid row-scroller" onscroll="handleCatalogScroll(this)">
-          <!-- Inserido dinamicamente via JS -->
-        </div>
-        <button class="nav-btn nav-next" id="catalogNavNext" onclick="scrollCatalogRow(1)" style="z-index: 1010;">></button>
+      <div class="row-container"
+        style="flex-grow: 1; min-height: 0; display: flex; align-items: center; position: relative;">
+        <button class="nav-btn nav-prev" id="catalogNavPrev" onclick="scrollCatalogRow(-1)"
+          style="display: none; z-index: 1010;">
+          << /button>
+            <div id="catalogGrid" class="catalog-grid row-scroller" onscroll="handleCatalogScroll(this)">
+              <!-- Inserido dinamicamente via JS -->
+            </div>
+            <button class="nav-btn nav-next" id="catalogNavNext" onclick="scrollCatalogRow(1)"
+              style="z-index: 1010;">></button>
       </div>
     </div>
   </div>
 
   <!-- MODAL DE ZOOM DA IMAGEM DO CATÁLOGO -->
   <div id="imageZoomModal" class="modal-overlay" onclick="closeImageZoomModal(event)" style="z-index: 10000;">
-    <div class="modal-content" style="max-width: 90vw; max-height: 90vh; background: transparent; border: none; box-shadow: none; display: flex; align-items: center; justify-content: center; padding: 0; overflow: visible; position: relative;">
-      <button class="modal-close" onclick="closeImageZoomModal(event)" style="position: absolute; top: -50px; right: 0; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.25); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10010;">×</button>
-      <img id="zoomedImage" src="" alt="Imagem ampliada" style="max-width: 100%; max-height: 80vh; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.9);">
+    <div class="modal-content"
+      style="max-width: 90vw; max-height: 90vh; background: transparent; border: none; box-shadow: none; display: flex; align-items: center; justify-content: center; padding: 0; overflow: visible; position: relative;">
+      <button class="modal-close" onclick="closeImageZoomModal(event)"
+        style="position: absolute; top: -50px; right: 0; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.25); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10010;">×</button>
+      <img id="zoomedImage" src="" alt="Imagem ampliada"
+        style="max-width: 100%; max-height: 80vh; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.9);">
     </div>
   </div>
 
   <!-- MODAL DE PERFURAÇÃO / TABELA DE VALORES -->
   <div id="perfuracaoModal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 900px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 25px;">
+    <div class="modal-content"
+      style="max-width: 900px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 25px;">
       <button class="modal-close" onclick="closePerfuracaoModal()" aria-label="Fechar perfuração">×</button>
-      
+
       <!-- Cabeçalho do modal -->
       <div style="margin-bottom: 20px; flex-shrink: 0;">
-        <h2 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: #fff;">Perfuração & Tabela de Valores</h2>
-        <p style="color: var(--muted); font-size: 0.95rem;">Confira abaixo o nosso catálogo completo de perfurações e valores.</p>
+        <h2
+          style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: #fff;">
+          Tabela de Valores</h2>
+        <p style="color: var(--muted); font-size: 0.95rem;">Perfuração</p>
       </div>
 
       <!-- Imagens do catálogo de Perfuração -->
-      <div style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding-right: 5px; margin-bottom: 20px;">
-        <img src="fotosjoias/catalogo1.jpeg" alt="Catálogo Perfuração Parte 1" style="width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 20px rgba(0,0,0,0.5); cursor: pointer;" onclick="openImageZoom('fotosjoias/catalogo1.jpeg')">
-        <img src="fotosjoias/catalogo2.jpeg" alt="Catálogo Perfuração Parte 2" style="width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 20px rgba(0,0,0,0.5); cursor: pointer;" onclick="openImageZoom('fotosjoias/catalogo2.jpeg')">
+      <div
+        style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding-right: 5px; margin-bottom: 20px;">
+        <img src="fotosjoias/catalogo1.jpeg" alt="Catálogo Perfuração Parte 1"
+          style="width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 20px rgba(0,0,0,0.5); cursor: pointer;"
+          onclick="openImageZoom('fotosjoias/catalogo1.jpeg')">
+        <img src="fotosjoias/catalogo2.jpeg" alt="Catálogo Perfuração Parte 2"
+          style="width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 20px rgba(0,0,0,0.5); cursor: pointer;"
+          onclick="openImageZoom('fotosjoias/catalogo2.jpeg')">
       </div>
 
       <!-- CTA para WhatsApp -->
       <div style="flex-shrink: 0; display: flex; justify-content: center;">
-        <button class="btn-cta" onclick="chamarWhatsappPiercing('Olá! Gostaria de tirar dúvidas ou saber mais informações sobre os catálogos de perfuração 1 e 2.')">
+        <button class="btn-cta"
+          onclick="chamarWhatsappPiercing('Olá! Gostaria de tirar dúvidas ou saber mais informações sobre os catálogos de perfuração 1 e 2.')">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="margin-right:8px;">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
           </svg>
-          Saber mais pelo WhatsApp
+          Agende sua perfuração
         </button>
       </div>
     </div>
@@ -3738,7 +3796,7 @@
       ...item,
       code: item.code || `#${213301 + idx}`
     }));
- 
+
     function openCatalogModal() {
       const modal = document.getElementById('catalogModal');
       modal.classList.add('open');
@@ -3746,7 +3804,7 @@
       filterCatalog('todos', document.querySelector('.catalog-tabs .tab-btn'));
       setTimeout(updateTabsScrollIndicator, 150);
     }
- 
+
     function closeCatalogModal() {
       const modal = document.getElementById('catalogModal');
       modal.classList.remove('open');
@@ -3766,7 +3824,7 @@
         modal.classList.remove('open');
       }
     }
- 
+
     function scrollCatalogRow(dir) {
       const el = document.getElementById('catalogGrid');
       if (el) {
@@ -3786,16 +3844,16 @@
     function filterCatalog(categoryKey, btn) {
       document.querySelectorAll('.catalog-tabs .tab-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
- 
+
       const grid = document.getElementById('catalogGrid');
       let filtered = [];
- 
+
       if (categoryKey === 'todos') {
         filtered = jewelryData;
       } else {
         filtered = jewelryData.filter(item => item.category === categoryKey);
       }
- 
+
       grid.innerHTML = filtered.map(item => {
         const msg = `Olá! Tenho interesse na joia ${item.name} (${item.code}) no valor de ${item.price}. Gostaria de verificar a disponibilidade para reserva.`;
         return `
@@ -3852,10 +3910,10 @@
       let startTime = null;
 
       function easeInOutCubic(t, b, c, d) {
-        t /= d/2;
-        if (t < 1) return c/2*t*t*t + b;
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t * t + b;
         t -= 2;
-        return c/2*(t*t*t + 2) + b;
+        return c / 2 * (t * t * t + 2) + b;
       }
 
       function animation(currentTime) {
@@ -4267,10 +4325,10 @@
       const tabs = document.getElementById('catalogTabs');
       const indicator = document.getElementById('tabsScrollIndicator');
       if (!tabs || !indicator) return;
-      
+
       const isScrollable = tabs.scrollWidth > tabs.clientWidth;
       const isAtEnd = tabs.scrollLeft + tabs.clientWidth >= tabs.scrollWidth - 8;
-      
+
       if (isScrollable && !isAtEnd) {
         indicator.style.opacity = '1';
         indicator.style.pointerEvents = 'auto';
