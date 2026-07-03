@@ -3550,14 +3550,11 @@
       <!-- Grade do Catálogo (Horizontal) -->
       <div class="row-container"
         style="flex-grow: 1; min-height: 0; display: flex; align-items: center; position: relative;">
-        <button class="nav-btn nav-prev" id="catalogNavPrev" onclick="scrollCatalogRow(-1)"
-          style="display: none; z-index: 1010;">
-          << /button>
-            <div id="catalogGrid" class="catalog-grid row-scroller" onscroll="handleCatalogScroll(this)">
-              <!-- Inserido dinamicamente via JS -->
-            </div>
-            <button class="nav-btn nav-next" id="catalogNavNext" onclick="scrollCatalogRow(1)"
-              style="z-index: 1010;">></button>
+        <button class="nav-btn nav-prev" id="catalogNavPrev" onclick="scrollCatalogRow(-1)" style="display: none; z-index: 1010;">&lt;</button>
+        <div id="catalogGrid" class="catalog-grid row-scroller" onscroll="handleCatalogScroll(this)">
+          <!-- Inserido dinamicamente via JS -->
+        </div>
+        <button class="nav-btn nav-next" id="catalogNavNext" onclick="scrollCatalogRow(1)" style="z-index: 1010;">&gt;</button>
       </div>
     </div>
   </div>
@@ -3872,13 +3869,10 @@
     }
 
     function filterCatalog(categoryKey, btn) {
-      console.log('filterCatalog called with key:', categoryKey);
       document.querySelectorAll('.catalog-tabs .tab-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
 
       const grid = document.getElementById('catalogGrid');
-      console.log('catalogGrid element:', grid);
-      console.log('jewelryData size:', typeof jewelryData !== 'undefined' ? jewelryData.length : 'undefined');
       let filtered = [];
 
       if (categoryKey === 'todos') {
@@ -3886,7 +3880,6 @@
       } else {
         filtered = jewelryData.filter(item => item.category === categoryKey);
       }
-      console.log('filtered items size:', filtered.length);
 
       grid.innerHTML = filtered.map(item => {
         const msg = `Olá! Tenho interesse na joia ${item.name} (${item.code}) no valor de ${item.price}. Gostaria de verificar a disponibilidade para reserva.`;
