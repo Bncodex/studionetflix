@@ -2970,6 +2970,115 @@
           </div>
         </section>
 
+        <!-- SESSÃO "EPISÓDIOS" (COMO FUNCIONA O ESTÚDIO) -->
+        <section class="episodes-section reveal delay-3" id="episodios-row">
+          <div class="episodes-header">
+            <h3>Temporada 1: Sua Jornada na Pele</h3>
+            <span>Estúdio Napele 67</span>
+          </div>
+
+          <div class="episodes-container">
+            <div class="episode-list">
+
+              <div class="episode-row active" onclick="selectEpisode(1, this)">
+                <div class="episode-number">1</div>
+                <div class="episode-thumb" style="background-image: url('img/capavideo1.jpeg');"
+                  onclick="event.stopPropagation(); openVideoModal('Avaliação Presencial', 'KgZnGrwbC2Q');">
+                  <div class="episode-play-icon"><svg viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></div>
+                </div>
+                <div class="episode-info">
+                  <div class="episode-title-bar">
+                    <span class="episode-title">Avaliação Presencial</span>
+                    <span class="episode-duration">Etapa 1</span>
+                  </div>
+                  <p class="episode-desc">Entendemos suas ideias de perto e desenvolvemos um projeto exclusivo.</p>
+                </div>
+              </div>
+
+              <div class="episode-row" onclick="selectEpisode(2, this)">
+                <div class="episode-number">2</div>
+                <div class="episode-thumb" style="background-image: url('img/capavideo2.jpeg');"
+                  onclick="event.stopPropagation(); openVideoModal('Projeto Personalizado', 'wR5aR2YB9mY');">
+                  <div class="episode-play-icon"><svg viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></div>
+                </div>
+                <div class="episode-info">
+                  <div class="episode-title-bar">
+                    <span class="episode-title">Projeto Personalizado</span>
+                    <span class="episode-duration">Etapa 2</span>
+                  </div>
+                  <p class="episode-desc">Materiais descartáveis, esterilização total e conforto durante sua tattoo.</p>
+                </div>
+              </div>
+
+              <div class="episode-row" onclick="selectEpisode(3, this)">
+                <div class="episode-number">3</div>
+                <div class="episode-thumb" style="background-image: url('img/capavideo3.jpeg');"
+                  onclick="event.stopPropagation(); openVideoModal('Acompanhamento Pós-Procedimento & Garantia de Serviço', 'xBZ0bVhEpFM');">
+                  <div class="episode-play-icon"><svg viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></div>
+                </div>
+                <div class="episode-info">
+                  <div class="episode-title-bar">
+                    <span class="episode-title">Acompanhamento Pós-Procedimento & Garantia de Serviço</span>
+                    <span class="episode-duration">Etapa 3</span>
+                  </div>
+                  <p class="episode-desc">Condições facilitadas para você realizar o projeto dos seus sonhos sem aperto
+                    e com uma garantia que só nós oferecemos.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Painel Dinâmico de Detalhes -->
+            <div class="episode-details" id="episodeDetailsPanel">
+              <div class="episode-details-header">
+                <h4 class="episode-details-title" id="epTitle">Avaliação Presencial</h4>
+                <div class="episode-details-meta">
+                  <span class="netflix-match" id="epMatch">100% Relevante para você</span>
+                  <span id="epYear">2026</span>
+                  <span
+                    style="border: 1px solid rgba(255,255,255,0.4); padding: 1px 6px; border-radius: 3px; font-size: 0.8rem;">A18</span>
+                </div>
+              </div>
+              <div class="episode-details-desc" id="epDesc">
+                Acreditamos que uma tatuagem é uma obra de arte que te acompanha para sempre. Por isso, a primeira etapa
+                é fundamental: <br><br>
+                <ul>
+                  <li><strong>Reunião Criativa:</strong> É o momento que você expõe todas as suas ideias em um bate-papo
+                    presencial diretamente com o artista para que ele possa absorver e aperfeiçoar toda a essência do
+                    seu
+                    projeto.</li>
+                  <li><strong>Estudo Anatômico:</strong> O projeto é criado fluindo e se encaixando com a anatomia do
+                    seu
+                    corpo, garantindo harmonia.</li>
+                  <li><strong>Transparência Total:</strong> Tiramos todas as suas dúvidas com relação ao tempo
+                    necessário
+                    para a execução do serviço, sessões, valores, formas de pagamento e disponibilidade da agenda do
+                    estúdio.</li>
+                </ul>
+              </div>
+              <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+                <p style="font-size: 0.95rem; color: var(--muted);" id="epActionText">Quer entender mais? Clique em…
+                </p>
+                <button class="btn btn-primary episode-details-btn" id="epWppBtn"
+                  onclick="openVideoModal('Avaliação Presencial', 'KgZnGrwbC2Q')">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  Iniciar Episódio 1
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
         <!-- BANNER INTERMEDIÁRIO (AVALIAÇÕES FLUTUANTES) -->
         <section class="mid-banner reveal delay-2">
           <div class="mid-banner-img"></div>
@@ -3170,115 +3279,6 @@
               </div>
 
             </div>
-          </div>
-        </section>
-
-        <!-- SESSÃO "EPISÓDIOS" (COMO FUNCIONA O ESTÚDIO) -->
-        <section class="episodes-section reveal delay-3" id="episodios-row">
-          <div class="episodes-header">
-            <h3>Temporada 1: Sua Jornada na Pele</h3>
-            <span>Estúdio Napele 67</span>
-          </div>
-
-          <div class="episodes-container">
-            <div class="episode-list">
-
-              <div class="episode-row active" onclick="selectEpisode(1, this)">
-                <div class="episode-number">1</div>
-                <div class="episode-thumb" style="background-image: url('img/capavideo1.jpeg');"
-                  onclick="event.stopPropagation(); openVideoModal('Avaliação Presencial', 'KgZnGrwbC2Q');">
-                  <div class="episode-play-icon"><svg viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></div>
-                </div>
-                <div class="episode-info">
-                  <div class="episode-title-bar">
-                    <span class="episode-title">Avaliação Presencial</span>
-                    <span class="episode-duration">Etapa 1</span>
-                  </div>
-                  <p class="episode-desc">Entendemos suas ideias de perto e desenvolvemos um projeto exclusivo.</p>
-                </div>
-              </div>
-
-              <div class="episode-row" onclick="selectEpisode(2, this)">
-                <div class="episode-number">2</div>
-                <div class="episode-thumb" style="background-image: url('img/capavideo2.jpeg');"
-                  onclick="event.stopPropagation(); openVideoModal('Projeto Personalizado', 'wR5aR2YB9mY');">
-                  <div class="episode-play-icon"><svg viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></div>
-                </div>
-                <div class="episode-info">
-                  <div class="episode-title-bar">
-                    <span class="episode-title">Projeto Personalizado</span>
-                    <span class="episode-duration">Etapa 2</span>
-                  </div>
-                  <p class="episode-desc">Materiais descartáveis, esterilização total e conforto durante sua tattoo.</p>
-                </div>
-              </div>
-
-              <div class="episode-row" onclick="selectEpisode(3, this)">
-                <div class="episode-number">3</div>
-                <div class="episode-thumb" style="background-image: url('img/capavideo3.jpeg');"
-                  onclick="event.stopPropagation(); openVideoModal('Acompanhamento Pós-Procedimento & Garantia de Serviço', 'xBZ0bVhEpFM');">
-                  <div class="episode-play-icon"><svg viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></div>
-                </div>
-                <div class="episode-info">
-                  <div class="episode-title-bar">
-                    <span class="episode-title">Acompanhamento Pós-Procedimento & Garantia de Serviço</span>
-                    <span class="episode-duration">Etapa 3</span>
-                  </div>
-                  <p class="episode-desc">Condições facilitadas para você realizar o projeto dos seus sonhos sem aperto
-                    e com uma garantia que só nós oferecemos.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Painel Dinâmico de Detalhes -->
-            <div class="episode-details" id="episodeDetailsPanel">
-              <div class="episode-details-header">
-                <h4 class="episode-details-title" id="epTitle">Avaliação Presencial</h4>
-                <div class="episode-details-meta">
-                  <span class="netflix-match" id="epMatch">100% Relevante para você</span>
-                  <span id="epYear">2026</span>
-                  <span
-                    style="border: 1px solid rgba(255,255,255,0.4); padding: 1px 6px; border-radius: 3px; font-size: 0.8rem;">A18</span>
-                </div>
-              </div>
-              <div class="episode-details-desc" id="epDesc">
-                Acreditamos que uma tatuagem é uma obra de arte que te acompanha para sempre. Por isso, a primeira etapa
-                é fundamental: <br><br>
-                <ul>
-                  <li><strong>Reunião Criativa:</strong> É o momento que você expõe todas as suas ideias em um bate-papo
-                    presencial diretamente com o artista para que ele possa absorver e aperfeiçoar toda a essência do
-                    seu
-                    projeto.</li>
-                  <li><strong>Estudo Anatômico:</strong> O projeto é criado fluindo e se encaixando com a anatomia do
-                    seu
-                    corpo, garantindo harmonia.</li>
-                  <li><strong>Transparência Total:</strong> Tiramos todas as suas dúvidas com relação ao tempo
-                    necessário
-                    para a execução do serviço, sessões, valores, formas de pagamento e disponibilidade da agenda do
-                    estúdio.</li>
-                </ul>
-              </div>
-              <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
-                <p style="font-size: 0.95rem; color: var(--muted);" id="epActionText">Quer entender mais? Clique em…
-                </p>
-                <button class="btn btn-primary episode-details-btn" id="epWppBtn"
-                  onclick="openVideoModal('Avaliação Presencial', 'KgZnGrwbC2Q')">
-                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <pahttps: //github.com/sickn33/antigravity-awesome-skills.gitth d="M8 5v14l11-7z" />
-                  </svg>
-                  Iniciar Episódio 1
-                </button>
-              </div>
-            </div>
-
           </div>
         </section>
 
