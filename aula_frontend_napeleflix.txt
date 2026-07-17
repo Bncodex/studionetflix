@@ -1,0 +1,218 @@
+================================================================================
+          ROTEIRO DE AULA: COMO CONSTRUÍMOS O NAPELEFLIX (COMBINAÇÕES)
+================================================================================
+
+
+RECURSO 1: O Loader de Portas Deslizantes (Sliding Doors)
+* O Efeito: Quando o usuário entra no site, uma tela preta se abre ao meio (como 
+  portas de elevador) e uma linha laser vermelha encolhe na largura e cresce na 
+  altura cortando a tela, revelando o site com profundidade.
+* A Combinação no Código:
+  - HTML (Estrutura): Criamos uma div geral (`.loader-wrapper`) contendo duas 
+    divs internas: `.loader-left` e `.loader-right` (as portas), além da 
+    linha central `.loader-line-container`.
+  - CSS (Visual & Movimento): As portas são posicionadas para cobrir metade da 
+    tela cada uma (width: 50vw; height: 100vh;). Adicionamos um efeito de 
+    transição suave com velocidade controlada (`transition: transform 0.8s`).
+  - JavaScript (Comportamento): O JS fica monitorando o carregamento da página. 
+    Assim que o site carrega (`DOMContentLoaded`), o JS adiciona a classe 
+    `loaded` no `<body>`.
+  - O Resultado Combinado: No CSS, programamos que quando o body tiver a classe 
+    `.loaded`, as portas devem se afastar: `.body.loaded .loader-left` ganha 
+    `transform: translateX(-100%)` (move para a esquerda) e a da direita se 
+    move para a direita, revelando o site.
+
+---
+
+RECURSO 2: O Brilho Ambiente Vermelho (Netflix Ambient Glow)
+* O Efeito: Um brilho avermelhado suave no plano de fundo que pulsa levemente, 
+  passando a sensação de uma sala de cinema escura.
+* A Combinação no Código:
+  - HTML (Estrutura): Uma simples div vazia na página com a classe `.ambient-glow`.
+  - CSS (Visual & Movimento): Criamos uma cor usando radial-gradient com canal 
+    Alpha (RGBA) para dar transparência: `rgba(229, 9, 20, 0.12)`. Posicionamos 
+    esse brilho de forma fixa (`position: fixed`) no fundo do site. 
+  - Animação por Trás: Para fazê-lo pulsar sozinho, criamos regras de animação:
+    `@keyframes pulseGlow` que altera a opacidade do brilho de 0.6 para 1.0. 
+    Com o CSS `animation: pulseGlow 6s infinite alternate;`, o navegador repete 
+    esse pulso de opacidade para sempre, sem precisar de Javascript.
+
+---
+
+RECURSO 3: O Topo Inteligente (Scroll Glassmorphism)
+* O Efeito: A barra de navegação superior (menu) começa transparente com um 
+  degradê preto suave. Mas, ao rolar a página para baixo, ela se torna escura, 
+  cria uma borda inferior fina e borra o conteúdo que passa por trás (efeito vidro).
+* A Combinação no Código:
+  - HTML (Estrutura): O menu principal estruturado com a tag `<nav class="top-nav">`.
+  - CSS (Visual): Definimos o visual básico transparente. Depois, criamos a 
+    classe especial `.top-nav.solid` no CSS que adiciona um fundo escuro semi-transparente 
+    e o efeito de desfoque moderno: `backdrop-filter: blur(20px);`.
+  - JavaScript (Comportamento): O JS fica escutando a rolagem do usuário. Criamos 
+    um código que verifica: "Se a distância de rolagem for maior que 50 pixels, 
+    adicione a classe `solid` no menu. Se o usuário voltar para o topo, remova."
+  - O Resultado Combinado: A adição da classe `solid` pelo JavaScript faz o 
+    navegador aplicar instantaneamente o estilo CSS de desfoque e escurecimento.
+
+---
+
+RECURSO 4: O Título Hero Cinemático (Scale & Blur Reveal)
+* O Efeito: O título principal "ALÉM DA PELE" entra na tela com um efeito de 
+  cinema: ele começa grande, desfocado e transparente, e vai tomando forma 
+  e focando conforme encolhe ligeiramente até sua posição final.
+* A Combinação no Código:
+  - HTML (Estrutura): Um título principal formatado com a tag `<h1>` e a classe `.hero-title`.
+  - CSS (Visual & Escala): Usamos a propriedade `clamp()` para calcular o tamanho 
+    do texto de forma responsiva de acordo com a tela. Criamos o `@keyframes cinematicTextReveal` 
+    definindo o estado inicial (opacity: 0, transform: scale(0.95) translateY(40px), filter: blur(10px)) 
+    e o estado final de foco e opacidade total.
+  - O Resultado Combinado: Aplicamos a animação no CSS com um pequeno delay 
+    (`animation-delay: 0.2s`) para que o título apareça logo após o loader de entrada sumir.
+
+---
+
+RECURSO 5: O Carrossel de Cards por Arrasto (Drag-to-Scroll)
+* O Efeito: As fileiras de tatuagens funcionam como na Netflix. No computador, você 
+  pode clicar com o mouse e arrastar para o lado para navegar pelos cards. No celular, 
+  funciona com o deslizar do dedo. Ao passar o mouse nos cards, eles dão zoom.
+* A Combinação no Código:
+  - HTML (Estrutura): O container principal `.row-scroller` agrupa vários cards (`.card`).
+  - CSS (Visual & Layout): Usamos o Flexbox (`display: flex`) para colocar os cards 
+    lado a lado. Damos `flex-shrink: 0` para que os cards mantenham a largura 
+    original (220px) sem esmagarem, criando o transbordo lateral. Escondemos a 
+    barra de rolagem padrão do navegador com `scrollbar-width: none`.
+  - No Hover: Aplicamos `transform: scale(1.05)` no card com um pequeno atraso 
+    (`transition-delay: 0.15s`) para dar um destaque elegante apenas quando o 
+    usuário para o mouse em cima.
+  - JavaScript (Comportamento): O clique e arrasto no computador foi programado 
+    capturando eventos de clique do mouse: `mousedown` (quando clica), `mousemove` 
+    (quando arrasta) e `mouseup` (quando solta). O JS calcula a diferença física 
+    de pixels que o mouse se moveu e rola o carrossel usando a propriedade `.scrollLeft`.
+
+---
+
+RECURSO 6: O Modal de Vídeo Inteligente (Player Responsivo)
+* O Efeito: Clicar em um card abre um pop-up que reproduz um trailer. Se o vídeo 
+  for vertical (9:16), o player fica em formato de celular (em pé). Se for horizontal, 
+  ele fica em formato widescreen de cinema.
+* A Combinação no Código:
+  - HTML (Estrutura): O modal contendo os players: uma tag de vídeo local (`<video>`) 
+    e uma div para carregar a API do YouTube.
+  - CSS (Visual): O modal é posicionado sobre a tela inteira (`position: fixed; inset: 0;`). 
+    A propriedade `pointer-events: none` impede que ele receba cliques enquanto 
+    estiver fechado. Quando abrimos, adicionamos a classe `.open` que ativa 
+    `pointer-events: auto` e torna o modal visível.
+  - JavaScript (Comportamento): O JS comanda tudo. No clique do card, ele recebe 
+    o link ou ID do vídeo. O JS detecta se o vídeo é local (ex: `.mp4`) ou do 
+    YouTube. Se for local, ele joga o endereço na tag `<video>` e dá play. Se 
+    for do YouTube, ele chama a API do YouTube. Ele também detecta se o vídeo 
+    faz parte da lista de vídeos verticais e adiciona a classe `.portrait` ou 
+    `.landscape` para que o CSS ajuste as proporções na tela.
+
+---
+
+RECURSO 7: Catálogo Inteligente com Filtro por Abas
+* O Efeito: Clicar em abas como "Preto e Cinza" ou "Fineline" faz os itens do 
+  catálogo mudarem na hora com reorganização automática das fotos, sem dar 
+  F5 ou recarregar a página.
+* A Combinação no Código:
+  - HTML (Estrutura): Uma lista de botões para as abas e um container `#catalogGrid`.
+  - CSS (Visual & Grid): O container usa CSS Grid com o comando dinâmico 
+    `grid-template-columns: repeat(auto-fill, minmax(220px, 1fr))`. Isso faz o 
+    navegador criar colunas flexíveis de 220px e preencher a tela inteira sozinho.
+  - JavaScript (Comportamento): Temos um banco de dados em formato de Array de 
+    Objetos no script. Quando uma aba é clicada, o JS filtra essa lista (`.filter()`), 
+    gera dinamicamente o código HTML com as imagens das joias e injeta no container 
+    usando a propriedade `.innerHTML`.
+  - O Resultado Combinado: Graças ao CSS Grid, assim que o JavaScript injeta os 
+    novos cards, o CSS reposiciona tudo em colunas alinhadas instantaneamente.
+
+---
+
+RECURSO 8: Animações ao Rolar a Página (Scroll Reveal)
+* O Efeito: Conforme o usuário rola a página, seções como o rodapé ou banners 
+  deslizam sutilmente de baixo para cima e ficam visíveis.
+* A Combinação no Código:
+  - HTML (Estrutura): Adicionamos a classe `.reveal` nas seções do site.
+  - CSS (Visual): A classe `.reveal` define o estado invisível inicial: 
+    `opacity: 0` e `transform: translateY(40px)`. Definimos também que a 
+    classe ativa `.reveal.active` volta para a posição e opacidade normais.
+  - JavaScript (Comportamento): Usamos a API nativa `IntersectionObserver` no JS. 
+    Ela monitora a página em tempo real. Assim que o elemento com a classe 
+    `.reveal` "cruza" a linha visível do navegador (entra na tela), o JS adiciona 
+    a classe `.active` nele.
+  - O Resultado Combinado: A transição de opacidade e movimento configurada no 
+    CSS é disparada de forma suave no exato momento da rolagem.
+
+---
+
+RECURSO 9: Os Números Gigantes Prateados (Top 10 Netflix Style)
+* O Efeito: Ao lado de cada uma das 10 tatuagens em destaque, há um número gigante 
+  (1 ao 10) que fica ligeiramente por trás do card. O número não tem preenchimento 
+  sólido, mas sim uma borda com um efeito metalizado cintilante (onda de luz) que 
+  se move continuamente.
+* A Combinação no Código:
+  - HTML (Estrutura): Criamos uma div com a classe `.top10-number` antes de cada 
+    bloco do card da tatuagem.
+  - CSS (Sobreposição & Camadas): Usamos `font-size: 11.5rem` com a fonte `"Anton"`. 
+    Para fazer o número entrar um pouco sob o card ao lado, aplicamos uma margem 
+    negativa (`margin-right: -35px`) e o `z-index: 2` (para garantir que ele fique 
+    na camada certa).
+  - O Brilho Cintilante (Cliped Gradient):
+    1. Definimos o preenchimento como transparente e a cor base igual ao fundo do 
+       site usando `-webkit-text-fill-color: var(--bg)`.
+    2. Criamos uma borda de 3px usando `-webkit-text-stroke: 3px transparent`.
+    3. Criamos um gradiente linear metálico (com cores cinzas e brancas alternadas).
+    4. Aplicamos `-webkit-background-clip: text`. Isso faz com que o gradiente 
+       linear seja recortado exatamente no contorno (na borda) do texto!
+  - Animação do Brilho: Usamos `@keyframes f1ShineWave` que muda a propriedade 
+    `background-position` de 200% para 0% continuamente, fazendo o reflexo de luz 
+    "correr" pelo contorno do número infinitamente.
+  - Efeito Hover: Quando o mouse passa no card, o CSS diminui a opacidade do miolo 
+    do número (`-webkit-text-fill-color: rgba(255, 255, 255, 0.05)`) e faz um leve 
+    zoom (`transform: scale(1.05)`), dando sensação de profundidade 3D.
+
+---
+
+RECURSO 10: Widgets Flutuantes e Chat de Atendimento Integrado
+* O Efeito: Dois botões redondos flutuam no canto inferior direito da tela (um do 
+  WhatsApp e um do Instagram). No computador, eles "pulsam" e rotacionam de leve 
+  ao passar o mouse. Ao clicar no do WhatsApp, abre-se uma janela de conversa real 
+  estilo chat de suporte, com mensagens simuladas automáticas.
+* A Combinação no Código:
+  - HTML (Estrutura):
+    - O botão do Instagram (`.ig-fab`) que é um link simples direto para a rede social.
+    - O botão do WhatsApp (`.wpp-fab`) e a estrutura da janela de chat (`#wppWindow` / `.wpp-chat-window`), 
+      que contém cabeçalho, balões de conversa, opções rápidas (chips) e campo de texto.
+  - CSS (Fixação & Animações):
+    - Fixamos os botões no canto da tela com `position: fixed; right: 30px;` e 
+      posicionamos um em cima do outro (`bottom: 30px` e `bottom: 110px`).
+    - Para a entrada elegante ao carregar a página, aplicamos um efeito elástico 
+      moderno de rebote usando `transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)`.
+    - No Hover: Aplicamos `transform: scale(1.15) rotate(5deg)` para o botão inclinar 
+      de forma divertida e amigável.
+    - A Janela de Chat: Fica escondida por padrão (`display: none`). Quando aberta, 
+      ela ganha estilo de vidro transparente (`backdrop-filter: blur(15px)`) e 
+      executa a animação `@keyframes popIn` que faz a janela surgir com efeito 
+      "pop" vinda do canto inferior direito.
+  - JavaScript (Inteligência & Interação):
+    - Ao clicar no botão, a função `toggleWppChat()` muda o estilo da janela para 
+      `display: flex`.
+    - Se for o primeiro clique, o JS simula que uma pessoa está digitando, exibindo 
+      a div `.wpp-typing` (com três pontinhos pulando). Após 1.5 segundos (`setTimeout`), 
+      o JS esconde os pontinhos e mostra o balão de boas-vindas e as opções de botões.
+    - Ao clicar em uma opção rápida (como "Fazer Orçamento") ou digitar uma mensagem 
+      própria e dar Enter, a função `chamarWhatsapp(mensagem)` é disparada.
+    - O JS converte o texto para o formato de link da web usando `encodeURIComponent()`, 
+      e abre uma nova aba do navegador direcionada para o número do WhatsApp do 
+      estúdio com o texto pronto: `window.open('https://wa.me/NUMERO?text=SUA_MENSAGEM')`.
+
+---
+
+DICA PARA A AULA:
+O site não é apenas um monte de tags jogadas. O front-end 
+de alta performance acontece quando criamos a estrutura no HTML, preparamos as 
+regras de animação e estados visuais no CSS (como `.open`, `.solid` ou `.active`), 
+e deixamos o JavaScript atuar apenas como o "gatilho" que adiciona ou remove 
+essas classes de acordo com a ação do usuário.
+================================================================================
