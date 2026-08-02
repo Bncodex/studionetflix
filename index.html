@@ -779,6 +779,7 @@
     /* ===== TOP 10 – ESTILO NETFLIX ===== */
     .top10-card {
       position: relative;
+      cursor: pointer;
       flex: 0 0 auto;
       width: 335px;
       min-width: 335px;
@@ -1807,6 +1808,8 @@
     /* MODAL STYLE */
     .modal-overlay {
       position: fixed;
+      touch-action: none;
+      -webkit-overflow-scrolling: touch;
       inset: 0;
       background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px);
@@ -1827,6 +1830,7 @@
 
     .modal-content {
       background: #0f0f0f;
+      touch-action: pan-y;
       border: 1px solid var(--glass-border);
       border-radius: 12px;
       width: 90%;
@@ -1848,10 +1852,12 @@
       position: absolute;
       top: 20px;
       right: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #fff;
-      font-size: 1.5rem;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      font-size: 1.8rem;
+      font-weight: 300;
+      line-height: 1;
       width: 44px;
       height: 44px;
       border-radius: 50%;
@@ -1859,7 +1865,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.2s;
+      z-index: 10010;
+    }
+    .modal-close:hover {
+      background: rgba(229, 9, 20, 0.8);
+      border-color: #e50914;
+      transform: scale(1.08);
     }
 
     @media (hover: hover) {
@@ -3491,7 +3503,7 @@
   <!-- MODAL E-MAIL STYLE -->
   <div class="modal-overlay" id="styleModal">
     <div class="modal-content">
-      <button class="modal-close" aria-label="Fechar modal de estilo" onclick="closeStyleModal()">×</button>
+      <button class="modal-close" onclick="closeStyleModal()" aria-label="Fechar modal de estilo">&times;</button>
       <h2 id="modalTitle"
         style="margin-bottom: 8px; font-family: 'Times New Roman', serif; font-size: clamp(1.5rem, 5vw, 2.2rem); text-transform: uppercase; padding-right: 50px; word-wrap: break-word;">
         Título do Estilo</h2>
@@ -3506,7 +3518,7 @@
       style="max-width: 800px; padding: 0; background: transparent; overflow: visible; border: none; position: relative; box-shadow: none; margin: auto; width: 90%; display: flex; align-items: center; justify-content: center;">
       <button class="modal-close"
         style="z-index: 30; position: absolute; top: -55px; right: 0; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.25);"
-        aria-label="Fechar vídeo" onclick="closeVideoModal()">×</button>
+        aria-label="Fechar vídeo" onclick="closeVideoModal()">&times;</button>
 
       <div id="videoContainer" class="video-container landscape">
         <div id="budgetVideo"></div>
@@ -3538,7 +3550,7 @@
   <div id="catalogModal" class="modal-overlay">
     <div class="modal-content"
       style="max-width: 1000px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 25px;">
-      <button class="modal-close" onclick="closeCatalogModal()" aria-label="Fechar catálogo">×</button>
+      <button class="modal-close" onclick="closeCatalogModal()" aria-label="Fechar catálogo">&times;</button>
 
       <!-- Cabeçalho do modal -->
       <div style="margin-bottom: 20px; flex-shrink: 0; padding-right: 50px;">
@@ -3597,8 +3609,7 @@
   <div id="imageZoomModal" class="modal-overlay" onclick="closeImageZoomModal(event)" style="z-index: 10000;">
     <div class="modal-content"
       style="max-width: 90vw; max-height: 90vh; background: transparent; border: none; box-shadow: none; display: flex; align-items: center; justify-content: center; padding: 0; overflow: visible; position: relative;">
-      <button class="modal-close" onclick="closeImageZoomModal(event)"
-        style="position: absolute; top: -50px; right: 0; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.25); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10010;">×</button>
+      <button class="modal-close" onclick="closeImageZoomModal(event)" aria-label="Fechar imagem">&times;</button>
       <img id="zoomedImage" src="" alt="Imagem ampliada"
         style="max-width: 100%; max-height: 80vh; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.9);">
     </div>
@@ -3608,7 +3619,7 @@
   <div id="perfuracaoModal" class="modal-overlay">
     <div class="modal-content"
       style="max-width: 900px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 25px;">
-      <button class="modal-close" onclick="closePerfuracaoModal()" aria-label="Fechar perfuração">×</button>
+      <button class="modal-close" onclick="closePerfuracaoModal()" aria-label="Fechar perfuração">&times;</button>
 
       <!-- Cabeçalho do modal -->
       <div style="margin-bottom: 20px; flex-shrink: 0; padding-right: 50px;">
@@ -3738,15 +3749,19 @@
       { id: 2701, name: "Labret cluster uper Titânio", price: "R$ 190,00", category: "labret", material: "titanio", img: "fotosjoias/titanio/labret/labret cluster uper - 2701 R$190.webp", code: "#2701" },
       { id: 2711, name: "Labret cluster corrente Titânio", price: "R$ 210,00", category: "labret", material: "titanio", img: "fotosjoias/titanio/labret/labret cluster corrente - 2711 R$210.webp", code: "#2711" },
       { id: 2143, name: "Transversal Aço", price: "R$ 70,00", category: "megabell", material: "aco", img: "fotosjoias/aco/megabell/Transversal - 2143 R$70.00.webp", code: "#2143" },
+      { id: 2609, name: "Megabell Aço", price: "R$ 50,00", category: "megabell", material: "aco", img: "fotosjoias/aco/megabell/Megabell - 2609 R$50.00.webp", code: "#2609" },
+      { id: 2166, name: "Microbell Aço", price: "R$ 40,00", category: "megabell", material: "aco", img: "fotosjoias/aco/megabell/Microbell - 2166 R$40.00.webp", code: "#2166" },
       { id: 2053, name: "Transversal Titânio", price: "R$ 100,00", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/transversal - 2053 R$100.webp", code: "#2053" },
       { id: 2192, name: "Mamilo coração zirconia Titânio", price: "R$ 170,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilo coração zirconia - 2192 R$170 (cada).webp", code: "#2192" },
       { id: 2193, name: "Mamilo coração zirconia dourada Titânio", price: "R$ 180,00", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilo coração zirconia dourada - 2193 R$180.webp", code: "#2193" },
       { id: 2195, name: "Mamilo brorboleta zirconia dourada Titânio", price: "R$ 170,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilo brorboleta zirconia dourada - 2195 R$170 (cada).webp", code: "#2195" },
       { id: 2624, name: "Megabell Titânio", price: "R$ 100,00", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/megabell - 2624  R$100.webp", code: "#2624" },
       { id: 2090, name: "Bananinha Aço", price: "R$ 40,00", category: "microcurvo", material: "aco", img: "fotosjoias/aco/microcurvo/Bananinha - 2090 R$40.00.webp", code: "#2090" },
+      { id: 2142, name: "Nostril Aço", price: "R$ 40,00", category: "nostril", material: "aco", img: "fotosjoias/aco/nostril/Nostril -2142 R$40.00.webp", code: "#2142" },
       { id: 2228, name: "Nostril estrela Titânio", price: "R$ 70,00", category: "nostril", material: "titanio", img: "fotosjoias/titanio/nostril/nostril estrela - 2228 R$70.webp", code: "#2228" },
       { id: 2229, name: "Nostril estrela dourado Titânio", price: "R$ 80,00", category: "nostril", material: "titanio", img: "fotosjoias/titanio/nostril/nostril estrela dourado - 2229 R$80.webp", code: "#2229" },
       { id: 2673, name: "Nostril Titânio", price: "R$ 60,00", category: "nostril", material: "titanio", img: "fotosjoias/titanio/nostril/nostril - 2673 R$60.webp", code: "#2673" },
+      { id: 2091, name: "Umbigo Aço", price: "R$ 50,00", category: "umbigo", material: "aco", img: "fotosjoias/aco/umbigo/Umbigo - 2091 R$50.00.webp", code: "#2091" },
       { id: 2075, name: "Umbigo flat dourado G Titânio", price: "R$ 160,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/umbigo flat dourado G - 2075 R$160.webp", code: "#2075" },
       { id: 2133, name: "Umbigo flat G Titânio", price: "R$ 150,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/umbigo flat G - 2133 R$150.webp", code: "#2133" },
       { id: 2135, name: "Umbigo floating Titânio", price: "R$ 150,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/umbigo floating - 2135 R$150.webp", code: "#2135" },
@@ -3754,7 +3769,64 @@
       { id: 2150, name: "Umbigo 5 zirconias Titânio", price: "R$ 120,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/umbigo 5 zirconias - 2150 R$120.webp", code: "#2150" },
       { id: 2151, name: "Umbigo flor dourado Titânio", price: "R$ 190,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/umbigo flor dourado - 2151 R$190.webp", code: "#2151" },
       { id: 2156, name: "Umbigo zirconia Titânio", price: "R$ 100,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/umbigo zirconia - 2156 R$100.webp", code: "#2156" },
-      { id: 2230, name: "Umbigo floating dourado Titânio", price: "R$ 160,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/umbigo floating dourado - 2230 R$160.webp", code: "#2230" }
+      { id: 2230, name: "Umbigo floating dourado Titânio", price: "R$ 160,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/umbigo floating dourado - 2230 R$160.webp", code: "#2230" },
+    
+      { id: 2127, name: "Argola lisa dourada Titânio", price: "R$ 110,00", category: "argola", material: "titanio", img: "fotosjoias/titanio/argola/argola lisa dourada - 2127 R$110.webp", code: "#2127" },
+      { id: 2152, name: "Microdermal dourada Titânio", price: "R$ 140,00", category: "dermal", material: "titanio", img: "fotosjoias/titanio/dermal/microdermal dourada - 2152 R$140.webp", code: "#2152" },
+      { id: 2776, name: "Ferradura preta Titânio", price: "R$ 60,00", category: "ferradura", material: "titanio", img: "fotosjoias/titanio/ferradura/Ferradura preta Titânio - 2776 R$60.00.webp", code: "#2776" },
+      { id: 2003, name: "Labret cluster corrente dourada Titânio", price: "R$ 220,00", category: "labret", material: "titanio", img: "fotosjoias/titanio/labret/labret cluster corrente dourada - 2003 R$220.webp", code: "#2003" },
+      { id: 2022, name: "Labret flor zircônia dourada G Titânio", price: "R$ 160,00", category: "labret", material: "titanio", img: "fotosjoias/titanio/labret/labret flor zirconia dourada G - 2022 R$160.webp", code: "#2022" },
+      { id: 2222, name: "Labret oval dourado Titânio", price: "R$ 140,00", category: "labret", material: "titanio", img: "fotosjoias/titanio/labret/labret oval dourado - 2222 R$140.webp", code: "#2222" },
+      { id: 2215, name: "Labret ponto de luz pingente duplo Titânio", price: "R$ 160,00", category: "labret", material: "titanio", img: "fotosjoias/titanio/labret/labret ponto de luz pingente duplo - 2215 R$160.webp", code: "#2215" },
+      { id: 2216, name: "Labret ponto de luz pingente duplo dourado Titânio", price: "R$ 170,00", category: "labret", material: "titanio", img: "fotosjoias/titanio/labret/labret ponto de luz pingente duplo dourado - 2216 R$170.webp", code: "#2216" },
+      { id: 2219, name: "Labret ponto de luz pingente oval Titânio", price: "R$ 160,00", category: "labret", material: "titanio", img: "fotosjoias/titanio/labret/labret ponto de luz pingente oval - 2219 R$160.webp", code: "#2219" },
+      { id: 2220, name: "Labret ponto de luz pingente oval dourado Titânio", price: "R$ 170,00", category: "labret", material: "titanio", img: "fotosjoias/titanio/labret/labret ponto de luz pingente oval dourado - 2220 R$170.webp", code: "#2220" },
+      { id: 2756, name: "Barbell Dourado Titânio", price: "R$ 70,00", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/Barbell Dourado - 2756 R$70.webp", code: "#2756" },
+      { id: 2826, name: "Barbell Preto Titânio", price: "R$ 70,00", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/Barbell Preto - 2826 R$70.webp", code: "#2826" },
+      { id: 2696, name: "Mamilo folhas Titânio", price: "R$ 170,00", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/Mamilo folhas - 2696 R$170.webp", code: "#2696" },
+      { id: 2754, name: "Transversal Dourado Titânio", price: "R$ 100,00", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/Transversal Dourado - 2754 R$100.webp", code: "#2754" },
+      { id: 2194, name: "Mamilo borboleta zircônia Titânio", price: "R$ 170,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilo brorboleta zirconia - 2194 R$170 (cada).webp", code: "#2194" },
+      { id: 2827, name: "Mamilo cluster brilhos Titânio", price: "R$ 170,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilo cluster brilhos - 2827 R$170 (cada).webp", code: "#2827" },
+      { id: 2614, name: "Mamilo cluster brilhos Dourado Titânio", price: "R$ 180,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilo cluster brilhos Dourado - 2614 R$180 (cada).webp", code: "#2614" },
+      { id: 2829, name: "Mamilo flor dourado Titânio", price: "R$ 180,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilo flor dourado -2829 R$180 (cada).webp", code: "#2829" },
+      { id: 2697, name: "Mamilo folhas dourado Titânio", price: "R$ 180,00", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilo folhas dourado - 2697 R$180.webp", code: "#2697" },
+      { id: 2512, name: "Mamilo zircônia Titânio", price: "R$ 160,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilo zirconia - 2512 R$160 (cada).webp", code: "#2512" },
+      { id: 2050, name: "Mamilo zircônia dourada Titânio", price: "R$ 170,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilo zirconia dourada - 2050 R$170 (cada).webp", code: "#2050" },
+      { id: 2828, name: "Mamilos flor Titânio", price: "R$ 180,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/mamilos flor - 2828 R$180 (cada).webp", code: "#2828" },
+      { id: 2048, name: "Microbell Titânio", price: "R$ 70,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/microbell - 2048 R$70 (cada).webp", code: "#2048" },
+      { id: 2046, name: "Microbell azul Titânio", price: "R$ 100,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/microbell azul - 2046 R$100 (cada).webp", code: "#2046" },
+      { id: 2045, name: "Microbell rosa Titânio", price: "R$ 100,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/microbell rosa - 2045 R$100 (cada).webp", code: "#2045" },
+      { id: 2043, name: "Microbell roxo Titânio", price: "R$ 100,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/microbell roxo - 2043 R$100 (cada).webp", code: "#2043" },
+      { id: 2830, name: "Transversal brilhos 2830 Titânio", price: "R$ 150,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/transversal brilhos 2830 R$150 (cada).webp", code: "#2830" },
+      { id: 2806, name: "Transversal brilhos dourado 2806 Titânio", price: "R$ 150,00 (cada)", category: "megabell", material: "titanio", img: "fotosjoias/titanio/megabell/transversal brilhos dourado 2806 R$150 (cada).webp", code: "#2806" },
+      { id: 2785, name: "Bananinha Dourado Spike Titânio", price: "R$ 100,00", category: "microcurvo", material: "titanio", img: "fotosjoias/titanio/microcurvo/Bananinha Dourado Spike - 2785 R$100.webp", code: "#2785" },
+      { id: 2187, name: "Bananinha Preto Titânio", price: "R$ 100,00 (cada)", category: "microcurvo", material: "titanio", img: "fotosjoias/titanio/microcurvo/Bananinha Preto - 2187 R$100 (cada).webp", code: "#2187" },
+      { id: 2185, name: "Bananinha Preto Spike Titânio", price: "R$ 100,00", category: "microcurvo", material: "titanio", img: "fotosjoias/titanio/microcurvo/Bananinha Preto Spike - 2185 R$100.webp", code: "#2185" },
+      { id: 2063, name: "Bananinha Rosa Titânio", price: "R$ 100,00 (cada)", category: "microcurvo", material: "titanio", img: "fotosjoias/titanio/microcurvo/Bananinha Rosa - 2063 R$100 (cada).webp", code: "#2063" },
+      { id: 2784, name: "Bananinha Spike 2784 Titânio", price: "R$ 100,00", category: "microcurvo", material: "titanio", img: "fotosjoias/titanio/microcurvo/Bananinha Spike 2784 R$100.webp", code: "#2784" },
+      { id: 2044, name: "Bananinha Titânio", price: "R$ 60,00 (cada)", category: "microcurvo", material: "titanio", img: "fotosjoias/titanio/microcurvo/bananinha  - 2044 R$60 (cada).webp", code: "#2044" },
+      { id: 2062, name: "Bananinha dourado Titânio", price: "R$ 70,00 (cada)", category: "microcurvo", material: "titanio", img: "fotosjoias/titanio/microcurvo/bananinha dourado - 2062 R$70 (cada).webp", code: "#2062" },
+      { id: 2218, name: "Bananinha zircônia Titânio", price: "R$ 110,00 (cada)", category: "microcurvo", material: "titanio", img: "fotosjoias/titanio/microcurvo/bananinha zirconia - 2218  R$110 (cada).webp", code: "#2218" },
+      { id: 2118, name: "Bananinha zircônia dourado Titânio", price: "R$ 120,00 (cada)", category: "microcurvo", material: "titanio", img: "fotosjoias/titanio/microcurvo/bananinha zirconia dourado - 2118 R$120 (cada).webp", code: "#2118" },
+      { id: 2761, name: "Bananinha zircônia preto Titânio", price: "R$ 120,00", category: "microcurvo", material: "titanio", img: "fotosjoias/titanio/microcurvo/bananinha zirconia preto - 2761 R$120.webp", code: "#2761" },
+      { id: 2733, name: "Nostril Coração Titânio", price: "R$ 60,00", category: "nostril", material: "titanio", img: "fotosjoias/titanio/nostril/Nostril Coração - 2733 R$60.webp", code: "#2733" },
+      { id: 2782, name: "Nostril Spike Titânio", price: "R$ 60,00", category: "nostril", material: "titanio", img: "fotosjoias/titanio/nostril/Nostril Spike - 2782 R$60.webp", code: "#2782" },
+      { id: 2145, name: "Nostril dourado Titânio", price: "R$ 70,00", category: "nostril", material: "titanio", img: "fotosjoias/titanio/nostril/Nostril dourado - 2145 R$70.webp", code: "#2145" },
+      { id: 2164, name: "Nostril ancora dourado Titânio", price: "R$ 50,00", category: "nostril", material: "titanio", img: "fotosjoias/titanio/nostril/nostril ancora dourado - 2164 R$50.webp", code: "#2164" },
+      { id: 2740, name: "Umbigo Argola Dourado Titânio", price: "R$ 150,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Argola Dourado - 2740 R$150.webp", code: "#2740" },
+      { id: 2736, name: "Umbigo Coração Titânio", price: "R$ 200,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Coração - 2736 R$200.webp", code: "#2736" },
+      { id: 2808, name: "Umbigo Coração Dourado Titânio", price: "R$ 200,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Coração Dourado - 2808 R$200.webp", code: "#2808" },
+      { id: 2157, name: "Umbigo Flat Dourado P Titânio", price: "R$ 160,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Flat Dourado P - 2157 R$160.webp", code: "#2157" },
+      { id: 2114, name: "Umbigo Flat P Titânio", price: "R$ 150,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Flat P - 2114 R$150.webp", code: "#2114" },
+      { id: 2217, name: "Umbigo Floating Titânio", price: "R$ 100,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Floating - 2217 R$100.webp", code: "#2217" },
+      { id: 2779, name: "Umbigo Floating Dourado Titânio", price: "R$ 100,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Floating Dourado - 2779 R$100.webp", code: "#2779" },
+      { id: 2741, name: "Umbigo Floating Flor Dourado Titânio", price: "R$ 200,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Floating Flor Dourado - 2741 R$200.webp", code: "#2741" },
+      { id: 2742, name: "Umbigo Floating Flor Titânio", price: "R$ 200,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Floating Flor- 2742 R$200.webp", code: "#2742" },
+      { id: 2809, name: "Umbigo Oval Titânio", price: "R$ 200,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Oval - 2809 R$200.webp", code: "#2809" },
+      { id: 2825, name: "Umbigo Oval Dourado Titânio", price: "R$ 200,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo Oval Dourado - 2825 R$200.webp", code: "#2825" },
+      { id: 2810, name: "Umbigo oval pingentes Titânio", price: "R$ 240,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo oval pingentes - 2810 R$240.webp", code: "#2810" },
+      { id: 2811, name: "Umbigo oval pingentes dourado Titânio", price: "R$ 240,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umbigo oval pingentes dourado - 2811 R$240.webp", code: "#2811" },
+      { id: 2737, name: "Umbigo Argola Titânio", price: "R$ 150,00", category: "umbigo", material: "titanio", img: "fotosjoias/titanio/umbigo/Umgibo Argola - 2737 R$150.webp", code: "#2737" },
     ];
 
     function openCatalogModal() {
@@ -3779,7 +3851,7 @@
     }
 
     function closeImageZoomModal(event) {
-      if (event.target.id === 'imageZoomModal' || event.target.classList.contains('modal-close')) {
+      if (!event || event.target.id === 'imageZoomModal' || event.target.classList.contains('modal-close')) {
         const modal = document.getElementById('imageZoomModal');
         modal.classList.remove('open');
       }
@@ -3811,7 +3883,7 @@
       if (categoryKey === 'todos') {
         filtered = jewelryData;
       } else {
-        filtered = jewelryData.filter(item => item.category === categoryKey);
+        filtered = jewelryData.filter(item => item.category === categoryKey || (categoryKey.includes('inti') && item.category.includes('inti')));
       }
 
       grid.innerHTML = filtered.map(item => {
@@ -3823,9 +3895,9 @@
               <span class="catalog-card-code">${item.code}</span>
               <span class="catalog-card-title" title="${item.name}">${item.name}</span>
               <span class="catalog-card-price">${item.price}</span>
-              <button class="catalog-card-btn" onclick="chamarWhatsapp('${msg}')">
+              <button class="catalog-card-btn" onclick="chamarWhatsappPiercing('${msg}')">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
                 Quero esta
               </button>
@@ -3850,7 +3922,7 @@
       blackwork: { title: "Black Work", desc: "A potência do preto puro em composições ricas de alto contraste. Fusões artísticas que combinam texturas densas, geometrias complexas, pontilhismo fino e a fluidez orgânica inspirada no Suminagashi japonês.", images: ["img/5-Blackwork/1C4BE1ED-128B-4D01-AA2C-5925E8F63200.webp", "img/5-Blackwork/IMG_1850.webp", "img/5-Blackwork/IMG_3033.webp", "img/5-Blackwork/WhatsApp Image 2026-05-14 at 01.22.55.webp", "img/5-Blackwork/WhatsApp Image 2026-05-14 at 01.20.51.webp"] },
       suminagashi: { title: "Suminagashi, Cyber & Geométrico", desc: "A fusão perfeita entre a fluidez da técnica tradicional de pintura Suminagashi, a estética cibernética/cyberpunk futurista (Cyber) e a precisão cirúrgica de formas e padrões geométricos tridimensionais.", images: ["img/6-Suminagashi/D6EF3F82-5EF3-4C63-8B29-81CC66CA698A.webp", "img/6-Suminagashi/IMG_5718.webp", "img/6-Suminagashi/IMG_5721.webp", "img/6-Suminagashi/IMG_7658.webp"] },
       maori: { title: "Maori & Tribal", desc: "Simbolismo sagrado ancestral eternizado na pele. Padrões geométricos tribais complexos com linhas pretas sólidas e cortes precisos, onde cada curva e detalhe contam a história de força, proteção e conquistas do cliente.", images: ["img/7-Maori/D94F4030-40E3-494C-8C3D-7A2EC4282EC1.JPG_processed.webp", "img/7-Maori/IMG_1766.webp"] },
-      colorido: { title: "Colorido", desc: "Explosão de cores vibrantes com técnicas de saturação avançadas e transições de degradê perfeitas (color fusion). Projetos únicos com contraste marcante para garantir que as cores permaneçam radiantes ao longo dos anos.", images: ["img/4-Oldschool/WhatsApp Image 2026-05-14 at 01.20.21.webp", "img/8-Colorido/IMG_3578.webp", "img/8-Colorido/IMG_7981.webp", "img/8-Colorido/1D5A553C-3B11-4EAE-8237-EE32282F11D6.webp", "img/8-Colorido/WhatsApp Image 2026-05-14 at 01.44.22.webp"] },
+      colorido: { title: "Colorido", desc: "Explosão de cores vibrantes com técnicas de saturação avançadas e transições de degradê perfeitas (color fusion). Projetos únicos com contraste marcante para garantir que as cores permaneceram radiantes ao longo dos anos.", images: ["img/4-Oldschool/WhatsApp Image 2026-05-14 at 01.20.21.webp", "img/8-Colorido/IMG_3578.webp", "img/8-Colorido/IMG_7981.webp", "img/8-Colorido/1D5A553C-3B11-4EAE-8237-EE32282F11D6.webp", "img/8-Colorido/WhatsApp Image 2026-05-14 at 01.44.22.webp"] },
       anime: { title: "Anime & Geek", desc: "A cultura pop e os animes elevados à categoria de arte de galeria. Traços fiéis aos mangás originais, técnicas mistas de traço fine, hachuras clássicas e coloração rica para eternizar seus personagens favoritos na pele.", images: ["img/9-anime/IMG_1735.JPG_processed.webp", "img/9-anime/PHOTOgoku-2026-06-12-14-18-30.webp", "img/9-anime/IMG_1841.JPG_processed.webp"] },
       minimalista: { title: "Minimalista", desc: "A beleza absoluta da simplicidade e da elegância sutil. Projetos pequenos com conceitos profundos, unindo microrealismo, linhas finas e precisão cirúrgica para criar artes discretas com grande significado.", images: ["img/10-minimalista/WhatsApp Image 2026-05-14 at 01.29.41.webp", "img/10-minimalista/6FD21235-9411-4EB2-BCF3-9C83982AB3B1.webp", "img/10-minimalista/IMG_1761.webp", "img/10-minimalista/IMG_3928.webp"] }
     };
